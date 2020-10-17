@@ -11,14 +11,25 @@ License: GPLv2 or later
 Optimizes your assets (images, css, js, fonts) for faster site loading so they are loaded by StaticOptimizer Optimization servers.
 
 == Description ==
- 
-Static Optimizer uses
+
+Static Optimizer is a free cloud service that speeds up your site by optimizing and serving the selected static files from your site.
+The service automatically optimizes & compresses the files automatically.
+No database or files changes are performed therefore there's no risk if you want to uninstall the plugin later (... but why would you?)
+If our optimization server are down (upgrade, maintenance or outage) your original files will be loaded instead.
 
 = Features / Benefits =
-* Load css/js assets for a given user and customize your user's experience
-* Fast & smart If the file doesn't exist it won't attempt to load it.
+* Easy to set up. Just get your API key and you're good to go.
+* Automatic js and css minification & compression
+* Automatic image optimization (gif, jpeg, png)
 * Simple to use
 
+= How it works =
+
+After you get your API key the plugin will install as a system (mu-plugin) and will correct where the selected files are loaded from.
+During the plugin configuration you can tell the plugin which files you'd like to be optimized.
+
+= Who is this plugin for? =
+People who have lots of images on their site such online stores, photographers.
 
 == Demo ==
 https://www.youtube.com/watch?v=a7f9vYVlmxg
@@ -50,7 +61,16 @@ n/a
 
 = How to use this plugin? =
 
-Check out https://statopt.com/store/product/optimizer/
+Check out https://statopt.com
+
+= Bug Report / Feature Requests =
+Please submit any bug report or feature requests to our github issue tracking system.
+
+<a href="https://github.com/statopt/static-optimizer-wp/issues"
+                                    target="_blank" title="[new window]">Report Bugs / Features</a>
+
+= Does it work with WordPress multisite? =
+Yes
 
 == Changelog ==
 
