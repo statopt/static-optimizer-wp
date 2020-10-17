@@ -526,9 +526,9 @@ function static_optimizer_setting_api_key() {
 	echo "<input id='static_optimizer_setting_api_key' name='static_optimizer_settings[api_key]' type='text' value='$val_esc' />";
 
 	if (empty($val)) {
-		echo "&nbsp; | <a href='https://statopt.com/go/get-api-key'>Get API Key</a>";
+		echo "&nbsp; | <a href='https://statopt.com/go/get-api-key' target='_blank'>Get API Key</a>";
 	} else {
-		echo "&nbsp; | <a href='https://statopt.com/go/manage-api-key'>Manage API Key</a>";
+		echo "&nbsp; | <a href='https://statopt.com/go/manage-api-key' target='_blank'>Manage API Key</a>";
     }
 }
 
