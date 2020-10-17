@@ -383,9 +383,6 @@ function static_optimizer_options_page() {
                                     |
                                     <a href="https://github.com/statopt/static-optimizer-wp/issues"
                                     target="_blank" title="[new window]">Report Bugs / Features</a>
-
-                                     <!-- |
-                                     <a href="//docs.google.com/viewer?url=https%3A%2F%2Fdl.dropboxusercontent.com%2Fs%2Fwz83vm9841lz3o9%2FOrbisius_LikeGate_Documentation.pdf" target="_blank">Documentation</a>-->
                                 </span>
                             </h3>
                         </div> <!-- .postbox -->
