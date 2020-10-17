@@ -524,6 +524,12 @@ function static_optimizer_setting_api_key() {
 	$val = $options['api_key'];
 	$val_esc = esc_attr($val);
 	echo "<input id='static_optimizer_setting_api_key' name='static_optimizer_settings[api_key]' type='text' value='$val_esc' />";
+
+	if (empty($val)) {
+		echo "&nbsp; | <a href='https://statopt.com/go/get-api-key'>Get API Key</a>";
+	} else {
+		echo "&nbsp; | <a href='https://statopt.com/go/manage-api-key'>Manage API Key</a>";
+    }
 }
 
 function static_optimizer_setting_status() {
