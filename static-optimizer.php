@@ -367,24 +367,21 @@ function static_optimizer_options_page() {
 
                                 <!-- Twitter: Orbisius_Follow:js -->
                                     <a href="https://twitter.com/static" class="twitter-follow-button"
-                                       data-align="right" data-show-count="false">Follow @static</a>
+                                       data-align="right" data-show-count="false">Follow @statopt</a>
                                 <!-- /Twitter: Orbisius_Follow:js -->
 
                                 <!-- Twitter: Tweet:js -->
                                 <a href="https://twitter.com/share" class="twitter-share-button"
                                    data-lang="en" data-text="Checkout <?php echo $product_name;?> #WordPress #plugin <?php echo $product_descr_short; ?>"
-                                   data-count="none" data-via="static" data-related="static"
+                                   data-count="none" data-via="statopt" data-related="orbisius"
                                    data-url="<?php echo $product_page_tweet_link;?>">Tweet</a>
                                 <!-- /Twitter: Tweet:js -->
 
                                 <br/>
                                 <span>
                                     <a href="<?php echo $product_page; ?>" target="_blank" title="[new window]">Product Page</a>
-<!--                                    |-->
-<!--                                    <a href="//statopt.com/forums/forum/community-support-forum/wordpress-plugins/--><?php //echo $base_name_slug;?><!--/?utm_source=--><?php //echo $base_name_slug;?><!--&utm_medium=plugin-settings&utm_campaign=product"-->
-<!--                                    target="_blank" title="[new window]">Support Forums</a>      -->
                                     |
-                                    <a href="https://github.com/static/static-optimizer/issues"
+                                    <a href="https://github.com/statopt/static-optimizer-wp/issues"
                                     target="_blank" title="[new window]">Report Bugs / Features</a>
 
                                      <!-- |
