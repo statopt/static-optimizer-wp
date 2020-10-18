@@ -539,7 +539,6 @@ function static_optimizer_setting_api_key() {
 function static_optimizer_setting_status() {
 	$options = static_optimizer_get_options();
 	$val = $options['status'];
-	$val_esc = esc_attr($val);
 	$active_checked = !empty($val) ? checked(1, 1, false) : '';
 	$inactive_checked = empty($val) ? checked(1, 1, false) : '';
 	echo "<label for='static_optimizer_setting_status_active'><input id='static_optimizer_setting_status_active' name='static_optimizer_settings[status]' type='radio' value='1' $active_checked /> Active</label>";
