@@ -604,7 +604,7 @@ function static_optimizer_maybe_render_get_key_form($ctx = []) {
         <form id="static_optimizer_get_api_key_form" name="static_optimizer_get_api_key_form"
               action="<?php echo esc_url(STATIC_OPTIMIZER_GET_API_KEY_PAGE);?>"
               target="_blank"
-              method="get">
+              method="post">
             Site: <input type="url" id="static_optimizer_url" name="url" value="<?php esc_attr_e($site_url);?>" />
             Email: <input type="email" id="static_optimizer_email" name="email" value="<?php esc_attr_e($admin_email);?>" />
             <input name='submit' class='button button-primary' type='submit' value='Get API Key' />
