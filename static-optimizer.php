@@ -40,6 +40,7 @@ if (defined('WP_CONTENT_DIR')) {
 add_action( 'init', 'static_optimizer_init' );
 add_action( 'admin_menu', 'static_optimizer_setup_admin' );
 add_action( 'update_option_static_optimizer_settings', 'static_optimizer_after_option_update', 20, 3); // be the last in the footer
+add_action( 'static_optimizer_action_after_settings_form', 'static_optimizer_maybe_render_get_key_form'); // be the last in the footer
 
 // multisite
 add_action('network_admin_menu', 'static_optimizer_setup_admin'); // manage_network_themes
@@ -578,4 +579,28 @@ function static_optimizer_get_settings_link($params = array()) {
 		: admin_url($rel_path);
 
 	return $link;
+}
+
+/**
+ * We prefill the get api key form so when the user requests that the receiving page will have
+ * some data prefilled in so we'll save 20 seconds for the user.
+ * @param array $ctx
+ */
+function static_optimizer_maybe_render_get_key_form($ctx = []) {
+	$options = static_optimizer_get_options();
+
+	if (!empty($options['api_key'])) {
+	    return;
+    }
+
+	$admin_email = get_option('admin_email');
+	$site_url = site_url();
+    ?>
+    <div id="static_optimizer_get_api_key_form_wrapper" class="static_optimizer_get_api_key_form_wrapper">
+        <form id="static_optimizer_get_api_key_form" name="static_optimizer_get_api_key_form" method="get">
+            <input type="hidden" id="static_optimizer_url" name="url" value="<?php esc_attr_e($site_url);?>" />
+            <input type="hidden" id="static_optimizer_email" name="email" value="<?php esc_attr_e($admin_email);?>" />
+        </form>
+    </div> <!-- /static_optimizer_get_api_key_form_wrapper -->
+    <?php
 }
