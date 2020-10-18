@@ -178,25 +178,25 @@ function static_optimizer_options_page() {
                     <div class="meta-box-sortables ui-sortable">
                         <div class="postbox">
 <!--                                <h3><span>Settings</span></h3>-->
-	                        <?php do_action('static_optimizer_action_before_settings_form', $plugin_ctx); ?>
-                            <form action="options.php" method="post">
                             <div class="inside">
-                                <?php
-                                if ( is_multisite() && ! is_main_site() ) {
-	                                $next_url = static_optimizer_get_settings_link();
-                                    $msg = "You can configure the settings globally in WordPress multisite network admin area "
-                                               . "<br/><a href='$next_url' class='button button-primary'>Continue</a>";
-                                    echo $msg;
-                                } else {
-	                                settings_fields( 'static_optimizer_settings' );
-	                                do_settings_sections( 'static_optimizer_settings' );
-	                                $btn_label = esc_attr( 'Save Changes' );
-	                                echo "<input name='submit' class='button button-primary' type='submit' value='$btn_label' />";
-                                }
-                                ?>
+                                <?php do_action('static_optimizer_action_before_settings_form', $plugin_ctx); ?>
+                                <form action="options.php" method="post">
+                                    <?php
+                                    if ( is_multisite() && ! is_main_site() ) {
+                                        $next_url = static_optimizer_get_settings_link();
+                                        $msg = "You can configure the settings globally in WordPress multisite network admin area "
+                                                   . "<br/><a href='$next_url' class='button button-primary'>Continue</a>";
+                                        echo $msg;
+                                    } else {
+                                        settings_fields( 'static_optimizer_settings' );
+                                        do_settings_sections( 'static_optimizer_settings' );
+                                        $btn_label = esc_attr( 'Save Changes' );
+                                        echo "<input name='submit' class='button button-primary' type='submit' value='$btn_label' />";
+                                    }
+                                    ?>
+                                </form>
+	                            <?php do_action('static_optimizer_action_after_settings_form', $plugin_ctx); ?>
                             </div> <!-- .inside -->
-                            </form>
-                            <?php do_action('static_optimizer_action_after_settings_form', $plugin_ctx); ?>
                         </div> <!-- .postbox -->
 
                         <div class="postbox">
