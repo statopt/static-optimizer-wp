@@ -165,6 +165,7 @@ function static_optimizer_setup_admin() {
  * @since 1.0
  */
 function static_optimizer_options_page() {
+	$plugin_ctx = [];
 	?>
     <div id="static_optimizer_wrapper" class="wrap static_optimizer_wrapper">
         <h2>StaticOptimizer</h2>
@@ -176,6 +177,7 @@ function static_optimizer_options_page() {
                     <div class="meta-box-sortables ui-sortable">
                         <div class="postbox">
 <!--                                <h3><span>Settings</span></h3>-->
+	                        <?php do_action('static_optimizer_action_before_settings_form', $plugin_ctx); ?>
                             <form action="options.php" method="post">
                             <div class="inside">
                                 <?php
@@ -193,6 +195,7 @@ function static_optimizer_options_page() {
                                 ?>
                             </div> <!-- .inside -->
                             </form>
+                            <?php do_action('static_optimizer_action_after_settings_form', $plugin_ctx); ?>
                         </div> <!-- .postbox -->
 
                         <div class="postbox">
