@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This script is part of Static Optimizer plugin so it can intercept content as early as possible.
+ * This script is part of StaticOptimizer plugin so it can intercept content as early as possible.
  * The script won't do any processing in the following cases.
  */
 if (    !defined('ABSPATH')

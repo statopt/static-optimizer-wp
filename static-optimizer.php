@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Static Optimizer
+Plugin Name: StaticOptimizer
 Plugin URI: https://statopt.com
 Description: Makes your your images, js, css load faster by optimizing them and loading them from StaticOptimizer Optimization servers
 Version: 1.0.0
@@ -73,7 +73,7 @@ function static_optimizer_after_option_update($old_value, $value, $option) {
 
         // let's add an empty file
 	    if (!file_exists($dir . '/index.html')) {
-		    file_put_contents($dir . '/index.html', "Static Optimizer", LOCK_EX);
+		    file_put_contents($dir . '/index.html', "StaticOptimizer", LOCK_EX);
 	    }
 
 	    // let's add some more protection
@@ -142,13 +142,13 @@ function static_optimizer_init() {
 /**
  * Set up administration
  *
- * @package Static Optimizer
+ * @package StaticOptimizer
  * @since 0.1
  */
 function static_optimizer_setup_admin() {
 	$hook = add_options_page( 
-		__('Static Optimizer', 'static_optimizer'), 
-		__('Static Optimizer', 'static_optimizer'),
+		__('StaticOptimizer', 'static_optimizer'),
+		__('StaticOptimizer', 'static_optimizer'),
         'manage_options', __FILE__, 
 		'static_optimizer_options_page'
 	);
@@ -161,13 +161,13 @@ function static_optimizer_setup_admin() {
  * For some reason the saved message doesn't show up on Products page
  * that's why I had to display the message for edit.php page specifically.
  *
- * @package Static Optimizer
+ * @package StaticOptimizer
  * @since 1.0
  */
 function static_optimizer_options_page() {
 	?>
     <div id="static_optimizer_wrapper" class="wrap static_optimizer_wrapper">
-        <h2>Static Optimizer</h2>
+        <h2>StaticOptimizer</h2>
 
         <div id="poststuff">
             <div id="post-body" class="metabox-holder columns-2">
@@ -199,7 +199,7 @@ function static_optimizer_options_page() {
                             <h3><span>Usage</span></h3>
                             <div class="inside">
                                 <div class="">
-                                    <p><a href="https://statopt.com" target="_blank">Static Optimizer</a> makes your site load faster by loading your files from StaticOptimizer Optimization servers.</p>
+                                    <p><a href="https://statopt.com" target="_blank">StaticOptimizer</a> makes your site load faster by loading your files from StaticOptimizer Optimization servers.</p>
                                     <p>We'll take care of optimizing the images & minimizing the javascript and css files.</p>
                                     <p>If our servers are down for some reason the original images will be loaded from your server.</p>
                                     <p>We've tried to make this plugin and our servers as efficient as possible, however,

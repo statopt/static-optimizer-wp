@@ -354,7 +354,7 @@ class Static_Optimizer_Asset_Optimizer {
 
 		$buff = <<<BUFF_EOF
     <script>
-    // Static Optimizer fallback code if optimization servers are down.
+    // StaticOptimizer fallback code if optimization servers are down.
     var static_optimizer_site_cfg = $json_str;
 
     function static_optimizer_handle_broken_image(img_obj) {
