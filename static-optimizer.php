@@ -31,6 +31,7 @@ if ( !defined('ABSPATH') ) {
 
 // define('STATIC_OPTIMIZER_ACTIVE', 0); // to turn off define this in WP config
 define('STATIC_OPTIMIZER_BASE_PLUGIN', __FILE__);
+define('STATIC_OPTIMIZER_GET_API_KEY_PAGE', 'https://statopt.com/go/api-key');
 
 if (defined('WP_CONTENT_DIR')) {
 	define( 'STATIC_OPTIMIZER_CONF_FILE', WP_CONTENT_DIR . '/.ht-static-optimizer/config.json' );
@@ -180,7 +181,12 @@ function static_optimizer_options_page() {
 <!--                                <h3><span>Settings</span></h3>-->
                             <div class="inside">
                                 <?php do_action('static_optimizer_action_before_settings_form', $plugin_ctx); ?>
-                                <form action="options.php" method="post">
+                                <style>
+                                    .static_optimizer_admin_options_form h2 { display: none; }
+                                </style>
+                                <form id="static_optimizer_admin_options_form"
+                                      class="static_optimizer_admin_options_form"
+                                      action="options.php" method="post">
                                     <?php
                                     if ( is_multisite() && ! is_main_site() ) {
                                         $next_url = static_optimizer_get_settings_link();
@@ -528,12 +534,6 @@ function static_optimizer_setting_api_key() {
 	$val = $options['api_key'];
 	$val_esc = esc_attr($val);
 	echo "<input id='static_optimizer_setting_api_key' name='static_optimizer_settings[api_key]' type='text' value='$val_esc' />";
-
-	if (empty($val)) {
-		echo "&nbsp; | <a href='https://statopt.com/go/get-api-key' target='_blank'>Get API Key</a>";
-	} else {
-		echo "&nbsp; | <a href='https://statopt.com/go/manage-api-key' target='_blank'>Manage API Key</a>";
-    }
 }
 
 function static_optimizer_setting_status() {
@@ -593,13 +593,22 @@ function static_optimizer_maybe_render_get_key_form($ctx = []) {
 	    return;
     }
 
-	$admin_email = get_option('admin_email');
 	$site_url = site_url();
+	$admin_email = get_option('admin_email');
     ?>
+    <br/>
+    <hr/>
     <div id="static_optimizer_get_api_key_form_wrapper" class="static_optimizer_get_api_key_form_wrapper">
-        <form id="static_optimizer_get_api_key_form" name="static_optimizer_get_api_key_form" method="get">
-            <input type="hidden" id="static_optimizer_url" name="url" value="<?php esc_attr_e($site_url);?>" />
-            <input type="hidden" id="static_optimizer_email" name="email" value="<?php esc_attr_e($admin_email);?>" />
+        <h3>API Key</h3>
+        <p>Get your StaticOptimizer API key using this form.</p>
+
+        <form id="static_optimizer_get_api_key_form" name="static_optimizer_get_api_key_form"
+              action="<?php echo esc_url(STATIC_OPTIMIZER_GET_API_KEY_PAGE);?>"
+              target="_blank"
+              method="get">
+            Site: <input type="url" id="static_optimizer_url" name="url" value="<?php esc_attr_e($site_url);?>" />
+            Email: <input type="email" id="static_optimizer_email" name="email" value="<?php esc_attr_e($admin_email);?>" />
+            <input name='submit' class='button button-primary' type='submit' value='Get API Key' />
         </form>
     </div> <!-- /static_optimizer_get_api_key_form_wrapper -->
     <?php
