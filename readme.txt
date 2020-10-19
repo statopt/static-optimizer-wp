@@ -39,7 +39,6 @@ https://www.youtube.com/watch?v=a7f9vYVlmxg
 
 Bugs? Suggestions? If you want a faster response contact us through our website's contact form at https://statopt.com and 
 not through the support tab of this plugin or WordPress forums.
-We don't get notified when such requests get posted in the forums.
 
 = Author =
 
