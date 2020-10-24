@@ -34,6 +34,12 @@ define('STATIC_OPTIMIZER_LIVE_ENV', empty($_SERVER['DEV_ENV']));
 define('STATIC_OPTIMIZER_BASE_PLUGIN', __FILE__);
 define('STATIC_OPTIMIZER_GET_API_KEY_PAGE', 'https://statopt.com/go/api-key');
 
+define('STATIC_OPTIMIZER_APP_SITE_URL',
+	STATIC_OPTIMIZER_LIVE_ENV
+		? 'https://app.statopt.com'
+		: site_url()
+);
+
 if (defined('WP_CONTENT_DIR')) {
 	define( 'STATIC_OPTIMIZER_CONF_FILE', WP_CONTENT_DIR . '/.ht-static-optimizer/config.json' );
 }
@@ -45,6 +51,7 @@ add_action( 'init', 'static_optimizer_init' );
 add_action( 'admin_menu', 'static_optimizer_setup_admin' );
 add_action( 'update_option_static_optimizer_settings', 'static_optimizer_after_option_update', 20, 3); // be the last in the footer
 add_action( 'static_optimizer_action_after_settings_form', 'static_optimizer_maybe_render_get_key_form'); // be the last in the footer
+add_action( 'static_optimizer_action_after_settings_form', 'static_optimizer_maybe_render_manage_key_form'); // be the last in the footer
 
 // multisite
 add_action('network_admin_menu', 'static_optimizer_setup_admin'); // manage_network_themes
@@ -172,7 +179,7 @@ function static_optimizer_redirect_to_gen_api_key($ctx) {
 		    return;
 	    }
 
-	    $base_url = STATIC_OPTIMIZER_LIVE_ENV ? 'https://app.statopt.com' : site_url();
+	    $base_url = STATIC_OPTIMIZER_APP_SITE_URL;
 	    $api_key_gen_url = $base_url . '/api-key/create';
 
 	    if ($cmd == 'api_key.generate') {
@@ -657,6 +664,33 @@ function static_optimizer_maybe_render_get_key_form($ctx = []) {
             <input name='submit' class='button button-primary' type='submit' value='Get API Key' />
         </form>
     </div> <!-- /static_optimizer_get_api_key_form_wrapper -->
+    <?php
+}
+
+/**
+ * We prefill the get api key form so when the user requests that the receiving page will have
+ * some data prefilled in so we'll save 20 seconds for the user.
+ * @param array $ctx
+ */
+function static_optimizer_maybe_render_manage_key_form($ctx = []) {
+	$options = static_optimizer_get_options();
+
+	if (empty($options['api_key'])) {
+	    return;
+    }
+
+	$app_site_url = STATIC_OPTIMIZER_APP_SITE_URL . '/login';
+    ?>
+    <br/>
+    <hr/>
+    <div id="static_optimizer_manage_api_key_form_wrapper" class="static_optimizer_get_api_key_form_wrapper">
+        <h3>Manage API Key</h3>
+        <p>
+            To manage your StaticOptimizer API key to go <a href="<?php echo esc_url($app_site_url);?>"
+                                                           target="_blank"
+                                                           class="button button-primary"><?php echo esc_url($app_site_url);?></a>
+        </p>
+    </div> <!-- /static_optimizer_manage_api_key_form_wrapper -->
     <?php
 }
 
