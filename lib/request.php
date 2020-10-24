@@ -186,4 +186,12 @@ class StaticOptimizerRequest {
 
 		return $data;
 	}
+
+	/**
+	 * @return string
+	 */
+	public function getRequestUrl() {
+		$req_url = empty($_SERVER['REQUEST_URI']) ? '' : $_SERVER['REQUEST_URI'];
+		return $req_url;
+	}
 }

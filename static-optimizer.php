@@ -172,7 +172,7 @@ function static_optimizer_redirect_to_gen_api_key($ctx) {
 		    return;
 	    }
 
-	    $base_url = STATIC_OPTIMIZER_LIVE_ENV ? 'https://app.statopt.com' : site_url('/');
+	    $base_url = STATIC_OPTIMIZER_LIVE_ENV ? 'https://app.statopt.com' : site_url();
 	    $api_key_gen_url = $base_url . '/api-key/create';
 
 	    if ($cmd == 'api_key.generate') {
@@ -185,8 +185,11 @@ function static_optimizer_redirect_to_gen_api_key($ctx) {
            }
 
 	       if ($req_obj->get('site_url')) {
-		       $req_params['redirect_to'] = $api_key_gen_url . '?url=' . urlencode($req_obj->get('site_url'));
-           }
+		       $redirect_to = $api_key_gen_url;
+		       $redirect_to = add_query_arg('url', $req_obj->get('site_url'), $redirect_to);
+		       $redirect_to = add_query_arg('current_page_url', $req_obj->getRequestUrl(), $redirect_to);
+		       $req_params['redirect_to'] = $redirect_to;
+	       }
 
 	       if (!empty($req_params)) {
 	           $url = add_query_arg($req_params, $url);
