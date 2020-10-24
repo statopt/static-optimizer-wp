@@ -16,14 +16,6 @@ class StaticOptimizerRequest {
 	protected $raw_data = [];
 
 	/**
-	 * StaticOptimizerRequest::isLocalHost()
-	 * @return false
-	 */
-	public function isLocalHost() {
-		return false;
-	}
-
-	/**
 	 * Smart redirect method. Sends header redirect or HTTP meta redirect.
 	 * StaticOptimizerRequest::redirect();
 	 * @param string $url
