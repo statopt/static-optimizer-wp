@@ -723,3 +723,27 @@ function static_optimizer_maybe_render_localhost_notice($ctx) {
     </div>
     <?php
 }
+
+add_action('static_optimizer_action_before_settings_form', 'static_optimizer_maybe_render_not_active_plugin');
+
+/**
+ * Remind the user if something is missing in the configuration.
+ * @param $ctx
+ */
+function static_optimizer_maybe_render_not_active_plugin($ctx) {
+	$options = static_optimizer_get_options();
+
+	if (empty($options['api_key'])) {
+	    $msg = "You need to request an API key to use this plugin.";
+    } elseif (empty( $options['status'])) {
+		$msg = "You need set plugin's status to active in order for it to work.";
+    } else {
+	    return;
+    }
+
+	?>
+    <div class="alert" style="background:red;color: #fff;padding: 3px;">
+            <?php echo $msg; ?>
+    </div>
+    <?php
+}
