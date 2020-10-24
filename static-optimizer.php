@@ -30,12 +30,15 @@ if ( !defined('ABSPATH') ) {
 }
 
 // define('STATIC_OPTIMIZER_ACTIVE', 0); // to turn off define this in WP config
+define('STATIC_OPTIMIZER_LIVE_ENV', empty($_SERVER['DEV_ENV']));
 define('STATIC_OPTIMIZER_BASE_PLUGIN', __FILE__);
 define('STATIC_OPTIMIZER_GET_API_KEY_PAGE', 'https://statopt.com/go/api-key');
 
 if (defined('WP_CONTENT_DIR')) {
 	define( 'STATIC_OPTIMIZER_CONF_FILE', WP_CONTENT_DIR . '/.ht-static-optimizer/config.json' );
 }
+
+require_once __DIR__ . '/lib/request.php';
 
 // Set up plugin
 add_action( 'init', 'static_optimizer_init' );
@@ -158,6 +161,44 @@ function static_optimizer_setup_admin() {
     add_filter( 'plugin_action_links', 'static_optimizer_add_quick_settings_link', 10, 2 );
 }
 
+add_action('static_optimizer_action_before_render_settings_form', 'static_optimizer_redirect_to_gen_api_key');
+
+function static_optimizer_redirect_to_gen_api_key($ctx) {
+    try {
+	    $req_obj = StaticOptimizerRequest::getInstance();
+	    $cmd = $req_obj->get('static_optimizer_cmd');
+
+	    if (empty($cmd)) {
+		    return;
+	    }
+
+	    $base_url = STATIC_OPTIMIZER_LIVE_ENV ? 'https://app.statopt.com' : site_url('/');
+	    $api_key_gen_url = $base_url . '/api-key/create';
+
+	    if ($cmd == 'api_key.generate') {
+	       $url = $base_url . '/login';
+
+	       $req_params = [];
+
+	       if ($req_obj->get('email')) {
+		       $req_params['email'] = $req_obj->get('email');
+           }
+
+	       if ($req_obj->get('site_url')) {
+		       $req_params['redirect_to'] = $api_key_gen_url . '?url=' . urlencode($req_obj->get('site_url'));
+           }
+
+	       if (!empty($req_params)) {
+	           $url = add_query_arg($req_params, $url);
+           }
+
+           $req_obj->redirect($url);
+	    }
+    } catch (Exception $e) {
+
+    }
+}
+
 /**
  * Options page and this is shown under Products.
  * For some reason the saved message doesn't show up on Products page
@@ -168,6 +209,8 @@ function static_optimizer_setup_admin() {
  */
 function static_optimizer_options_page() {
 	$plugin_ctx = [];
+	do_action( 'static_optimizer_action_before_render_settings_form', $plugin_ctx );
+
 	?>
     <div id="static_optimizer_wrapper" class="wrap static_optimizer_wrapper">
         <h2>StaticOptimizer</h2>
@@ -594,6 +637,7 @@ function static_optimizer_maybe_render_get_key_form($ctx = []) {
 
 	$site_url = site_url();
 	$admin_email = get_option('admin_email');
+	//               action1111="<?php echo esc_url(STATIC_OPTIMIZER_GET_API_KEY_PAGE)
     ?>
     <br/>
     <hr/>
@@ -601,11 +645,10 @@ function static_optimizer_maybe_render_get_key_form($ctx = []) {
         <h3>API Key</h3>
         <p>Get your StaticOptimizer API key using this form.</p>
 
-        <form id="static_optimizer_get_api_key_form" name="static_optimizer_get_api_key_form"
-              action="<?php echo esc_url(STATIC_OPTIMIZER_GET_API_KEY_PAGE);?>"
-              target="_blank"
-              method="get">
-            Site: <input type="url" id="static_optimizer_url" name="url" value="<?php esc_attr_e($site_url);?>" />
+        <form id="static_optimizer_get_api_key_form" name="static_optimizer_get_api_key_form" method="post">
+            <input type="hidden" id="static_optimizer_cmd" name="static_optimizer_cmd" value="api_key.generate" />
+
+            Site: <input type="url" id="static_optimizer_site_url" name="site_url" value="<?php esc_attr_e($site_url);?>" />
             Email: <input type="email" id="static_optimizer_email" name="email" value="<?php esc_attr_e($admin_email);?>" />
             <input name='submit' class='button button-primary' type='submit' value='Get API Key' />
         </form>
