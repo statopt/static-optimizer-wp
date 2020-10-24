@@ -640,7 +640,6 @@ function static_optimizer_maybe_render_get_key_form($ctx = []) {
 
 	$site_url = site_url();
 	$admin_email = get_option('admin_email');
-	//               action1111="<?php echo esc_url(STATIC_OPTIMIZER_GET_API_KEY_PAGE)
     ?>
     <br/>
     <hr/>
@@ -660,7 +659,6 @@ function static_optimizer_maybe_render_get_key_form($ctx = []) {
     </div> <!-- /static_optimizer_get_api_key_form_wrapper -->
     <?php
 }
-
 
 add_action('static_optimizer_action_before_settings_form', 'static_optimizer_maybe_render_localhost_notice');
 
