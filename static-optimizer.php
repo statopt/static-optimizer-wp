@@ -648,7 +648,9 @@ function static_optimizer_maybe_render_get_key_form($ctx = []) {
         <h3>API Key</h3>
         <p>Get your StaticOptimizer API key using this form.</p>
 
-        <form id="static_optimizer_get_api_key_form" name="static_optimizer_get_api_key_form" method="post">
+        <form id="static_optimizer_get_api_key_form" name="static_optimizer_get_api_key_form"
+              target="_blank"
+              method="post">
             <input type="hidden" id="static_optimizer_cmd" name="static_optimizer_cmd" value="api_key.generate" />
 
             Site: <input type="url" id="static_optimizer_site_url" name="site_url" value="<?php esc_attr_e($site_url);?>" />
@@ -656,5 +658,33 @@ function static_optimizer_maybe_render_get_key_form($ctx = []) {
             <input name='submit' class='button button-primary' type='submit' value='Get API Key' />
         </form>
     </div> <!-- /static_optimizer_get_api_key_form_wrapper -->
+    <?php
+}
+
+
+add_action('static_optimizer_action_before_settings_form', 'static_optimizer_maybe_render_localhost_notice');
+
+function static_optimizer_maybe_render_localhost_notice($ctx) {
+	$local_ips = [ '::1', '127.0.0.1', ];
+
+	if ( empty( $_SERVER['REMOTE_ADDR'] ) ) {
+	    return;
+    }
+
+	// Let's check LAN IPs
+	if (!preg_match('#^(::1|127\.0\.|10\.0\.[0-2]|192\.168.[0-2]\.|172\.[1-3]\d*\.0)#si', $_SERVER['REMOTE_ADDR'])) { // internal req or dev machine
+		return;
+	}
+
+	$server_name = empty($_SERVER['SERVER_NAME']) ? '' : $_SERVER['SERVER_NAME'];
+
+	if (!preg_match('#^(localhost|\.local)#si', $server_name)) { // internal req or dev machine
+		return;
+	}
+
+	?>
+    <div class="alert" style="background:red;color: #fff;padding: 3px;">
+            This plugin doesn't work on localhost because our servers need to be able to access your site.
+    </div>
     <?php
 }
