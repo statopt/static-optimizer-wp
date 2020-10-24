@@ -680,13 +680,16 @@ function static_optimizer_maybe_render_manage_key_form($ctx = []) {
     }
 
 	$app_site_url = STATIC_OPTIMIZER_APP_SITE_URL . '/login';
-    ?>
+	$app_site_url_href = STATIC_OPTIMIZER_APP_SITE_URL . '/login';
+	$admin_email = get_option('admin_email');
+	$app_site_url_href = add_query_arg('email', $admin_email, $app_site_url_href);
+	?>
     <br/>
     <hr/>
     <div id="static_optimizer_manage_api_key_form_wrapper" class="static_optimizer_get_api_key_form_wrapper">
         <h3>Manage API Key</h3>
         <p>
-            To manage your StaticOptimizer API key to go <a href="<?php echo esc_url($app_site_url);?>"
+            To manage your StaticOptimizer API key to go <a href="<?php echo esc_url($app_site_url_href);?>"
                                                            target="_blank"
                                                            class="button button-primary"><?php echo esc_url($app_site_url);?></a>
         </p>
