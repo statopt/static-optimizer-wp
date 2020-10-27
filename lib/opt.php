@@ -411,7 +411,7 @@ class Static_Optimizer_Asset_Optimizer {
             return false;
         }
 
-        if (src.indexOf('.static_optimizer_ver') == -1) { // not optimized.
+        if (src.indexOf('.statopt_ver') == -1) { // not optimized.
             console.log("fix: Skipping item. Not optimized : " + src);
             return false;
         }
@@ -530,7 +530,7 @@ BUFF_EOF;
 			return $matches[0];
 		}
 
-		if (stripos($first_match, '.static_optimizer_ver') !== false) { // the link already has version
+		if (stripos($first_match, '.statopt_ver') !== false) { // the link already has version
 			return $matches[0];
 		}
 
@@ -576,7 +576,7 @@ BUFF_EOF;
 		$ver = empty($ver)? date('Y-m-d') : $ver; // one day caching if version was not found.
 
 		// @todo use https://www.jsdelivr.com/?docs=wp for known wp plugins & themes assets ?
-		$str = $matches[1] . '.static_optimizer_ver.' . $ver . '.'. $matches[2] . $matches[4];
+		$str = $matches[1] . '.statopt_ver.' . $ver . '.'. $matches[2] . $matches[4];
 
 		$ctx = [
 			'url' => $str,
