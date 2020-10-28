@@ -140,8 +140,25 @@ function static_optimizer_after_option_update($old_value, $value, $option) {
 		    }
 
             if (!empty($data['status'])) {
-                if (!file_exists($system_worker_loader_file)) {
-                    $copy_res = copy($src_system_worker_loader_file, $system_worker_loader_file);
+	            if (!file_exists($system_worker_loader_file)) {
+		            // the plugin may be installed in a different dir so we need to check if that's the case.
+                    // if it is we need to update the system plugin that loads the worker so it looks for it in the proper folder.
+                    // If the worker file can't be found the plugin won't optimize anything.
+		            $expected_plugin_install_dir = 'static-optimizer';
+		            $plugin_directory = plugin_dir_path(__FILE__);
+		            $actual_plugin_install_dir = basename($plugin_directory);
+
+		            $copy_res = copy($src_system_worker_loader_file, $system_worker_loader_file);
+
+                    if ($copy_res && $actual_plugin_install_dir != $expected_plugin_install_dir) { // dev or another install dir.
+	                    $system_worker_loader_file_buff = file_get_contents($system_worker_loader_file);
+	                    $system_worker_loader_file_buff = str_replace(
+                            "/$expected_plugin_install_dir/",
+                            "/$actual_plugin_install_dir/",
+                            $system_worker_loader_file_buff
+                        );
+	                    file_put_contents($system_worker_loader_file, $system_worker_loader_file_buff, LOCK_EX);
+                    }
                 }
             } elseif (file_exists($system_worker_loader_file)) {
                 $del_res = unlink($system_worker_loader_file);
