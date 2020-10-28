@@ -619,6 +619,10 @@ BUFF_EOF;
 	 * @return string[]
 	 */
 	public function getServers() {
+		if (!empty($this->cfg['servers'])) { // the user may have custom servers linked to their account
+			return $this->cfg['servers'];
+		}
+
 		return $this->servers;
 	}
 }
