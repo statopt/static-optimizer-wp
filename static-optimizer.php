@@ -763,9 +763,9 @@ function static_optimizer_maybe_render_not_active_plugin($ctx) {
 	$options = static_optimizer_get_options();
 
 	if (empty($options['api_key'])) {
-	    $msg = "You need to request an API key to use this plugin.";
+	    $msg = "Error: Missing API key. You need to request an API key to use this plugin.";
     } elseif (empty( $options['status'])) {
-		$msg = "You need set plugin's status to active in order for it to work.";
+		$msg = "Error: Plugin Inactive. You need set plugin's status to active in order for it to work.";
     } else {
 	    return;
     }
