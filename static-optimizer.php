@@ -44,6 +44,20 @@ if (defined('WP_CONTENT_DIR')) {
 	define( 'STATIC_OPTIMIZER_CONF_FILE', WP_CONTENT_DIR . '/.ht-static-optimizer/config.json' );
 }
 
+$mu_plugins_dir = '';
+
+if (defined('WPMU_PLUGIN_DIR')) {
+	$mu_plugins_dir = WPMU_PLUGIN_DIR;
+} elseif (defined('WP_PLUGIN_DIR')) {
+	$mu_plugins_dir = WP_PLUGIN_DIR . '/mu-plugins';
+}
+
+// Adds or removes the loader depending on the status
+if (!empty($mu_plugins_dir)) {
+	$system_worker_loader_file = $mu_plugins_dir . '/000-static-optimizer-system-loader.php';
+	define( 'STATIC_OPTIMIZER_SYSTEM_WORKER_LOADER_FILE', $system_worker_loader_file );
+}
+
 require_once __DIR__ . '/lib/request.php';
 
 // Set up plugin
@@ -78,6 +92,10 @@ function static_optimizer_process_uninstall() {
 		if (is_dir($opt_dir)) {
 			rmdir( $opt_dir );
 		}
+	}
+
+	if (defined('STATIC_OPTIMIZER_SYSTEM_WORKER_LOADER_FILE') && file_exists(STATIC_OPTIMIZER_SYSTEM_WORKER_LOADER_FILE)) {
+	    unlink(STATIC_OPTIMIZER_SYSTEM_WORKER_LOADER_FILE);
 	}
 
 	delete_option('static_optimizer_settings');
@@ -132,7 +150,7 @@ function static_optimizer_after_option_update($old_value, $value, $option) {
 
         // Adds or removes the loader depending on the status
 	    if (!empty($mu_plugins_dir)) {
-		    $system_worker_loader_file = $mu_plugins_dir . '/000-static-optimizer-system-loader.php';
+		    $system_worker_loader_file = STATIC_OPTIMIZER_SYSTEM_WORKER_LOADER_FILE;
 		    $src_system_worker_loader_file = __DIR__ . '/' . basename($system_worker_loader_file);
 
 		    if (!is_dir($mu_plugins_dir)) {
@@ -160,7 +178,7 @@ function static_optimizer_after_option_update($old_value, $value, $option) {
 	                    file_put_contents($system_worker_loader_file, $system_worker_loader_file_buff, LOCK_EX);
                     }
                 }
-            } elseif (file_exists($system_worker_loader_file)) {
+            } elseif (file_exists($system_worker_loader_file)) { // on deactivate delete the worker loader
                 $del_res = unlink($system_worker_loader_file);
             }
 	    }
