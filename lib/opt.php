@@ -4,6 +4,8 @@ class Static_Optimizer_Asset_Optimizer {
 	private $cfg = [];
 	private $host = '';
 	private $doc_root = '';
+
+	// default servers
 	private $servers = [
 		'http://us1.statopt.net:5080',
 		'https://us1.statopt.net:5443',
