@@ -288,7 +288,7 @@ function static_optimizer_options_page() {
                         </div> <!-- .postbox -->
 
                         <div class="postbox">
-                            <h3><span>Usage</span></h3>
+<!--                            <h3><span>Usage</span></h3>-->
                             <div class="inside">
                                 <div class="">
                                     <p><a href="https://statopt.com" target="_blank">StaticOptimizer</a> makes your site load faster by loading your files from StaticOptimizer Optimization servers.</p>
@@ -311,6 +311,7 @@ function static_optimizer_options_page() {
                             </div> <!-- .inside -->
                         </div> <!-- .postbox -->
 
+                        <?php if (0) : // turn off this for now. ?>
                         <div class="postbox">
                             <h3><span>Demo (1min 22s)</span></h3>
                             <div class="inside">
@@ -321,6 +322,7 @@ function static_optimizer_options_page() {
                                 </div>
                             </div> <!-- .inside -->
                         </div> <!-- .postbox -->
+                        <?php endif; ?>
 
                     </div> <!-- .meta-box-sortables .ui-sortable -->
                 </div> <!-- #postbox-container-1 .postbox-container -->
