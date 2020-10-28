@@ -56,6 +56,35 @@ add_action( 'static_optimizer_action_after_settings_form', 'static_optimizer_may
 // multisite
 add_action('network_admin_menu', 'static_optimizer_setup_admin'); // manage_network_themes
 
+register_uninstall_hook(__FILE__, 'static_optimizer_process_uninstall');
+
+function static_optimizer_process_uninstall() {
+	// delete cfg files and dir
+	if (defined('STATIC_OPTIMIZER_CONF_FILE')) {
+		if (file_exists(STATIC_OPTIMIZER_CONF_FILE)) {
+			unlink( STATIC_OPTIMIZER_CONF_FILE );
+		}
+
+		$opt_dir = dirname(STATIC_OPTIMIZER_CONF_FILE);
+
+		if (file_exists($opt_dir . '/.htaccess')) {
+			unlink( $opt_dir . '/.htaccess' );
+		}
+
+		if (file_exists($opt_dir . '/index.html')) {
+			unlink( $opt_dir . '/index.html' );
+		}
+
+		if (is_dir($opt_dir)) {
+			rmdir( $opt_dir );
+		}
+	}
+
+	delete_option('static_optimizer_settings');
+
+	// @todo clean htaccess if it was modified by us. backup first of course
+}
+
 /**
  * We'll sync the conf file on option save.
  * @param array $old_value
