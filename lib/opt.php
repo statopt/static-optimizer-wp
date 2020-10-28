@@ -4,6 +4,10 @@ class Static_Optimizer_Asset_Optimizer {
 	private $cfg = [];
 	private $host = '';
 	private $doc_root = '';
+	private $servers = [
+		'http://us1.statopt.net:5080',
+		'https://us1.statopt.net:5443',
+	];
 
 	public function __construct($cfg = []) {
 		$host = '';
@@ -37,35 +41,16 @@ class Static_Optimizer_Asset_Optimizer {
 	 * @return string
 	 */
 	public function getOptimizerServerUri($ctx = []) {
-		//putenv('QS_APP_SYSTEM_OPTIMIZER_URL=http://us1.wpdemo.org:5080/site/{url},https://us1.wpdemo.org:5443/site/{url}'); // stg
-		//putenv('QS_APP_SYSTEM_OPTIMIZER_URL=http://localhost:5080/site/{url},https://localhost:5443/site/{url}'); // dev dbg via nginx
-		//putenv('QS_APP_SYSTEM_OPTIMIZER_URL=http://localhost:8181/site/{url},https://localhost:5443/site/{url}'); // dev dbg direct
-		$optimizer_url = getenv('QS_APP_SYSTEM_OPTIMIZER_URL');
-
-		if (empty($optimizer_url)) {
-			return '';
-		}
-
-		// For now we'll optimize only images
-		if (0&&!empty($ctx['url'])
-		    && ((strpos($ctx['url'], '.js') !== false) || (strpos($ctx['url'], '.css') !== false) ) ) {
-			return '';
-		}
-
-		$sep_pos = strpos($optimizer_url, ',');
+		$servers = $this->getServers();
 
 		// Single server -> return it
-		if ($sep_pos === false) {
-			return $optimizer_url;
+		if (empty($servers)) {
+			return '';
 		}
-
-		$servers = explode(',', $optimizer_url);
-		$servers = array_map('trim', $servers);
-		$servers = array_filter($servers);
 
 		$is_ssl = !empty($_SERVER['HTTPS']) && strcasecmp($_SERVER['HTTPS'], 'off') != 0;
 
-		// We'll leave ssl requets to go to ssl optimizer urls and non-ssl to non-ssl ones
+		// We'll leave ssl requests to go to ssl optimizer urls and non-ssl to non-ssl ones
 		if ($is_ssl) {
 			$filtered = preg_grep('#^https://#si', $servers);
 		} else {
@@ -626,5 +611,12 @@ BUFF_EOF;
 	public function getHostPrefixRegex() {
 		$pref = '(?:www\.)?(?:[a-z\d\-]+\.)?(?:[a-z\d\-]+\.)?';
 		return $pref;
+	}
+
+	/**
+	 * @return string[]
+	 */
+	public function getServers() {
+		return $this->servers;
 	}
 }
