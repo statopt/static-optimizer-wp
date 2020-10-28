@@ -30,21 +30,60 @@ if ( !defined('ABSPATH') ) {
 }
 
 // define('STATIC_OPTIMIZER_ACTIVE', 0); // to turn off define this in WP config
+define('STATIC_OPTIMIZER_LIVE_ENV', empty($_SERVER['DEV_ENV']));
 define('STATIC_OPTIMIZER_BASE_PLUGIN', __FILE__);
 define('STATIC_OPTIMIZER_GET_API_KEY_PAGE', 'https://statopt.com/go/api-key');
+
+define('STATIC_OPTIMIZER_APP_SITE_URL',
+	STATIC_OPTIMIZER_LIVE_ENV
+		? 'https://app.statopt.com'
+		: site_url()
+);
 
 if (defined('WP_CONTENT_DIR')) {
 	define( 'STATIC_OPTIMIZER_CONF_FILE', WP_CONTENT_DIR . '/.ht-static-optimizer/config.json' );
 }
+
+require_once __DIR__ . '/lib/request.php';
 
 // Set up plugin
 add_action( 'init', 'static_optimizer_init' );
 add_action( 'admin_menu', 'static_optimizer_setup_admin' );
 add_action( 'update_option_static_optimizer_settings', 'static_optimizer_after_option_update', 20, 3); // be the last in the footer
 add_action( 'static_optimizer_action_after_settings_form', 'static_optimizer_maybe_render_get_key_form'); // be the last in the footer
+add_action( 'static_optimizer_action_after_settings_form', 'static_optimizer_maybe_render_manage_key_form'); // be the last in the footer
 
 // multisite
 add_action('network_admin_menu', 'static_optimizer_setup_admin'); // manage_network_themes
+
+register_uninstall_hook(__FILE__, 'static_optimizer_process_uninstall');
+
+function static_optimizer_process_uninstall() {
+	// delete cfg files and dir
+	if (defined('STATIC_OPTIMIZER_CONF_FILE')) {
+		if (file_exists(STATIC_OPTIMIZER_CONF_FILE)) {
+			unlink( STATIC_OPTIMIZER_CONF_FILE );
+		}
+
+		$opt_dir = dirname(STATIC_OPTIMIZER_CONF_FILE);
+
+		if (file_exists($opt_dir . '/.htaccess')) {
+			unlink( $opt_dir . '/.htaccess' );
+		}
+
+		if (file_exists($opt_dir . '/index.html')) {
+			unlink( $opt_dir . '/index.html' );
+		}
+
+		if (is_dir($opt_dir)) {
+			rmdir( $opt_dir );
+		}
+	}
+
+	delete_option('static_optimizer_settings');
+
+	// @todo clean htaccess if it was modified by us. backup first of course
+}
 
 /**
  * We'll sync the conf file on option save.
@@ -158,6 +197,47 @@ function static_optimizer_setup_admin() {
     add_filter( 'plugin_action_links', 'static_optimizer_add_quick_settings_link', 10, 2 );
 }
 
+add_action('static_optimizer_action_before_render_settings_form', 'static_optimizer_redirect_to_gen_api_key');
+
+function static_optimizer_redirect_to_gen_api_key($ctx) {
+    try {
+	    $req_obj = StaticOptimizerRequest::getInstance();
+	    $cmd = $req_obj->get('static_optimizer_cmd');
+
+	    if (empty($cmd)) {
+		    return;
+	    }
+
+	    $base_url = STATIC_OPTIMIZER_APP_SITE_URL;
+	    $api_key_gen_url = $base_url . '/api-key/create';
+
+	    if ($cmd == 'api_key.generate') {
+	       $url = $base_url . '/login';
+
+	       $req_params = [];
+
+	       if ($req_obj->get('email')) {
+		       $req_params['email'] = $req_obj->get('email');
+           }
+
+	       if ($req_obj->get('site_url')) {
+		       $redirect_to = $api_key_gen_url;
+		       $redirect_to = add_query_arg('url', $req_obj->get('site_url'), $redirect_to);
+		       $redirect_to = add_query_arg('current_page_url', $req_obj->getRequestUrl(), $redirect_to);
+		       $req_params['redirect_to'] = $redirect_to;
+	       }
+
+	       if (!empty($req_params)) {
+	           $url = add_query_arg($req_params, $url);
+           }
+
+           $req_obj->redirect($url);
+	    }
+    } catch (Exception $e) {
+
+    }
+}
+
 /**
  * Options page and this is shown under Products.
  * For some reason the saved message doesn't show up on Products page
@@ -168,6 +248,8 @@ function static_optimizer_setup_admin() {
  */
 function static_optimizer_options_page() {
 	$plugin_ctx = [];
+	do_action( 'static_optimizer_action_before_render_settings_form', $plugin_ctx );
+
 	?>
     <div id="static_optimizer_wrapper" class="wrap static_optimizer_wrapper">
         <h2>StaticOptimizer</h2>
@@ -602,13 +684,95 @@ function static_optimizer_maybe_render_get_key_form($ctx = []) {
         <p>Get your StaticOptimizer API key using this form.</p>
 
         <form id="static_optimizer_get_api_key_form" name="static_optimizer_get_api_key_form"
-              action="<?php echo esc_url(STATIC_OPTIMIZER_GET_API_KEY_PAGE);?>"
               target="_blank"
-              method="get">
-            Site: <input type="url" id="static_optimizer_url" name="url" value="<?php esc_attr_e($site_url);?>" />
+              method="post">
+            <input type="hidden" id="static_optimizer_cmd" name="static_optimizer_cmd" value="api_key.generate" />
+
+            Site: <input type="url" id="static_optimizer_site_url" name="site_url" value="<?php esc_attr_e($site_url);?>" />
             Email: <input type="email" id="static_optimizer_email" name="email" value="<?php esc_attr_e($admin_email);?>" />
             <input name='submit' class='button button-primary' type='submit' value='Get API Key' />
         </form>
     </div> <!-- /static_optimizer_get_api_key_form_wrapper -->
+    <?php
+}
+
+/**
+ * We prefill the get api key form so when the user requests that the receiving page will have
+ * some data prefilled in so we'll save 20 seconds for the user.
+ * @param array $ctx
+ */
+function static_optimizer_maybe_render_manage_key_form($ctx = []) {
+	$options = static_optimizer_get_options();
+
+	if (empty($options['api_key'])) {
+	    return;
+    }
+
+	$app_site_url = STATIC_OPTIMIZER_APP_SITE_URL . '/login';
+	$app_site_url_href = STATIC_OPTIMIZER_APP_SITE_URL . '/login';
+	$admin_email = get_option('admin_email');
+	$app_site_url_href = add_query_arg('email', $admin_email, $app_site_url_href);
+	?>
+    <br/>
+    <hr/>
+    <div id="static_optimizer_manage_api_key_form_wrapper" class="static_optimizer_get_api_key_form_wrapper">
+        <h3>Manage API Key</h3>
+        <p>
+            To manage your StaticOptimizer API key to go <a href="<?php echo esc_url($app_site_url_href);?>"
+                                                           target="_blank"
+                                                           class="button button-primary"><?php echo esc_url($app_site_url);?></a>
+        </p>
+    </div> <!-- /static_optimizer_manage_api_key_form_wrapper -->
+    <?php
+}
+
+add_action('static_optimizer_action_before_settings_form', 'static_optimizer_maybe_render_localhost_notice');
+
+function static_optimizer_maybe_render_localhost_notice($ctx) {
+	$local_ips = [ '::1', '127.0.0.1', ];
+
+	if ( empty( $_SERVER['REMOTE_ADDR'] ) ) {
+	    return;
+    }
+
+	// Let's check LAN IPs
+	if (!preg_match('#^(::1|127\.0\.|10\.0\.[0-2]|192\.168.[0-2]\.|172\.[1-3]\d*\.0)#si', $_SERVER['REMOTE_ADDR'])) { // internal req or dev machine
+		return;
+	}
+
+	$server_name = empty($_SERVER['SERVER_NAME']) ? '' : $_SERVER['SERVER_NAME'];
+
+	if (!preg_match('#^(localhost|\.local)#si', $server_name)) { // internal req or dev machine
+		return;
+	}
+
+	?>
+    <div class="alert" style="background:red;color: #fff;padding: 3px;">
+            This plugin doesn't work on localhost because our servers need to be able to access your site.
+    </div>
+    <?php
+}
+
+add_action('static_optimizer_action_before_settings_form', 'static_optimizer_maybe_render_not_active_plugin');
+
+/**
+ * Remind the user if something is missing in the configuration.
+ * @param $ctx
+ */
+function static_optimizer_maybe_render_not_active_plugin($ctx) {
+	$options = static_optimizer_get_options();
+
+	if (empty($options['api_key'])) {
+	    $msg = "You need to request an API key to use this plugin.";
+    } elseif (empty( $options['status'])) {
+		$msg = "You need set plugin's status to active in order for it to work.";
+    } else {
+	    return;
+    }
+
+	?>
+    <div class="alert" style="background:red;color: #fff;padding: 3px;">
+            <?php echo $msg; ?>
+    </div>
     <?php
 }

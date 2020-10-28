@@ -5,6 +5,12 @@ class Static_Optimizer_Asset_Optimizer {
 	private $host = '';
 	private $doc_root = '';
 
+	// default servers
+	private $servers = [
+		'http://us1.statopt.net:5080',
+		'https://us1.statopt.net:5443',
+	];
+
 	public function __construct($cfg = []) {
 		$host = '';
 
@@ -37,35 +43,16 @@ class Static_Optimizer_Asset_Optimizer {
 	 * @return string
 	 */
 	public function getOptimizerServerUri($ctx = []) {
-		//putenv('QS_APP_SYSTEM_OPTIMIZER_URL=http://us1.wpdemo.org:5080/site/{url},https://us1.wpdemo.org:5443/site/{url}'); // stg
-		//putenv('QS_APP_SYSTEM_OPTIMIZER_URL=http://localhost:5080/site/{url},https://localhost:5443/site/{url}'); // dev dbg via nginx
-		//putenv('QS_APP_SYSTEM_OPTIMIZER_URL=http://localhost:8181/site/{url},https://localhost:5443/site/{url}'); // dev dbg direct
-		$optimizer_url = getenv('QS_APP_SYSTEM_OPTIMIZER_URL');
-
-		if (empty($optimizer_url)) {
-			return '';
-		}
-
-		// For now we'll optimize only images
-		if (0&&!empty($ctx['url'])
-		    && ((strpos($ctx['url'], '.js') !== false) || (strpos($ctx['url'], '.css') !== false) ) ) {
-			return '';
-		}
-
-		$sep_pos = strpos($optimizer_url, ',');
+		$servers = $this->getServers();
 
 		// Single server -> return it
-		if ($sep_pos === false) {
-			return $optimizer_url;
+		if (empty($servers)) {
+			return '';
 		}
-
-		$servers = explode(',', $optimizer_url);
-		$servers = array_map('trim', $servers);
-		$servers = array_filter($servers);
 
 		$is_ssl = !empty($_SERVER['HTTPS']) && strcasecmp($_SERVER['HTTPS'], 'off') != 0;
 
-		// We'll leave ssl requets to go to ssl optimizer urls and non-ssl to non-ssl ones
+		// We'll leave ssl requests to go to ssl optimizer urls and non-ssl to non-ssl ones
 		if ($is_ssl) {
 			$filtered = preg_grep('#^https://#si', $servers);
 		} else {
@@ -411,7 +398,7 @@ class Static_Optimizer_Asset_Optimizer {
             return false;
         }
 
-        if (src.indexOf('.static_optimizer_ver') == -1) { // not optimized.
+        if (src.indexOf('.statopt_ver') == -1) { // not optimized.
             console.log("fix: Skipping item. Not optimized : " + src);
             return false;
         }
@@ -530,7 +517,7 @@ BUFF_EOF;
 			return $matches[0];
 		}
 
-		if (stripos($first_match, '.static_optimizer_ver') !== false) { // the link already has version
+		if (stripos($first_match, '.statopt_ver') !== false) { // the link already has version
 			return $matches[0];
 		}
 
@@ -576,7 +563,7 @@ BUFF_EOF;
 		$ver = empty($ver)? date('Y-m-d') : $ver; // one day caching if version was not found.
 
 		// @todo use https://www.jsdelivr.com/?docs=wp for known wp plugins & themes assets ?
-		$str = $matches[1] . '.static_optimizer_ver.' . $ver . '.'. $matches[2] . $matches[4];
+		$str = $matches[1] . '.statopt_ver.' . $ver . '.'. $matches[2] . $matches[4];
 
 		$ctx = [
 			'url' => $str,
@@ -626,5 +613,16 @@ BUFF_EOF;
 	public function getHostPrefixRegex() {
 		$pref = '(?:www\.)?(?:[a-z\d\-]+\.)?(?:[a-z\d\-]+\.)?';
 		return $pref;
+	}
+
+	/**
+	 * @return string[]
+	 */
+	public function getServers() {
+		if (!empty($this->cfg['servers'])) { // the user may have custom servers linked to their account
+			return $this->cfg['servers'];
+		}
+
+		return $this->servers;
 	}
 }
