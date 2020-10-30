@@ -21,8 +21,8 @@ if (    !defined('ABSPATH')
 	 || empty( $_SERVER['HTTP_HOST'] )
 	 || empty( $_SERVER['SERVER_NAME'] )
      || (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strcasecmp($_SERVER['HTTP_X_REQUESTED_WITH'], 'xmlhttprequest') == 0)
-	|| ! empty( $_SERVER['QS_SYSTEM_CORE_CORRECT_ASSETS_VER'] ) // do not run on Orbisius servers as this is built-in.
-	|| ! empty( $_SERVER['QS_APP_SYSTEM_OPTIMIZER_URL'] )
+//	|| ! empty( $_SERVER['QS_SYSTEM_CORE_CORRECT_ASSETS_VER'] ) // do not run on Orbisius servers as this is built-in.
+//	|| ! empty( $_SERVER['QS_APP_SYSTEM_OPTIMIZER_URL'] )
 ) {
     return;
 }
