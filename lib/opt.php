@@ -580,7 +580,17 @@ BUFF_EOF;
 				$suff = $matches[3];
 				$clean_url = $matches[2];
 				$clean_url_esc = urlencode($clean_url);
-				$optimized_asset_url = str_replace('{url}', $clean_url_esc, $optimizer_url);
+
+				// Sometimes we may have a specific place where to put the URL as a template variable {url}
+				// but if it doesn't exist then we'll just append.
+				$search_tpl_var = '{url}';
+
+				if (strpos($optimizer_url, $search_tpl_var) === false) {
+					$optimized_asset_url = $optimizer_url . '/site/' . $clean_url_esc;
+				} else {
+					$optimized_asset_url = str_replace($search_tpl_var, $clean_url_esc, $optimizer_url);
+				}
+
 				$str = $pref . $optimized_asset_url . $suff;
 			}
 		}
