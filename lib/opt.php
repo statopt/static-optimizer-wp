@@ -146,7 +146,7 @@ class Static_Optimizer_Asset_Optimizer {
 			return $buff;
 		}
 
-		// there are no links for thos host?
+		// there are no links for this host?
 		if ( stripos( $buff, $host ) === false ) {
 			return $buff;
 		}
