@@ -59,16 +59,16 @@ class Static_Optimizer_Asset_Optimizer {
 			$filtered = preg_grep('#^http://#si', $servers);
 		}
 
+		if (empty($filtered)) {
+			return '';
+		}
+
 		if (!empty($filtered)) {
 			$servers = $filtered;
 		}
 
-		if (count($servers) == 1) { // if it's just one return it
-			return array_shift($servers);
-		}
-
-		// Pick a random static optimization server
-		$url = $servers[mt_rand(0, count($servers) - 1)];
+		// Pick a random static optimization server. If it's one element there won't be any randomness.
+		$url = $servers[ array_rand($servers) ];
 
 		return $url;
 	}
@@ -632,6 +632,33 @@ BUFF_EOF;
 	 * @return string[]
 	 */
 	public function getServers() {
+		static $servers = null;
+
+		if (!is_null($servers)) {
+			return $servers;
+		}
+
+		$user_defined_servers = '';
+		$user_defined_servers_env = getenv('STATIC_OPTIMIZER_SERVERS');
+
+		if (defined('STATIC_OPTIMIZER_SERVERS')) {
+			$user_defined_servers = STATIC_OPTIMIZER_SERVERS;
+		} elseif (!empty($user_defined_servers_env)) {
+			$user_defined_servers = $user_defined_servers_env;
+		}
+
+		if (!empty($user_defined_servers)) {
+			$servers_arr = preg_split('#[\s,|;]+#si', $user_defined_servers);
+			$servers_arr = array_map('trim', $servers_arr);
+			$servers_arr = array_filter($servers_arr);
+			$servers_arr = array_unique($servers_arr);
+
+			if (!empty($servers_arr)) {
+				$servers = $servers_arr;
+				return $servers;
+			}
+		}
+
 		if (!empty($this->cfg['servers'])) { // the user may have custom servers linked to their account
 			return $this->cfg['servers'];
 		}
