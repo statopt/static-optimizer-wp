@@ -563,6 +563,7 @@ BUFF_EOF;
 		$ver = empty($ver)? date('Y-m-d') : $ver; // one day caching if version was not found.
 
 		// @todo use https://www.jsdelivr.com/?docs=wp for known wp plugins & themes assets ?
+		// ='https://1mapps.qsandbox0.staging.com/statopt/test/site/wp-includes/css/dist/block-library/style.min.statopt_ver.1603969031.css'
 		$str = $matches[1] . '.statopt_ver.' . $ver . '.'. $matches[2] . $matches[4];
 
 		$ctx = [
