@@ -3,6 +3,7 @@
 class StaticOptimizerRequest {
 	const REDIRECT_DEFAULT = 0;
 	const REDIRECT_FORCE = 1;
+	const REDIRECT_EXTERNAL_SITE = 2;
 	const INT = 2;
 	const FLOAT = 4;
 	const ESC_ATTR = 8;
@@ -17,7 +18,7 @@ class StaticOptimizerRequest {
 
 	/**
 	 * Smart redirect method. Sends header redirect or HTTP meta redirect.
-	 * StaticOptimizerRequest::redirect();
+	 * ->redirect();
 	 * @param string $url
 	 */
 	public function redirect( $url = '', $force = self::REDIRECT_DEFAULT ) {
@@ -62,6 +63,8 @@ class StaticOptimizerRequest {
 			$url = wp_sanitize_redirect( $url ); // the wp_safe redir does this
 			echo sprintf( '<meta http-equiv="refresh" content="0;URL=\'%s\'" />', $url ); // jic
 			echo sprintf( '<script language="javascript">window.parent.location="%s";document.body.innerHTML = "Please wait ...";</script>', $url );
+		} elseif ($force & self::REDIRECT_EXTERNAL_SITE) {
+			wp_redirect( $url, 302 );
 		} else {
 			wp_safe_redirect( $url, 302 );
 		}
