@@ -63,7 +63,7 @@ class StaticOptimizerRequest {
 			echo sprintf( '<meta http-equiv="refresh" content="0;URL=\'%s\'" />', $url ); // jic
 			echo sprintf( '<script language="javascript">window.parent.location="%s";document.body.innerHTML = "Please wait ...";</script>', $url );
 		} else {
-			wp_safe_redirect( $url, 307 );
+			wp_safe_redirect( $url, 302 );
 		}
 
 		exit;
