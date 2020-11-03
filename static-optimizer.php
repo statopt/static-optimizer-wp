@@ -36,7 +36,7 @@ define('STATIC_OPTIMIZER_BASE_PLUGIN', __FILE__);
 define('STATIC_OPTIMIZER_APP_SITE_URL',
 	STATIC_OPTIMIZER_LIVE_ENV
 		? 'https://app.statopt.com'
-		: site_url()
+		: 'https://1mapps.qsandbox0.staging.com/statopt/app/login'
 );
 
 if (defined('WP_CONTENT_DIR')) {
@@ -265,7 +265,7 @@ function static_optimizer_redirect_to_gen_api_key($ctx) {
 	           $url = add_query_arg($req_params, $url);
            }
 
-           $req_obj->redirect($url);
+           $req_obj->redirect($url, StaticOptimizerRequest::REDIRECT_EXTERNAL_SITE);
 	    }
     } catch (Exception $e) {
 
