@@ -264,8 +264,12 @@ function static_optimizer_redirect_to_gen_api_key( $ctx ) {
 			$key_gen_page_params['current_page_url'] = $req_obj->getRequestUrl();
 
 			if ( ! empty( $key_gen_page_params ) ) {
-				$post_login_redirect_url = add_query_arg( $key_gen_page_params, $api_key_gen_url );
-				$app_login_url           = add_query_arg( 'redirect_to', $post_login_redirect_url, $app_login_url );
+				$post_login_redirect_url = $api_key_gen_url  . '?' .http_build_query( $key_gen_page_params);
+				// https://wpvip.com/documentation/encode-values-passed-to-add_query_arg/
+//				$key_gen_page_params = array_map( 'rawurlencode', $key_gen_page_params );
+//				$post_login_redirect_url = add_query_arg( $key_gen_page_params, $api_key_gen_url );
+
+				$app_login_url           = add_query_arg( 'redirect_to', rawurlencode($post_login_redirect_url), $app_login_url );
 			}
 
 			$req_obj->redirect( $app_login_url, StaticOptimizerRequest::REDIRECT_EXTERNAL_SITE );
