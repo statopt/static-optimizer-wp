@@ -799,9 +799,11 @@ function static_optimizer_maybe_render_not_active_plugin($ctx) {
 	$options = static_optimizer_get_options();
 
 	if (empty($options['api_key'])) {
-	    $msg = "Error: Missing API key. You need to request an API key to use this plugin.";
+	    $msg = __("Error: Missing API key. You need to request an API key to use this plugin. "
+                  . "<br/>Generating an API key will authorize the current site."
+                  . " If the site is not authorized our servers will not deliver your files (403 error).", 'statopt');
     } elseif (empty( $options['status'])) {
-		$msg = "Error: Plugin Inactive. You need set plugin's status to active in order for it to work.";
+		$msg = __("Error: Plugin Inactive. You need set plugin's status to active in order for it to work.", 'statopt');
     } else {
 	    return;
     }
