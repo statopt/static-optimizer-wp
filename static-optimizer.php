@@ -36,7 +36,7 @@ define('STATIC_OPTIMIZER_BASE_PLUGIN', __FILE__);
 define('STATIC_OPTIMIZER_APP_SITE_URL',
 	STATIC_OPTIMIZER_LIVE_ENV
 		? 'https://app.statopt.com'
-		: 'https://1mapps.qsandbox0.staging.com/statopt/app/login'
+		: 'https://1mapps.qsandbox0.staging.com/statopt/app'
 );
 
 if (defined('WP_CONTENT_DIR')) {
