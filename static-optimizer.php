@@ -253,8 +253,8 @@ function static_optimizer_redirect_to_gen_api_key( $ctx ) {
 			$key_gen_page_params = [];
 
 			if ( $req_obj->get( 'email' ) ) {
-				$email                        = $req_obj->get( 'email' );
-				$key_gen_page_params['email'] = $email;
+				$email         = $req_obj->get( 'email' );
+				$app_login_url = add_query_arg( 'email', rawurlencode($email), $app_login_url );
 			}
 
 			if ( $req_obj->get( 'site_url' ) ) {
