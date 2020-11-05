@@ -696,7 +696,7 @@ function static_optimizer_setting_api_key() {
 	$options = static_optimizer_get_options();
 	$val     = $options['api_key'];
 	$val_esc = esc_attr( $val );
-	echo "<input id='static_optimizer_setting_api_key' name='static_optimizer_settings[api_key]' type='text' value='$val_esc' />";
+	echo "<input id='static_optimizer_setting_api_key' name='static_optimizer_settings[api_key]' class='widefat' type='text' value='$val_esc' />";
 }
 
 function static_optimizer_setting_status() {
