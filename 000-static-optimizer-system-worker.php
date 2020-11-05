@@ -27,7 +27,13 @@ if (    !defined('ABSPATH')
 }
 
 // We have the .ht prefix because this is normally blocked by apache .ht access rules
-$cfg_file = WP_CONTENT_DIR . '/.ht-static-optimizer/config.json';
+if (defined( 'STATIC_OPTIMIZER_CONF_FILE')) {
+	$cfg_file = STATIC_OPTIMIZER_CONF_FILE;
+} elseif (defined('WP_CONTENT_DIR')) {
+	$cfg_file = WP_CONTENT_DIR . '/.ht-static-optimizer/config.json';
+} else {
+	return;
+}
 
 if (!file_exists($cfg_file)) {
 	return;

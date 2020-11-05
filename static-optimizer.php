@@ -29,12 +29,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit();
 }
 
-$static_optimizer_worker = __DIR__ . '/000-static-optimizer-system-worker.php';
-
-if (!defined('STATIC_OPTIMIZER_ACTIVE') || STATIC_OPTIMIZER_ACTIVE) {
-	include_once $static_optimizer_worker;
-}
-
 // define('STATIC_OPTIMIZER_ACTIVE', 0); // to turn off define this in WP config
 define( 'STATIC_OPTIMIZER_LIVE_ENV', empty( $_SERVER['DEV_ENV'] ) );
 define( 'STATIC_OPTIMIZER_BASE_PLUGIN', __FILE__ );
@@ -46,8 +40,17 @@ define( 'STATIC_OPTIMIZER_APP_SITE_URL',
 );
 
 if ( defined( 'WP_CONTENT_DIR' ) ) {
-	define( 'STATIC_OPTIMIZER_CONF_FILE', WP_CONTENT_DIR . '/.ht-static-optimizer/config.json' );
+	define( 'STATIC_OPTIMIZER_CONF_FILE', WP_CONTENT_DIR . '/.ht-static-optimizer/.ht_config.json' );
+} else {
+	define( 'STATIC_OPTIMIZER_CONF_FILE', __DIR__ . '/.ht_config.json' );
 }
+
+$static_optimizer_worker = __DIR__ . '/000-static-optimizer-system-worker.php';
+
+if (!defined('STATIC_OPTIMIZER_ACTIVE') || STATIC_OPTIMIZER_ACTIVE) {
+	include_once $static_optimizer_worker;
+}
+
 
 //$mu_plugins_dir = '';
 //
