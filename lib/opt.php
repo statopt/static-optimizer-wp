@@ -371,15 +371,15 @@ class Static_Optimizer_Asset_Optimizer {
 
     function static_optimizer_handle_broken_image(img_obj) {
         var src = img_obj.currentSrc || img_obj.src || '';
-        console.log("static_optimizer_image_found: " + src);
+        console.log("statopt: found src: " + src);
 
         var orig_src = static_optimizer_core_get_original_asset_url(src);
 
         if ( orig_src ) {
-            img_obj.onerror = null;  
+            img_obj.onerror = null;
             img_obj.src = orig_src;
             img_obj.srcset = orig_src;
-            console.log("static_optimizer_fixed_src: " + orig_src );
+            console.log("statopt: orig src: " + orig_src);
             console.log(img_obj);
         }
 
@@ -424,17 +424,17 @@ class Static_Optimizer_Asset_Optimizer {
         }
 
         if (src.indexOf('.statopt_ver') == -1) { // not optimized.
-            console.log("fix: Skipping item. Not optimized : " + src);
+            console.log("statopt: Skipping item. Not optimized : " + src);
             return false;
         }
 
         if (src.indexOf(static_optimizer_site_cfg.server_name) == -1) {
-            console.log("fix: Skipping external image: " + src);
+            console.log("statopt: Skipping external image: " + src);
             return false;
         }
 
         if (src.indexOf('/site/http') == -1) { // already linked to the origin src
-            console.log("fix: Skipping already linked to the origin src?: " + src);
+            console.log("statopt: Skipping already linked to the origin src?: " + src);
             return false;
         }
         
@@ -445,6 +445,7 @@ class Static_Optimizer_Asset_Optimizer {
         
         if ('https:' == document.location.protocol) {
             src = src.replace(/http:\/\//ig, 'https://');
+            console.log("statopt: correcting protocol to https: " + src);
         }
 
         return src;
