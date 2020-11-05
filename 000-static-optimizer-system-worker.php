@@ -40,15 +40,22 @@ if (empty($fp)) {
 }
 
 @flock($fp, LOCK_SH);
-$json_buff = file_get_contents($cfg_file);
+$cfg_buff = file_get_contents($cfg_file);
 @flock($fp, LOCK_UN);
 fclose($fp);
 
-if (empty($json_buff)) {
+if (empty($cfg_buff)) {
 	return;
 }
 
-$cfg = json_decode($json_buff, true);
+$cfg = [];
+
+if (substr($cfg_buff, 0, 1 ) == '{') { // is this a JSON file?
+	$cfg = json_decode($cfg_buff, true);
+} else { // it must be php serialized file then.
+	$php_ser = base64_decode($cfg_buff);
+	$cfg = unserialize($php_ser);
+}
 
 if (empty($cfg['status']) || empty($cfg['file_types'])) { // deactivated or nothing selected?
 	return;
