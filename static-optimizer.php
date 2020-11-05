@@ -212,11 +212,19 @@ function static_optimizer_after_option_update( $old_value, $value, $option = nul
     $data['host']               = parse_url( $data['site_url'], PHP_URL_HOST );
     $data['host']               = strtolower( $data['host'] );
     $data['host']               = preg_replace( '#^www\.#si', '', $data['host'] );
-	$data['prev_status']        = isset($old_value['status']) ? $old_value['status'] : true;
 	$data['updated_on']         = date( 'r' );
 	$data['updated_by_user_id'] = get_current_user_id();
 
-    $data_str                   = @json_encode( $data, JSON_PRETTY_PRINT );
+	// This value and the status field determine if the cfg status will be set to true upon (reactivation)
+    // this logic works well for status=true but for false we need to set this to false
+    // because the user has manually and explicitely turned off the functionality
+    if (empty($data['prev_status'])) {
+	    $data['prev_status'] = false;
+    } else {
+	    $data['prev_status'] = isset($old_value['status']) ? $old_value['status'] : true;
+    }
+
+	$data_str                   = @json_encode( $data, JSON_PRETTY_PRINT );
 
     if (empty($data_str)) { // JSON serialization failed possibly due to UTF-8 formatting
 	    // let's try php serialization
