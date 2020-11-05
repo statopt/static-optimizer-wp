@@ -117,7 +117,7 @@ function static_optimizer_process_activate() {
     $json = json_decode($buff,true);
 
     // We'll reactivate if only it was activated before that and has an API key
-    if (!empty($json) && empty($json['status']) && !empty($json['api_key']) && !empty($json['prev_status'])) {
+    if (!empty($json) && empty($json['status']) && !empty($json['api_key']) && !empty($json['was_active_before_plugin_deactivation'])) {
         $json['status'] = true;
         $buff = json_encode($json, JSON_PRETTY_PRINT);
 
@@ -144,8 +144,9 @@ function static_optimizer_process_deactivate() {
     $json = json_decode($buff,true);
 
     if (!empty($json) && !empty($json['status'])) { // update only if it was active before.
-        $json['status'] = false;
-        $buff = json_encode($json, JSON_PRETTY_PRINT);
+	    $json['status'] = false;
+	    $json['was_active_before_plugin_deactivation'] = true;
+	    $buff = json_encode($json, JSON_PRETTY_PRINT);
 
         if (!empty($buff)) {
 	        file_put_contents(STATIC_OPTIMIZER_CONF_FILE, $buff, LOCK_EX);
@@ -228,15 +229,6 @@ function static_optimizer_after_option_update( $old_value, $value, $option = nul
     $data['host']               = preg_replace( '#^www\.#si', '', $data['host'] );
 	$data['updated_on']         = date( 'r' );
 	$data['updated_by_user_id'] = get_current_user_id();
-
-	// This value and the status field determine if the cfg status will be set to true upon (reactivation)
-    // this logic works well for status=true but for false we need to set this to false
-    // because the user has manually and explicitly turned off the functionality
-    if (empty($data['status'])) {
-	    $data['prev_status'] = false;
-    } else {
-	    $data['prev_status'] = isset($old_value['status']) ? $old_value['status'] : true;
-    }
 
 	$data_str                   = @json_encode( $data, JSON_PRETTY_PRINT );
 
