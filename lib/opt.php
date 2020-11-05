@@ -74,6 +74,20 @@ class Static_Optimizer_Asset_Optimizer {
 	}
 
 	/**
+	 * php docs: Some web servers (e.g. Apache) change the working directory of a script when calling the callback function.
+	 * You can change it back by e.g. chdir(dirname($_SERVER['SCRIPT_FILENAME'])) in the callback function.
+	 * https://www.php.net/ob_start
+	 */
+	public function maybeCorrectScriptDir() {
+		if (!empty($_SERVER['SCRIPT_FILENAME'])
+		    && !empty($_SERVER['SERVER_SOFTWARE'])
+		    && (stripos($_SERVER['SERVER_SOFTWARE'], 'apache') !== false)
+	    ) {
+			chdir(dirname($_SERVER['SCRIPT_FILENAME']));
+		}
+	}
+
+	/**
 	 * Parses the output and checks if we need to replace any links. Exit on first occasion.
 	 * @param string $buff
 	 * @return string
@@ -158,6 +172,8 @@ class Static_Optimizer_Asset_Optimizer {
 		if (empty($file_types)) {
 			return $buff;
 		}
+
+		$this->maybeCorrectScriptDir();
 
 		$host_q = preg_quote( $host, '#' );
 		$script_tag_found = false;
@@ -276,6 +292,7 @@ class Static_Optimizer_Asset_Optimizer {
 		}
 
 		// @todo parse WP load scripts js too
+		// @todo parse local files starting with / or relative???
 		// change jquery to google cdn ? or leave my code to run in WP to do it.
 		// //<script onerror="javascript:static_optimizer_handle_broken_script(this);"
 		// src='http://demo.qsandbox0.staging.com/qs3_1596199452_0089/s-qcsgy24aatlal.qsandbox0.staging.com/wp-admin/load-scripts.php?c=0&amp;load%5Bchunk_0%5D=jquery-core,jquery-migrate,utils&amp;ver=5.4.2'></script>
