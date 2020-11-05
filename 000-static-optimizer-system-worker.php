@@ -12,7 +12,6 @@ if (    !defined('ABSPATH')
      || php_sapi_name() == 'cli'
      || (defined('WP_CLI') && WP_CLI)
 //     || !empty($_POST)
-//	 || (!empty($_SERVER['REQUEST_METHOD']) && strcasecmp($_SERVER['REQUEST_METHOD'], 'get') != 0)
      || (!empty($_SERVER['REQUEST_URI']) &&
          (     (strpos($_SERVER['REQUEST_URI'], 'wp-cron') !== false) // no cron requests
             || (strpos($_SERVER['REQUEST_URI'], '/wp-admin/') !== false) // no running in admin area
