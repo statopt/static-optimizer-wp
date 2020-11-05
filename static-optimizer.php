@@ -158,10 +158,23 @@ function static_optimizer_after_option_update( $old_value, $value, $option ) {
     $data['host']               = preg_replace( '#^www\.#si', '', $data['host'] );
     $data['updated_on']         = date( 'r' );
     $data['updated_by_user_id'] = get_current_user_id();
-    $data_str                   = json_encode( $data, JSON_PRETTY_PRINT );
+    $data_str                   = @json_encode( $data, JSON_PRETTY_PRINT );
+
+    if (empty($data_str)) { // serialization failed possibly due to UTF-8 formatting
+	    // let's try php serialization
+	    $data_str = serialize( $data );
+
+	    // Well, we've tried ...
+	    if ( empty( $data_str ) ) {
+		    return;
+	    }
+
+	    // Let's encode the data so it works in case it's transferred to another host and another php version.
+	    $data_str = base64_encode($data_str);
+    }
 
     // Save data
-    $save_stat                  = file_put_contents( STATIC_OPTIMIZER_CONF_FILE, $data_str, LOCK_EX );
+    $save_stat = file_put_contents( STATIC_OPTIMIZER_CONF_FILE, $data_str, LOCK_EX );
 
     // let's add an empty file
     if ( ! file_exists( $dir . '/index.html' ) ) {
@@ -198,6 +211,8 @@ function static_optimizer_after_option_update( $old_value, $value, $option ) {
 //            file_put_contents( $system_worker_loader_file, $system_worker_loader_file_buff, LOCK_EX );
 //        }
 //    }
+
+    return $save_stat;
 }
 
 /**
