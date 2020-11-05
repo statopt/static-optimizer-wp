@@ -129,7 +129,7 @@ function static_optimizer_process_deactivate() {
 
     $json = json_decode($buff,true);
 
-    if (!empty($json)) {
+    if (!empty($json) && !empty($json['status'])) { // update only if it was active before.
         $json['status'] = false;
         $buff = json_encode($json, JSON_PRETTY_PRINT);
 
