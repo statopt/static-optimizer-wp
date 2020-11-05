@@ -4,7 +4,7 @@ Plugin Name: StaticOptimizer
 Plugin URI: https://statopt.com
 Description: Makes your your images, js, css load faster by optimizing them and loading them from StaticOptimizer Optimization servers
 Version: 1.0.0
-Author: Svetoslav Marinov (Slavi)
+Author: StaticOptimizer
 Author URI: https://statopt.com
 */
 
