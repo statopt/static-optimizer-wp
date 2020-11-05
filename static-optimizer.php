@@ -733,7 +733,7 @@ function static_optimizer_setting_file_types() {
 
 	echo "<div>Which file types would like to be optimized?</div>";
 
-	foreach ( $options['file_types'] as $file_type => $checked_value) {
+	foreach ( $file_types as $file_type => $checked_value) {
 		$checked = $checked_value === 1 || $checked_value === '1' || $checked_value === true ? checked( 1, 1, false ) : '';
 		echo "<label for='static_optimizer_setting_file_types_{$file_type}'>
             <input id='static_optimizer_setting_file_types_{$file_type}' name='static_optimizer_settings[file_types][$file_type]' 
