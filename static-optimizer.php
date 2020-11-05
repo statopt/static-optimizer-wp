@@ -797,8 +797,6 @@ function static_optimizer_maybe_render_manage_key_form( $ctx = [] ) {
 
 	$app_site_url      = STATIC_OPTIMIZER_APP_SITE_URL . '/login';
 	$app_site_url_href = STATIC_OPTIMIZER_APP_SITE_URL . '/login';
-	$admin_email       = get_option( 'admin_email' );
-	$app_site_url_href = add_query_arg( 'email', urlencode($admin_email), $app_site_url_href );
 	?>
     <br/>
     <hr/>
