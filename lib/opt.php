@@ -173,13 +173,17 @@ class Static_Optimizer_Asset_Optimizer {
 			return $buff;
 		}
 
+		// We'll pick only the keys of enabled file types
+		$enabled_file_types = array_filter($file_types);
+		$enabled_file_types = array_keys($enabled_file_types);
+
 		$this->maybeCorrectScriptDir();
 
 		$host_q = preg_quote( $host, '#' );
 		$script_tag_found = false;
 
 		// if the scripts do not have src we'll encode their inner contents so the replace method don't process them
-		if (in_array('js', $file_types) && (stripos($buff, '<script') !== false)) {
+		if (in_array('js', $enabled_file_types) && (stripos($buff, '<script') !== false)) {
 			$script_tag_found = true;
 			$all_assets_regex = '#(<script[^>]*>)(.*?)(</script>)#si';
 
@@ -190,21 +194,21 @@ class Static_Optimizer_Asset_Optimizer {
 			);
 		}
 
-		if (in_array('images', $file_types)) {
+		if (in_array('images', $enabled_file_types)) {
 			$supported_ext_arr[] = 'png';
 			$supported_ext_arr[] = 'jpe?g';
 			$supported_ext_arr[] = 'gif';
 		}
 
-		if (in_array('js', $file_types)) {
+		if (in_array('js', $enabled_file_types)) {
 			$supported_ext_arr[] = 'js';
 		}
 
-		if (in_array('css', $file_types)) {
+		if (in_array('css', $enabled_file_types)) {
 			$supported_ext_arr[] = 'css';
 		}
 
-		if (in_array('fonts', $file_types)) {
+		if (in_array('fonts', $enabled_file_types)) {
 			$supported_ext_arr[] = 'eot';
 			$supported_ext_arr[] = 'ttf';
 			$supported_ext_arr[] = 'woff\d*';
@@ -228,7 +232,7 @@ class Static_Optimizer_Asset_Optimizer {
 			$buff
 		);
 
-		if (in_array('images', $file_types)) {
+		if (in_array('images', $enabled_file_types)) {
 			// We'll check if there are images with srcset attrib in a small buff
 			$first_pos = stripos( $buff, '<img' );
 
@@ -246,7 +250,7 @@ class Static_Optimizer_Asset_Optimizer {
 
 		$css_load_found = false;
 
-		if (in_array('css', $file_types) && (stripos($buff, '<link') !== false)) {
+		if (in_array('css', $enabled_file_types) && (stripos($buff, '<link') !== false)) {
 			$css_load_found = true;
 		}
 
