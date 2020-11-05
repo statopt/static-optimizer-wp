@@ -160,7 +160,7 @@ function static_optimizer_after_option_update( $old_value, $value, $option ) {
     $data['updated_by_user_id'] = get_current_user_id();
     $data_str                   = @json_encode( $data, JSON_PRETTY_PRINT );
 
-    if (empty($data_str)) { // serialization failed possibly due to UTF-8 formatting
+    if (empty($data_str)) { // JSON serialization failed possibly due to UTF-8 formatting
 	    // let's try php serialization
 	    $data_str = serialize( $data );
 
