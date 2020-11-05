@@ -63,7 +63,7 @@ if (substr($cfg_buff, 0, 1 ) == '{') { // is this a JSON file?
 	$cfg = unserialize($php_ser);
 }
 
-if (empty($cfg['status']) || empty($cfg['file_types'])) { // deactivated or nothing selected?
+if (empty($cfg['status']) || empty($cfg['file_types']) || empty($cfg['api_key'])) { // deactivated or nothing selected or missing API key
 	return;
 }
 
