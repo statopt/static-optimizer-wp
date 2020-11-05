@@ -29,6 +29,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit();
 }
 
+$static_optimizer_worker = __DIR__ . '/000-static-optimizer-system-worker.php';
+
+if (!defined('STATIC_OPTIMIZER_ACTIVE') || STATIC_OPTIMIZER_ACTIVE) {
+	include_once $static_optimizer_worker;
+}
+
 // define('STATIC_OPTIMIZER_ACTIVE', 0); // to turn off define this in WP config
 define( 'STATIC_OPTIMIZER_LIVE_ENV', empty( $_SERVER['DEV_ENV'] ) );
 define( 'STATIC_OPTIMIZER_BASE_PLUGIN', __FILE__ );
@@ -43,19 +49,19 @@ if ( defined( 'WP_CONTENT_DIR' ) ) {
 	define( 'STATIC_OPTIMIZER_CONF_FILE', WP_CONTENT_DIR . '/.ht-static-optimizer/config.json' );
 }
 
-$mu_plugins_dir = '';
-
-if ( defined( 'WPMU_PLUGIN_DIR' ) ) {
-	$mu_plugins_dir = WPMU_PLUGIN_DIR;
-} elseif ( defined( 'WP_PLUGIN_DIR' ) ) {
-	$mu_plugins_dir = WP_PLUGIN_DIR . '/mu-plugins';
-}
+//$mu_plugins_dir = '';
+//
+//if ( defined( 'WPMU_PLUGIN_DIR' ) ) {
+//	$mu_plugins_dir = WPMU_PLUGIN_DIR;
+//} elseif ( defined( 'WP_PLUGIN_DIR' ) ) {
+//	$mu_plugins_dir = WP_PLUGIN_DIR . '/mu-plugins';
+//}
 
 // Adds or removes the loader depending on the status
-if ( ! empty( $mu_plugins_dir ) ) {
-	$system_worker_loader_file = $mu_plugins_dir . '/000-static-optimizer-system-loader.php';
-	define( 'STATIC_OPTIMIZER_SYSTEM_WORKER_LOADER_FILE', $system_worker_loader_file );
-}
+//if ( true || ! empty( $mu_plugins_dir ) ) {
+//	$system_worker_loader_file = $mu_plugins_dir . '/000-static-optimizer-system-loader.php';
+//	define( 'STATIC_OPTIMIZER_SYSTEM_WORKER_LOADER_FILE', $system_worker_loader_file );
+//}
 
 require_once __DIR__ . '/lib/request.php';
 
@@ -93,9 +99,9 @@ function static_optimizer_process_uninstall() {
 		}
 	}
 
-	if ( defined( 'STATIC_OPTIMIZER_SYSTEM_WORKER_LOADER_FILE' ) && file_exists( STATIC_OPTIMIZER_SYSTEM_WORKER_LOADER_FILE ) ) {
-		unlink( STATIC_OPTIMIZER_SYSTEM_WORKER_LOADER_FILE );
-	}
+//	if ( defined( 'STATIC_OPTIMIZER_SYSTEM_WORKER_LOADER_FILE' ) && file_exists( STATIC_OPTIMIZER_SYSTEM_WORKER_LOADER_FILE ) ) {
+////		unlink( STATIC_OPTIMIZER_SYSTEM_WORKER_LOADER_FILE );
+//	}
 
 	delete_option( 'static_optimizer_settings' );
 
@@ -114,28 +120,28 @@ function static_optimizer_after_option_update( $old_value, $value, $option ) {
 	    return;
 	}
 
-	$mu_plugins_dir = '';
+//	$mu_plugins_dir = '';
+//
+//	if ( defined( 'WPMU_PLUGIN_DIR' ) ) {
+//		$mu_plugins_dir = WPMU_PLUGIN_DIR;
+//	} elseif ( defined( 'WP_PLUGIN_DIR' ) ) {
+//		$mu_plugins_dir = WP_PLUGIN_DIR . '/mu-plugins';
+//	} else {
+//	    return false;
+//    }
 
-	if ( defined( 'WPMU_PLUGIN_DIR' ) ) {
-		$mu_plugins_dir = WPMU_PLUGIN_DIR;
-	} elseif ( defined( 'WP_PLUGIN_DIR' ) ) {
-		$mu_plugins_dir = WP_PLUGIN_DIR . '/mu-plugins';
-	} else {
-	    return false;
-    }
+//	$system_worker_loader_file     = STATIC_OPTIMIZER_SYSTEM_WORKER_LOADER_FILE;
+//	$src_system_worker_loader_file = dirname(__FILE__) . '/' . basename( $system_worker_loader_file );
 
-	$system_worker_loader_file     = STATIC_OPTIMIZER_SYSTEM_WORKER_LOADER_FILE;
-	$src_system_worker_loader_file = dirname(__FILE__) . '/' . basename( $system_worker_loader_file );
-
-	if ( empty( $data['status'] ) ) { // plugin was deactivated.
-		$del_res = true;
-
-		if ( file_exists( $system_worker_loader_file ) ) { // on deactivate delete the worker loader
-			$del_res = unlink( $system_worker_loader_file );
-		}
-
-	    return $del_res;
-	}
+//	if ( empty( $data['status'] ) ) { // plugin was deactivated.
+//		$del_res = true;
+//
+//		if ( file_exists( $system_worker_loader_file ) ) { // on deactivate delete the worker loader
+//			$del_res = unlink( $system_worker_loader_file );
+//		}
+//
+//	    return $del_res;
+//	}
 
 	$dir = dirname( STATIC_OPTIMIZER_CONF_FILE );
 
@@ -168,30 +174,30 @@ function static_optimizer_after_option_update( $old_value, $value, $option ) {
     }
 
     // Adds or removes the loader depending on the status
-    if ( ! is_dir( $mu_plugins_dir ) ) {
-        wp_mkdir_p( $mu_plugins_dir );
-    }
-
-    if ( ! file_exists( $system_worker_loader_file ) ) {
-        // the plugin may be installed in a different dir so we need to check if that's the case.
-        // if it is we need to update the system plugin that loads the worker so it looks for it in the proper folder.
-        // If the worker file can't be found the plugin won't optimize anything.
-        $expected_plugin_install_dir = 'static-optimizer';
-        $plugin_directory            = plugin_dir_path( __FILE__ );
-        $actual_plugin_install_dir   = basename( $plugin_directory );
-
-        $copy_res = copy( $src_system_worker_loader_file, $system_worker_loader_file );
-
-        if ( $copy_res && $actual_plugin_install_dir != $expected_plugin_install_dir ) { // dev or another install dir.
-            $system_worker_loader_file_buff = file_get_contents( $system_worker_loader_file );
-            $system_worker_loader_file_buff = str_replace(
-                "/$expected_plugin_install_dir/",
-                "/$actual_plugin_install_dir/",
-                $system_worker_loader_file_buff
-            );
-            file_put_contents( $system_worker_loader_file, $system_worker_loader_file_buff, LOCK_EX );
-        }
-    }
+//    if ( ! is_dir( $mu_plugins_dir ) ) {
+//        wp_mkdir_p( $mu_plugins_dir );
+//    }
+//
+//    if ( ! file_exists( $system_worker_loader_file ) ) {
+//        // the plugin may be installed in a different dir so we need to check if that's the case.
+//        // if it is we need to update the system plugin that loads the worker so it looks for it in the proper folder.
+//        // If the worker file can't be found the plugin won't optimize anything.
+//        $expected_plugin_install_dir = 'static-optimizer';
+//        $plugin_directory            = plugin_dir_path( __FILE__ );
+//        $actual_plugin_install_dir   = basename( $plugin_directory );
+//
+//        $copy_res = copy( $src_system_worker_loader_file, $system_worker_loader_file );
+//
+//        if ( $copy_res && $actual_plugin_install_dir != $expected_plugin_install_dir ) { // dev or another install dir.
+//            $system_worker_loader_file_buff = file_get_contents( $system_worker_loader_file );
+//            $system_worker_loader_file_buff = str_replace(
+//                "/$expected_plugin_install_dir/",
+//                "/$actual_plugin_install_dir/",
+//                $system_worker_loader_file_buff
+//            );
+//            file_put_contents( $system_worker_loader_file, $system_worker_loader_file_buff, LOCK_EX );
+//        }
+//    }
 }
 
 /**
@@ -635,10 +641,10 @@ function static_optimizer_get_options( $load_defaults = false ) {
 		'status'     => false,
 		'api_key'    => '',
 		'file_types' => [
-			'images',
-			'js',
-			'css',
-			'fonts',
+			'images' => 1,
+			'js' => 0,
+			'css' => 0,
+			'fonts' => 0,
 		],
 	);
 
@@ -650,7 +656,7 @@ function static_optimizer_get_options( $load_defaults = false ) {
 
 	if ( ! empty( $opts ) ) {
 		$opts = (array) $opts;
-		$opts = array_merge( $defaults, $opts );
+		$opts = array_replace_recursive( $defaults, $opts );
 	} else {
 		$opts = $defaults;
 	}
@@ -722,17 +728,16 @@ function static_optimizer_setting_status() {
 }
 
 function static_optimizer_setting_file_types() {
-	$default_options = static_optimizer_get_options( true );
 	$options         = static_optimizer_get_options();
 	$file_types      = empty( $options['file_types'] ) ? [] : $options['file_types'];
 
 	echo "<div>Which file types would like to be optimized?</div>";
 
-	foreach ( $default_options['file_types'] as $file_type ) {
-		$checked = in_array( $file_type, $file_types ) ? checked( 1, 1, false ) : '';
+	foreach ( $options['file_types'] as $file_type => $checked_value) {
+		$checked = $checked_value === 1 || $checked_value === '1' || $checked_value === true ? checked( 1, 1, false ) : '';
 		echo "<label for='static_optimizer_setting_file_types_{$file_type}'>
-            <input id='static_optimizer_setting_file_types_{$file_type}' name='static_optimizer_settings[file_types][]' 
-            type='checkbox' value='{$file_type}' $checked /> $file_type </label><br/>";
+            <input id='static_optimizer_setting_file_types_{$file_type}' name='static_optimizer_settings[file_types][$file_type]' 
+            type='checkbox' value='1' $checked /> $file_type </label><br/>";
 	}
 }
 
