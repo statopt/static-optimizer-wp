@@ -102,8 +102,8 @@ function static_optimizer_process_activate() {
 
     $json = json_decode($buff,true);
 
-    // if it was deactivated and has an empty key
-    if (!empty($json) && empty($json['status']) && !empty($json['api_key'])) {
+    // We'll reactivate if only it was activated before that and has an API key
+    if (!empty($json) && empty($json['status']) && !empty($json['api_key']) && !empty($json['prev_status'])) {
         $json['status'] = true;
         $buff = json_encode($json, JSON_PRETTY_PRINT);
 
@@ -212,8 +212,10 @@ function static_optimizer_after_option_update( $old_value, $value, $option = nul
     $data['host']               = parse_url( $data['site_url'], PHP_URL_HOST );
     $data['host']               = strtolower( $data['host'] );
     $data['host']               = preg_replace( '#^www\.#si', '', $data['host'] );
-    $data['updated_on']         = date( 'r' );
-    $data['updated_by_user_id'] = get_current_user_id();
+	$data['prev_status']        = isset($old_value['status']) ? $old_value['status'] : true;
+	$data['updated_on']         = date( 'r' );
+	$data['updated_by_user_id'] = get_current_user_id();
+
     $data_str                   = @json_encode( $data, JSON_PRETTY_PRINT );
 
     if (empty($data_str)) { // JSON serialization failed possibly due to UTF-8 formatting
