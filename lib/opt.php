@@ -440,6 +440,11 @@ class Static_Optimizer_Asset_Optimizer {
         
         src = src.replace(/^.+?\/site\/(.*)/ig, '$1');
         
+        // Screenshot-300x150.statopt_ver.5.5.png -> Screenshot-300x150.png
+        // Screenshot-300x150.statopt_ver.1604574710.png -> Screenshot-300x150.png
+        // Screenshot-300x150.statopt_ver.sha1-asfoijasofjoiajsfjasfjoasfjioas.png -> Screenshot-300x150.png
+        src = src.replace(/statopt_ver[\-_.]([\w\-]+|\d+[\d.]+)\./ig, '');
+
         // https://stackoverflow.com/questions/3431512/javascript-equivalent-to-phps-urldecode
         src = decodeURIComponent(src.replace(/\+/g, ' '));
         
