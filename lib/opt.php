@@ -439,11 +439,15 @@ class Static_Optimizer_Asset_Optimizer {
         }
         
         src = src.replace(/^.+?\/site\/(.*)/ig, '$1');
-        
+
+        // @todo check JSON cfg if htaccess has the handler for statopt_ver installed.
+        // script.statopt_ver.5.5.js -> script.statopt_ver.5.5.js
+        // script.statopt_ver.5.5.min.js -> script.statopt_ver.5.5.min.js
         // Screenshot-300x150.statopt_ver.5.5.png -> Screenshot-300x150.png
+        // Screenshot-300x150.statopt_ver.5.5.5.png -> Screenshot-300x150.png
         // Screenshot-300x150.statopt_ver.1604574710.png -> Screenshot-300x150.png
         // Screenshot-300x150.statopt_ver.sha1-asfoijasofjoiajsfjasfjoasfjioas.png -> Screenshot-300x150.png
-        src = src.replace(/statopt_ver[\-_.]([\w\-]+|\d+[\d.]+)\./ig, '');
+        src = src.replace(/statopt_ver[\-_.][\w\-\.]+?\.((min\.)?[a-z]{2,5})$/ig, '$1');
 
         // https://stackoverflow.com/questions/3431512/javascript-equivalent-to-phps-urldecode
         src = decodeURIComponent(src.replace(/\+/g, ' '));
