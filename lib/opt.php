@@ -452,7 +452,8 @@ class Static_Optimizer_Asset_Optimizer {
         // https://stackoverflow.com/questions/3431512/javascript-equivalent-to-phps-urldecode
         src = decodeURIComponent(src.replace(/\+/g, ' '));
 
-        if ('https:' == document.location.protocol) {
+        // Is the site loaded from https and the asset point to http ?
+        if ('https:' == document.location.protocol && src.indexOf('http://') != -1) {
             src = src.replace(/http:\/\//ig, 'https://');
             console.log("statopt: correcting protocol to https: " + src);
         }
