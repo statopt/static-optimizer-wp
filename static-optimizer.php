@@ -114,13 +114,37 @@ function static_optimizer_after_option_update( $old_value, $value, $option ) {
 	    return;
 	}
 
-    $dir = dirname( STATIC_OPTIMIZER_CONF_FILE );
+	$mu_plugins_dir = '';
 
-    if ( ! is_dir( $dir ) ) {
-        wp_mkdir_p( $dir );
+	if ( defined( 'WPMU_PLUGIN_DIR' ) ) {
+		$mu_plugins_dir = WPMU_PLUGIN_DIR;
+	} elseif ( defined( 'WP_PLUGIN_DIR' ) ) {
+		$mu_plugins_dir = WP_PLUGIN_DIR . '/mu-plugins';
+	} else {
+	    return false;
     }
 
-    $data                       = $value;
+	$system_worker_loader_file     = STATIC_OPTIMIZER_SYSTEM_WORKER_LOADER_FILE;
+	$src_system_worker_loader_file = dirname(__FILE__) . '/' . basename( $system_worker_loader_file );
+
+	if ( empty( $data['status'] ) ) { // plugin was deactivated.
+		$del_res = true;
+
+		if ( file_exists( $system_worker_loader_file ) ) { // on deactivate delete the worker loader
+			$del_res = unlink( $system_worker_loader_file );
+		}
+
+	    return $del_res;
+	}
+
+	$dir = dirname( STATIC_OPTIMIZER_CONF_FILE );
+
+	if ( ! is_dir( $dir ) ) {
+		wp_mkdir_p( $dir );
+	}
+
+	$data = $value;
+
     $data['is_multisite']       = function_exists( 'is_multisite' ) && is_multisite() ? true : false;
     $data['site_url']           = $data['is_multisite'] ? network_site_url() : site_url();
     $data['host']               = parse_url( $data['site_url'], PHP_URL_HOST );
@@ -143,46 +167,29 @@ function static_optimizer_after_option_update( $old_value, $value, $option ) {
         file_put_contents( $dir . '/.htaccess', "deny from all", LOCK_EX );
     }
 
-    $mu_plugins_dir = '';
-
-    if ( defined( 'WPMU_PLUGIN_DIR' ) ) {
-        $mu_plugins_dir = WPMU_PLUGIN_DIR;
-    } elseif ( defined( 'WP_PLUGIN_DIR' ) ) {
-        $mu_plugins_dir = WP_PLUGIN_DIR . '/mu-plugins';
+    // Adds or removes the loader depending on the status
+    if ( ! is_dir( $mu_plugins_dir ) ) {
+        wp_mkdir_p( $mu_plugins_dir );
     }
 
-    // Adds or removes the loader depending on the status
-    if ( ! empty( $mu_plugins_dir ) ) {
-        $system_worker_loader_file     = STATIC_OPTIMIZER_SYSTEM_WORKER_LOADER_FILE;
-        $src_system_worker_loader_file = __DIR__ . '/' . basename( $system_worker_loader_file );
+    if ( ! file_exists( $system_worker_loader_file ) ) {
+        // the plugin may be installed in a different dir so we need to check if that's the case.
+        // if it is we need to update the system plugin that loads the worker so it looks for it in the proper folder.
+        // If the worker file can't be found the plugin won't optimize anything.
+        $expected_plugin_install_dir = 'static-optimizer';
+        $plugin_directory            = plugin_dir_path( __FILE__ );
+        $actual_plugin_install_dir   = basename( $plugin_directory );
 
-        if ( ! is_dir( $mu_plugins_dir ) ) {
-            wp_mkdir_p( $mu_plugins_dir );
-        }
+        $copy_res = copy( $src_system_worker_loader_file, $system_worker_loader_file );
 
-        if ( ! empty( $data['status'] ) ) {
-            if ( ! file_exists( $system_worker_loader_file ) ) {
-                // the plugin may be installed in a different dir so we need to check if that's the case.
-                // if it is we need to update the system plugin that loads the worker so it looks for it in the proper folder.
-                // If the worker file can't be found the plugin won't optimize anything.
-                $expected_plugin_install_dir = 'static-optimizer';
-                $plugin_directory            = plugin_dir_path( __FILE__ );
-                $actual_plugin_install_dir   = basename( $plugin_directory );
-
-                $copy_res = copy( $src_system_worker_loader_file, $system_worker_loader_file );
-
-                if ( $copy_res && $actual_plugin_install_dir != $expected_plugin_install_dir ) { // dev or another install dir.
-                    $system_worker_loader_file_buff = file_get_contents( $system_worker_loader_file );
-                    $system_worker_loader_file_buff = str_replace(
-                        "/$expected_plugin_install_dir/",
-                        "/$actual_plugin_install_dir/",
-                        $system_worker_loader_file_buff
-                    );
-                    file_put_contents( $system_worker_loader_file, $system_worker_loader_file_buff, LOCK_EX );
-                }
-            }
-        } elseif ( file_exists( $system_worker_loader_file ) ) { // on deactivate delete the worker loader
-            $del_res = unlink( $system_worker_loader_file );
+        if ( $copy_res && $actual_plugin_install_dir != $expected_plugin_install_dir ) { // dev or another install dir.
+            $system_worker_loader_file_buff = file_get_contents( $system_worker_loader_file );
+            $system_worker_loader_file_buff = str_replace(
+                "/$expected_plugin_install_dir/",
+                "/$actual_plugin_install_dir/",
+                $system_worker_loader_file_buff
+            );
+            file_put_contents( $system_worker_loader_file, $system_worker_loader_file_buff, LOCK_EX );
         }
     }
 }
