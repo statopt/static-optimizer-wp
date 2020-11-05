@@ -290,7 +290,7 @@ class Static_Optimizer_Asset_Optimizer {
 
 			$buff = preg_replace_callback(
 				$all_assets_regex,
-				[ $this, 'unProtectScriptWithData' ],
+				[ $this, 'unprotectScriptWithData' ],
 				$buff
 			);
 		}
@@ -323,7 +323,7 @@ class Static_Optimizer_Asset_Optimizer {
 	}
 
 	// This should revert the encoded text to <script>...</script> sections
-	function UnprotectScriptWithData($matches) {
+	function unprotectScriptWithData($matches) {
 		$str = $matches[1];
 		$str = base64_decode($str);
 		$str = unserialize($str);
