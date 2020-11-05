@@ -110,79 +110,81 @@ function static_optimizer_process_uninstall() {
  * @param string $option
  */
 function static_optimizer_after_option_update( $old_value, $value, $option ) {
-	$dir_perm = 0755; // I really want 0700 but probably most servers will show permission errors.
-
-	if ( defined( 'STATIC_OPTIMIZER_CONF_FILE' ) ) {
-		$dir = dirname( STATIC_OPTIMIZER_CONF_FILE );
-
-		if ( ! is_dir( $dir ) ) {
-			mkdir( $dir, $dir_perm, true );
-		}
-
-		$data                       = $value;
-		$data['is_multisite']       = function_exists( 'is_multisite' ) && is_multisite() ? true : false;
-		$data['site_url']           = $data['is_multisite'] ? network_site_url() : site_url();
-		$data['host']               = parse_url( $data['site_url'], PHP_URL_HOST );
-		$data['host']               = strtolower( $data['host'] );
-		$data['host']               = preg_replace( '#^www\.#si', '', $data['host'] );
-		$data['updated_on']         = date( 'r' );
-		$data['updated_by_user_id'] = get_current_user_id();
-		$data_str                   = json_encode( $data, JSON_PRETTY_PRINT );
-		$save_stat                  = file_put_contents( STATIC_OPTIMIZER_CONF_FILE, $data_str, LOCK_EX );
-
-		// let's add an empty file
-		if ( ! file_exists( $dir . '/index.html' ) ) {
-			file_put_contents( $dir . '/index.html', "StaticOptimizer", LOCK_EX );
-		}
-
-		// let's add some more protection
-		if ( ! file_exists( $dir . '/.htaccess' ) ) {
-			file_put_contents( $dir . '/.htaccess', "deny from all", LOCK_EX );
-		}
-
-		$mu_plugins_dir = '';
-
-		if ( defined( 'WPMU_PLUGIN_DIR' ) ) {
-			$mu_plugins_dir = WPMU_PLUGIN_DIR;
-		} elseif ( defined( 'WP_PLUGIN_DIR' ) ) {
-			$mu_plugins_dir = WP_PLUGIN_DIR . '/mu-plugins';
-		}
-
-		// Adds or removes the loader depending on the status
-		if ( ! empty( $mu_plugins_dir ) ) {
-			$system_worker_loader_file     = STATIC_OPTIMIZER_SYSTEM_WORKER_LOADER_FILE;
-			$src_system_worker_loader_file = __DIR__ . '/' . basename( $system_worker_loader_file );
-
-			if ( ! is_dir( $mu_plugins_dir ) ) {
-				mkdir( $mu_plugins_dir, $dir_perm, true );
-			}
-
-			if ( ! empty( $data['status'] ) ) {
-				if ( ! file_exists( $system_worker_loader_file ) ) {
-					// the plugin may be installed in a different dir so we need to check if that's the case.
-					// if it is we need to update the system plugin that loads the worker so it looks for it in the proper folder.
-					// If the worker file can't be found the plugin won't optimize anything.
-					$expected_plugin_install_dir = 'static-optimizer';
-					$plugin_directory            = plugin_dir_path( __FILE__ );
-					$actual_plugin_install_dir   = basename( $plugin_directory );
-
-					$copy_res = copy( $src_system_worker_loader_file, $system_worker_loader_file );
-
-					if ( $copy_res && $actual_plugin_install_dir != $expected_plugin_install_dir ) { // dev or another install dir.
-						$system_worker_loader_file_buff = file_get_contents( $system_worker_loader_file );
-						$system_worker_loader_file_buff = str_replace(
-							"/$expected_plugin_install_dir/",
-							"/$actual_plugin_install_dir/",
-							$system_worker_loader_file_buff
-						);
-						file_put_contents( $system_worker_loader_file, $system_worker_loader_file_buff, LOCK_EX );
-					}
-				}
-			} elseif ( file_exists( $system_worker_loader_file ) ) { // on deactivate delete the worker loader
-				$del_res = unlink( $system_worker_loader_file );
-			}
-		}
+	if ( ! defined( 'STATIC_OPTIMIZER_CONF_FILE' ) ) {
+	    return;
 	}
+
+    $dir = dirname( STATIC_OPTIMIZER_CONF_FILE );
+
+    if ( ! is_dir( $dir ) ) {
+        wp_mkdir_p( $dir );
+    }
+
+    $data                       = $value;
+    $data['is_multisite']       = function_exists( 'is_multisite' ) && is_multisite() ? true : false;
+    $data['site_url']           = $data['is_multisite'] ? network_site_url() : site_url();
+    $data['host']               = parse_url( $data['site_url'], PHP_URL_HOST );
+    $data['host']               = strtolower( $data['host'] );
+    $data['host']               = preg_replace( '#^www\.#si', '', $data['host'] );
+    $data['updated_on']         = date( 'r' );
+    $data['updated_by_user_id'] = get_current_user_id();
+    $data_str                   = json_encode( $data, JSON_PRETTY_PRINT );
+
+    // Save data
+    $save_stat                  = file_put_contents( STATIC_OPTIMIZER_CONF_FILE, $data_str, LOCK_EX );
+
+    // let's add an empty file
+    if ( ! file_exists( $dir . '/index.html' ) ) {
+        file_put_contents( $dir . '/index.html', "StaticOptimizer", LOCK_EX );
+    }
+
+    // let's add some more protection
+    if ( ! file_exists( $dir . '/.htaccess' ) ) {
+        file_put_contents( $dir . '/.htaccess', "deny from all", LOCK_EX );
+    }
+
+    $mu_plugins_dir = '';
+
+    if ( defined( 'WPMU_PLUGIN_DIR' ) ) {
+        $mu_plugins_dir = WPMU_PLUGIN_DIR;
+    } elseif ( defined( 'WP_PLUGIN_DIR' ) ) {
+        $mu_plugins_dir = WP_PLUGIN_DIR . '/mu-plugins';
+    }
+
+    // Adds or removes the loader depending on the status
+    if ( ! empty( $mu_plugins_dir ) ) {
+        $system_worker_loader_file     = STATIC_OPTIMIZER_SYSTEM_WORKER_LOADER_FILE;
+        $src_system_worker_loader_file = __DIR__ . '/' . basename( $system_worker_loader_file );
+
+        if ( ! is_dir( $mu_plugins_dir ) ) {
+            wp_mkdir_p( $mu_plugins_dir );
+        }
+
+        if ( ! empty( $data['status'] ) ) {
+            if ( ! file_exists( $system_worker_loader_file ) ) {
+                // the plugin may be installed in a different dir so we need to check if that's the case.
+                // if it is we need to update the system plugin that loads the worker so it looks for it in the proper folder.
+                // If the worker file can't be found the plugin won't optimize anything.
+                $expected_plugin_install_dir = 'static-optimizer';
+                $plugin_directory            = plugin_dir_path( __FILE__ );
+                $actual_plugin_install_dir   = basename( $plugin_directory );
+
+                $copy_res = copy( $src_system_worker_loader_file, $system_worker_loader_file );
+
+                if ( $copy_res && $actual_plugin_install_dir != $expected_plugin_install_dir ) { // dev or another install dir.
+                    $system_worker_loader_file_buff = file_get_contents( $system_worker_loader_file );
+                    $system_worker_loader_file_buff = str_replace(
+                        "/$expected_plugin_install_dir/",
+                        "/$actual_plugin_install_dir/",
+                        $system_worker_loader_file_buff
+                    );
+                    file_put_contents( $system_worker_loader_file, $system_worker_loader_file_buff, LOCK_EX );
+                }
+            }
+        } elseif ( file_exists( $system_worker_loader_file ) ) { // on deactivate delete the worker loader
+            $del_res = unlink( $system_worker_loader_file );
+        }
+    }
 }
 
 /**
