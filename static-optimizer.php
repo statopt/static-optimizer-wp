@@ -692,6 +692,9 @@ function static_optimizer_settings_text() {
 	//echo '<p>Here you can set all the options for using the API</p>';
 }
 
+/**
+ * Generates the api_key box
+ */
 function static_optimizer_setting_api_key() {
 	$options = static_optimizer_get_options();
 	$val     = $options['api_key'];
