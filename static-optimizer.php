@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: StaticOptimizer
+Plugin Name: Static Optimizer
 Plugin URI: https://statopt.com
 Description: Makes your images, js, css load faster by optimizing them and loading them from StaticOptimizer Optimization servers
 Version: 1.0.0
