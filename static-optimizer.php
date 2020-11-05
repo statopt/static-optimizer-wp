@@ -760,7 +760,7 @@ function static_optimizer_settings_trim( $input ) {
 function static_optimizer_settings_validate( $input ) {
 	$input                   = array_map( 'static_optimizer_settings_trim', $input );
 	$new_input['api_key']    = trim( $input['api_key'] );
-	$new_input['status']     = isset( $input['status'] ) ? ! empty( $input['status'] ) : 1;
+	$new_input['status']     = isset( $input['status'] ) ? ! empty( $input['status'] ) : true;
 	$new_input['file_types'] = empty( $input['file_types'] ) ? [] : $input['file_types'];
 
 	if ( ! preg_match( '/^[\w]{5,60}$/si', $new_input['api_key'] ) ) {
