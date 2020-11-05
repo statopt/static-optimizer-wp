@@ -123,10 +123,6 @@ function static_optimizer_process_uninstall() {
  * @param string $option
  */
 function static_optimizer_after_option_update( $old_value, $value, $option ) {
-	if ( ! defined( 'STATIC_OPTIMIZER_CONF_FILE' ) ) {
-	    return;
-	}
-
 //	$mu_plugins_dir = '';
 //
 //	if ( defined( 'WPMU_PLUGIN_DIR' ) ) {
