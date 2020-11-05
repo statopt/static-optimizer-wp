@@ -49,8 +49,12 @@ $static_optimizer_worker = __DIR__ . '/000-static-optimizer-system-worker.php';
 
 if (!defined('STATIC_OPTIMIZER_ACTIVE') || STATIC_OPTIMIZER_ACTIVE) {
 	include_once $static_optimizer_worker;
-}
 
+	// The worker has all the conditions to run so don't load the plugin's stuff.
+	if (defined('STATIC_OPTIMIZER_WORKER_RUNNING') && STATIC_OPTIMIZER_WORKER_RUNNING) {
+		return;
+	}
+}
 
 //$mu_plugins_dir = '';
 //

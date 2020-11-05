@@ -69,6 +69,8 @@ if (empty($cfg['status']) || empty($cfg['file_types'])) { // deactivated or noth
 
 require_once __DIR__ . '/lib/opt.php';
 
+define( 'STATIC_OPTIMIZER_WORKER_RUNNING', 1 );
+
 // We've got everything we need so let's go and optimize.
 $static_opt_obj = new Static_Optimizer_Asset_Optimizer($cfg);
 ob_start( [ $static_opt_obj, 'run' ] );
