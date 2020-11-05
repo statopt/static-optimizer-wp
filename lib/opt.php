@@ -307,8 +307,12 @@ class Static_Optimizer_Asset_Optimizer {
 	private $customEscapeStart = "<!--static_optimizer_prot:";
 	private $customEscapeEnd = ":/static_optimizer_prot -->";
 
-	// This receives <script>...</script> sections
-	// if the script has src we won't encode its contents
+	/**
+	 * This receives <script>...</script> sections.
+	 * if the script has src we won't encode its contents.
+	 * @param $matches
+	 * @return string
+	 */
 	function protectScriptWithData($matches) {
 		static $cnt = 0;
 
