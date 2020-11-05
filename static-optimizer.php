@@ -460,13 +460,13 @@ function static_optimizer_options_page() {
                             </div> <!-- .inside -->
                         </div> <!-- .postbox -->
 
-						<?php if ( 0 ) : // turn off this for now. ?>
+						<?php if ( 1 ) : // turn off this for now. ?>
                             <div class="postbox">
-                                <h3><span>Demo (1min 22s)</span></h3>
+                                <h3><span>Demo (1min 47s)</span></h3>
                                 <div class="inside">
                                     <div class="">
                                         <iframe width="560" height="315"
-                                                src="https://www.youtube-nocookie.com/embed/a7f9vYVlmxg?rel=0"
+                                                src="https://www.youtube-nocookie.com/embed/1KC_JJOcu1s?rel=0"
                                                 frameborder="0"
                                                 allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                                                 allowfullscreen></iframe>

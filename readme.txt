@@ -1,7 +1,7 @@
 === Static Optimizer ===
 Contributors: lordspace,statopt,orbisius
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7APYDVPBCSY9A
-Tags: wp,static,optimization,smush,ewww,autoptimize,cache,minify,nginx,caching,speed,memcache,memcached,performance,siteground,apache,supercacher
+Tags: wp,static,optimization,smush,ewww,autoptimize,cache,minify,caching,speed,performance,supercacher,wp-super-cache,wp-fastest-cache,image,asset,js,css,font,optimisation
 Requires at least: 4
 Tested up to: 5.5
 Requires PHP: 5.6
@@ -35,7 +35,9 @@ your users will be redirected to the original file that was requested. Any subse
 People who have lots of images on their site such online stores, photographers.
 
 == Demo ==
-https://www.youtube.com/watch?v=a7f9vYVlmxg
+https://www.youtube.com/watch?v=1KC_JJOcu1s
+
+== Support ==
 
 Bugs? Suggestions? If you want a faster response contact us through our website's contact form at https://statopt.com and 
 not through the support tab of this plugin or WordPress forums.
