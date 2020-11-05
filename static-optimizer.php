@@ -82,29 +82,82 @@ add_action( 'static_optimizer_action_after_settings_form', 'static_optimizer_may
 // multisite
 add_action( 'network_admin_menu', 'static_optimizer_setup_admin' ); // manage_network_themes
 
+register_activation_hook(__FILE__, 'static_optimizer_process_activate');
+register_deactivation_hook(__FILE__, 'static_optimizer_process_deactivate');
 register_uninstall_hook( __FILE__, 'static_optimizer_process_uninstall' );
 
-function static_optimizer_process_uninstall() {
-	// delete cfg files and dir
-	if ( defined( 'STATIC_OPTIMIZER_CONF_FILE' ) ) {
-		if ( file_exists( STATIC_OPTIMIZER_CONF_FILE ) ) {
-			unlink( STATIC_OPTIMIZER_CONF_FILE );
-		}
-
-		$opt_dir = dirname( STATIC_OPTIMIZER_CONF_FILE );
-
-		if ( file_exists( $opt_dir . '/.htaccess' ) ) {
-			unlink( $opt_dir . '/.htaccess' );
-		}
-
-		if ( file_exists( $opt_dir . '/index.html' ) ) {
-			unlink( $opt_dir . '/index.html' );
-		}
-
-		if ( is_dir( $opt_dir ) ) {
-			rmdir( $opt_dir );
-		}
+/**
+ * The plugin was activated. If conf file exists and has api_key we can set it to status=1 now
+ */
+function static_optimizer_process_activate() {
+	if ( ! file_exists( STATIC_OPTIMIZER_CONF_FILE ) ) {
+		return;
 	}
+
+    $buff = file_get_contents(STATIC_OPTIMIZER_CONF_FILE);;
+
+    if (empty($buff)) {
+        return;
+    }
+
+    $json = json_decode($buff,true);
+
+    // if it was deactivated and has an empty key
+    if (!empty($json) && empty($json['status']) && !empty($json['api_key'])) {
+        $json['status'] = true;
+        $buff = json_encode($json, JSON_PRETTY_PRINT);
+
+        if (!empty($buff)) {
+		    file_put_contents(STATIC_OPTIMIZER_CONF_FILE, $buff, LOCK_EX);
+	    }
+    }
+}
+
+/**
+ * The plugin was deactivated so we need to set status to 0
+ */
+function static_optimizer_process_deactivate() {
+	if ( ! file_exists( STATIC_OPTIMIZER_CONF_FILE ) ) {
+		return;
+	}
+
+	$buff = file_get_contents(STATIC_OPTIMIZER_CONF_FILE);
+
+	if (empty($buff)) {
+		return;
+	}
+
+    $json = json_decode($buff,true);
+
+    if (!empty($json)) {
+        $json['status'] = false;
+        $buff = json_encode($json, JSON_PRETTY_PRINT);
+
+        if (!empty($buff)) {
+	        file_put_contents(STATIC_OPTIMIZER_CONF_FILE, $buff, LOCK_EX);
+        }
+    }
+}
+
+function static_optimizer_process_uninstall() {
+	// delete cfg files and data dir
+    if ( file_exists( STATIC_OPTIMIZER_CONF_FILE ) ) {
+        unlink( STATIC_OPTIMIZER_CONF_FILE );
+    }
+
+    $opt_dir = dirname( STATIC_OPTIMIZER_CONF_FILE );
+
+    if ( file_exists( $opt_dir . '/.htaccess' ) ) {
+        unlink( $opt_dir . '/.htaccess' );
+    }
+
+    if ( file_exists( $opt_dir . '/index.html' ) ) {
+        unlink( $opt_dir . '/index.html' );
+    }
+
+    if ( is_dir( $opt_dir ) ) {
+        rmdir( $opt_dir );
+    }
 
 //	if ( defined( 'STATIC_OPTIMIZER_SYSTEM_WORKER_LOADER_FILE' ) && file_exists( STATIC_OPTIMIZER_SYSTEM_WORKER_LOADER_FILE ) ) {
 ////		unlink( STATIC_OPTIMIZER_SYSTEM_WORKER_LOADER_FILE );
@@ -122,7 +175,7 @@ function static_optimizer_process_uninstall() {
  * @param array $value
  * @param string $option
  */
-function static_optimizer_after_option_update( $old_value, $value, $option ) {
+function static_optimizer_after_option_update( $old_value, $value, $option = null) {
 //	$mu_plugins_dir = '';
 //
 //	if ( defined( 'WPMU_PLUGIN_DIR' ) ) {
