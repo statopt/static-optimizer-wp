@@ -75,10 +75,23 @@ require_once __DIR__ . '/lib/request.php';
 // Set up plugin
 add_action( 'init', 'static_optimizer_init' );
 add_action( 'admin_menu', 'static_optimizer_setup_admin' );
-add_action( 'pre_update_option_static_optimizer_settings', 'static_optimizer_after_option_update', 20, 3 ); // be the last in the footer
 //add_action( 'update_option_static_optimizer_settings', 'static_optimizer_after_option_update', 20, 3 ); // be the last in the footer
 add_action( 'static_optimizer_action_after_settings_form', 'static_optimizer_maybe_render_get_key_form' ); // be the last in the footer
 add_action( 'static_optimizer_action_after_settings_form', 'static_optimizer_maybe_render_manage_key_form' ); // be the last in the footer
+
+add_filter( 'pre_update_option_static_optimizer_settings', 'static_optimizer_before_option_update', 20, 3 ); // be the last in the footer
+
+/**
+ * @param $value
+ * @param $option
+ * @param $old_value
+ *
+ * @return mixed
+ */
+function static_optimizer_before_option_update($value, $old_value, $option) {
+	static_optimizer_after_option_update($old_value, $value, $option);
+    return $value;
+}
 
 // multisite
 add_action( 'network_admin_menu', 'static_optimizer_setup_admin' ); // manage_network_themes
@@ -218,8 +231,8 @@ function static_optimizer_after_option_update( $old_value, $value, $option = nul
 
 	// This value and the status field determine if the cfg status will be set to true upon (reactivation)
     // this logic works well for status=true but for false we need to set this to false
-    // because the user has manually and explicitely turned off the functionality
-    if (empty($data['prev_status'])) {
+    // because the user has manually and explicitly turned off the functionality
+    if (empty($data['status'])) {
 	    $data['prev_status'] = false;
     } else {
 	    $data['prev_status'] = isset($old_value['status']) ? $old_value['status'] : true;
