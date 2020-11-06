@@ -22,14 +22,17 @@ If our optimization server are down (upgrade, maintenance or outage) your origin
 * Automatic js and css minification & compression
 * Automatic image optimization (gif, jpeg, png)
 * Files are reloaded only when they are changed on your server (or deleted from ours).
+* Our servers check and if the visitor's browser support webp that's what we'll serve.
+* We've put extra efforts to make this plugin as efficient as possible.
 * Simple to use
 
 = How it works =
 
-After you get your API key the plugin will install as a system (mu-plugin) and will correct where the selected files are loaded from.
-During the plugin configuration you can tell the plugin which files you'd like to be optimized.
+After you get your API key the plugin will install as a system (mu-plugin) and will correct the location where the selected files are loaded from.
+During the plugin configuration you can tell the plugin which file types you'd like to be optimized.
+By default only images are selected for optimization. You can also select js, css & font files to be optimized as well.
 The first time our servers get a file it will be downloaded and optimized. Because this operation can take several seconds
-your users will be redirected to the original file that was requested. Any subsequent requests will be served from our servers.
+your users will be redirected back to the original file that was requested. Any subsequent requests will be served from our servers.
 
 = Who is this plugin for? =
 People who have lots of images on their site such online stores, photographers.
