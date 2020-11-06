@@ -44,7 +44,7 @@ not through the support tab of this plugin or WordPress forums.
 
 = Author =
 
-Svetoslav Marinov (Slavi) | <a href="https://statopt.com/?utm_source=static-optimizer-wp" title="" target="_blank">Static File optimization and compression</a>
+Svetoslav Marinov (Slavi) | <a href="https://statopt.com/?utm_source=static-optimizer-wp" title="Image, js, css optimization and compression" target="_blank">StaticOptimizer</a>
 
 == Upgrade Notice ==
 n/a
