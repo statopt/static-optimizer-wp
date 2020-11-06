@@ -1,4 +1,4 @@
-=== Static Optimizer ===
+=== StaticOptimizer ===
 Contributors: lordspace,statopt,orbisius
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7APYDVPBCSY9A
 Tags: wp,static,optimization,smush,ewww,autoptimize,cache,minify,caching,speed,performance,supercacher,wp-super-cache,wp-fastest-cache,image,asset,js,css,font,optimisation
@@ -12,7 +12,7 @@ Optimizes your assets (images, css, js, fonts) for faster site loading so they a
 
 == Description ==
 
-Static Optimizer is a static file optimization cloud service that speeds up your site by optimizing and serving (the selected) static files from your site.
+StaticOptimizer is a static file optimization cloud service that speeds up your site by optimizing and serving (the selected) static files from your site.
 The service automatically optimizes & compresses the files automatically.
 No database or files changes are performed therefore there's no risk if you want to uninstall the plugin later (... but why would you?)
 If our optimization server are down (upgrade, maintenance or outage) your original files will be loaded instead.
