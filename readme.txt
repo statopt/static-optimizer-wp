@@ -22,6 +22,7 @@ If our optimization server are down (upgrade, maintenance or outage) your origin
 * Automatic js and css minification & compression
 * Automatic image optimization (gif, jpeg, png)
 * Files are reloaded only when they are changed on your server (or deleted from ours).
+* Our servers determine what file type to return and usually that's webp
 * Simple to use
 
 = How it works =
