@@ -72,7 +72,6 @@ if (!defined('STATIC_OPTIMIZER_ACTIVE') || STATIC_OPTIMIZER_ACTIVE) {
 
 require_once __DIR__ . '/lib/request.php';
 
-// Set up plugin
 add_action( 'init', 'static_optimizer_init' );
 add_action( 'admin_menu', 'static_optimizer_setup_admin' );
 add_action( 'static_optimizer_action_after_settings_form', 'static_optimizer_maybe_render_get_key_form' );
