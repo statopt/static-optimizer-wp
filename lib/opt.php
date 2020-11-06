@@ -59,18 +59,32 @@ class Static_Optimizer_Asset_Optimizer {
 			$filtered = preg_grep('#^http://#si', $servers);
 		}
 
+		if (empty($filtered)) {
+			return '';
+		}
+
 		if (!empty($filtered)) {
 			$servers = $filtered;
 		}
 
-		if (count($servers) == 1) { // if it's just one return it
-			return array_shift($servers);
-		}
-
-		// Pick a random static optimization server
-		$url = $servers[mt_rand(0, count($servers) - 1)];
+		// Pick a random static optimization server. If it's one element there won't be any randomness.
+		$url = $servers[ array_rand($servers) ];
 
 		return $url;
+	}
+
+	/**
+	 * php docs: Some web servers (e.g. Apache) change the working directory of a script when calling the callback function.
+	 * You can change it back by e.g. chdir(dirname($_SERVER['SCRIPT_FILENAME'])) in the callback function.
+	 * https://www.php.net/ob_start
+	 */
+	public function maybeCorrectScriptDir() {
+		if (!empty($_SERVER['SCRIPT_FILENAME'])
+		    && !empty($_SERVER['SERVER_SOFTWARE'])
+		    && (stripos($_SERVER['SERVER_SOFTWARE'], 'apache') !== false)
+	    ) {
+			chdir(dirname($_SERVER['SCRIPT_FILENAME']));
+		}
 	}
 
 	/**
@@ -146,7 +160,7 @@ class Static_Optimizer_Asset_Optimizer {
 			return $buff;
 		}
 
-		// there are no links for thos host?
+		// there are no links for this host?
 		if ( stripos( $buff, $host ) === false ) {
 			return $buff;
 		}
@@ -159,11 +173,17 @@ class Static_Optimizer_Asset_Optimizer {
 			return $buff;
 		}
 
+		// We'll pick only the keys of enabled file types
+		$enabled_file_types = array_filter($file_types);
+		$enabled_file_types = array_keys($enabled_file_types);
+
+		$this->maybeCorrectScriptDir();
+
 		$host_q = preg_quote( $host, '#' );
 		$script_tag_found = false;
 
 		// if the scripts do not have src we'll encode their inner contents so the replace method don't process them
-		if (in_array('js', $file_types) && (stripos($buff, '<script') !== false)) {
+		if (in_array('js', $enabled_file_types) && (stripos($buff, '<script') !== false)) {
 			$script_tag_found = true;
 			$all_assets_regex = '#(<script[^>]*>)(.*?)(</script>)#si';
 
@@ -174,21 +194,21 @@ class Static_Optimizer_Asset_Optimizer {
 			);
 		}
 
-		if (in_array('images', $file_types)) {
+		if (in_array('images', $enabled_file_types)) {
 			$supported_ext_arr[] = 'png';
 			$supported_ext_arr[] = 'jpe?g';
 			$supported_ext_arr[] = 'gif';
 		}
 
-		if (in_array('js', $file_types)) {
+		if (in_array('js', $enabled_file_types)) {
 			$supported_ext_arr[] = 'js';
 		}
 
-		if (in_array('css', $file_types)) {
+		if (in_array('css', $enabled_file_types)) {
 			$supported_ext_arr[] = 'css';
 		}
 
-		if (in_array('fonts', $file_types)) {
+		if (in_array('fonts', $enabled_file_types)) {
 			$supported_ext_arr[] = 'eot';
 			$supported_ext_arr[] = 'ttf';
 			$supported_ext_arr[] = 'woff\d*';
@@ -212,7 +232,7 @@ class Static_Optimizer_Asset_Optimizer {
 			$buff
 		);
 
-		if (in_array('images', $file_types)) {
+		if (in_array('images', $enabled_file_types)) {
 			// We'll check if there are images with srcset attrib in a small buff
 			$first_pos = stripos( $buff, '<img' );
 
@@ -230,7 +250,7 @@ class Static_Optimizer_Asset_Optimizer {
 
 		$css_load_found = false;
 
-		if (in_array('css', $file_types) && (stripos($buff, '<link') !== false)) {
+		if (in_array('css', $enabled_file_types) && (stripos($buff, '<link') !== false)) {
 			$css_load_found = true;
 		}
 
@@ -270,12 +290,13 @@ class Static_Optimizer_Asset_Optimizer {
 
 			$buff = preg_replace_callback(
 				$all_assets_regex,
-				[ $this, 'unProtectScriptWithData' ],
+				[ $this, 'unprotectScriptWithData' ],
 				$buff
 			);
 		}
 
 		// @todo parse WP load scripts js too
+		// @todo parse local files starting with / or relative???
 		// change jquery to google cdn ? or leave my code to run in WP to do it.
 		// //<script onerror="javascript:static_optimizer_handle_broken_script(this);"
 		// src='http://demo.qsandbox0.staging.com/qs3_1596199452_0089/s-qcsgy24aatlal.qsandbox0.staging.com/wp-admin/load-scripts.php?c=0&amp;load%5Bchunk_0%5D=jquery-core,jquery-migrate,utils&amp;ver=5.4.2'></script>
@@ -286,8 +307,12 @@ class Static_Optimizer_Asset_Optimizer {
 	private $customEscapeStart = "<!--static_optimizer_prot:";
 	private $customEscapeEnd = ":/static_optimizer_prot -->";
 
-	// This receives <script>...</script> sections
-	// if the script has src we won't encode its contents
+	/**
+	 * This receives <script>...</script> sections.
+	 * if the script has src we won't encode its contents.
+	 * @param $matches
+	 * @return string
+	 */
 	function protectScriptWithData($matches) {
 		static $cnt = 0;
 
@@ -302,7 +327,7 @@ class Static_Optimizer_Asset_Optimizer {
 	}
 
 	// This should revert the encoded text to <script>...</script> sections
-	function UnprotectScriptWithData($matches) {
+	function unprotectScriptWithData($matches) {
 		$str = $matches[1];
 		$str = base64_decode($str);
 		$str = unserialize($str);
@@ -346,15 +371,15 @@ class Static_Optimizer_Asset_Optimizer {
 
     function static_optimizer_handle_broken_image(img_obj) {
         var src = img_obj.currentSrc || img_obj.src || '';
-        console.log("static_optimizer_image_found: " + src);
+        console.log("statopt: found src: " + src);
 
         var orig_src = static_optimizer_core_get_original_asset_url(src);
 
         if ( orig_src ) {
-            img_obj.onerror = null;  
+            img_obj.onerror = null;
             img_obj.src = orig_src;
             img_obj.srcset = orig_src;
-            console.log("static_optimizer_fixed_src: " + orig_src );
+            console.log("statopt: orig src: " + orig_src);
             console.log(img_obj);
         }
 
@@ -399,27 +424,38 @@ class Static_Optimizer_Asset_Optimizer {
         }
 
         if (src.indexOf('.statopt_ver') == -1) { // not optimized.
-            console.log("fix: Skipping item. Not optimized : " + src);
+            console.log("statopt: Skipping item. Not optimized : " + src);
             return false;
         }
 
         if (src.indexOf(static_optimizer_site_cfg.server_name) == -1) {
-            console.log("fix: Skipping external image: " + src);
+            console.log("statopt: Skipping external image: " + src);
             return false;
         }
 
         if (src.indexOf('/site/http') == -1) { // already linked to the origin src
-            console.log("fix: Skipping already linked to the origin src?: " + src);
+            console.log("statopt: Skipping already linked to the origin src?: " + src);
             return false;
         }
         
         src = src.replace(/^.+?\/site\/(.*)/ig, '$1');
-        
+
+        // @todo check JSON cfg if htaccess has the handler for statopt_ver installed.
+        // script.statopt_ver.5.5.js -> script.statopt_ver.5.5.js
+        // script.statopt_ver.5.5.min.js -> script.statopt_ver.5.5.min.js
+        // Screenshot-300x150.statopt_ver.5.5.png -> Screenshot-300x150.png
+        // Screenshot-300x150.statopt_ver.5.5.5.png -> Screenshot-300x150.png
+        // Screenshot-300x150.statopt_ver.1604574710.png -> Screenshot-300x150.png
+        // Screenshot-300x150.statopt_ver.sha1-asfoijasofjoiajsfjasfjoasfjioas.png -> Screenshot-300x150.png
+        src = src.replace(/statopt_ver[\-_.][\w\-\.]+?\.((min\.)?[a-z]{2,5})$/ig, '$1');
+
         // https://stackoverflow.com/questions/3431512/javascript-equivalent-to-phps-urldecode
         src = decodeURIComponent(src.replace(/\+/g, ' '));
-        
-        if ('https:' == document.location.protocol) {
+
+        // Is the site loaded from https and the asset point to http ?
+        if ('https:' == document.location.protocol && src.indexOf('http://') != -1) {
             src = src.replace(/http:\/\//ig, 'https://');
+            console.log("statopt: correcting protocol to https: " + src);
         }
 
         return src;
@@ -563,6 +599,7 @@ BUFF_EOF;
 		$ver = empty($ver)? date('Y-m-d') : $ver; // one day caching if version was not found.
 
 		// @todo use https://www.jsdelivr.com/?docs=wp for known wp plugins & themes assets ?
+		// ='https://1mapps.qsandbox0.staging.com/statopt/test/site/wp-includes/css/dist/block-library/style.min.statopt_ver.1603969031.css'
 		$str = $matches[1] . '.statopt_ver.' . $ver . '.'. $matches[2] . $matches[4];
 
 		$ctx = [
@@ -572,15 +609,28 @@ BUFF_EOF;
 		$optimizer_url = $this->getOptimizerServerUri($ctx);
 
 		if (!empty($optimizer_url)) {
-			$r = '#(.*?)(https?://.+?)([\s\'\"]*.*)$#si';
-
 			// get url replace url with server + url and append leave the other stuff as is such as surrounding quotes.
+			// ='https://1mapps.qsandbox0.staging.com/statopt/test/site/wp-includes/css/dist/block-library/style.min.statopt_ver.1603969031.css'
+			// 1 -> ='
+			// 2 -> https://1mapps.qsandbox0.staging.com/statopt/test/site/wp-includes/css/dist/block-library/style.min.statopt_ver.1603969031.css
+			// 3 -> '' <= or spaces or quotes
+			$r = '#(.*?)(https?://[^\s\'\"]+)(.*)$#si';
 			if (preg_match($r, $str, $matches)) {
 				$pref = $matches[1];
 				$suff = $matches[3];
-				$clean_url = $matches[2];
-				$clean_url_esc = urlencode($clean_url);
-				$optimized_asset_url = str_replace('{url}', $clean_url_esc, $optimizer_url);
+				$url_only = $matches[2];
+				$url_only_esc = urlencode($url_only);
+
+				// Sometimes we may have a specific place where to put the URL as a template variable {url}
+				// but if it doesn't exist then we'll just append.
+				$search_tpl_var = '{url}';
+
+				if (strpos($optimizer_url, $search_tpl_var) === false) {
+					$optimized_asset_url = $optimizer_url . '/site/' . $url_only_esc;
+				} else {
+					$optimized_asset_url = str_replace($search_tpl_var, $url_only_esc, $optimizer_url);
+				}
+
 				$str = $pref . $optimized_asset_url . $suff;
 			}
 		}
@@ -619,6 +669,33 @@ BUFF_EOF;
 	 * @return string[]
 	 */
 	public function getServers() {
+		static $servers = null;
+
+		if (!is_null($servers)) {
+			return $servers;
+		}
+
+		$user_defined_servers = '';
+		$user_defined_servers_env = getenv('STATIC_OPTIMIZER_SERVERS');
+
+		if (defined('STATIC_OPTIMIZER_SERVERS')) {
+			$user_defined_servers = STATIC_OPTIMIZER_SERVERS;
+		} elseif (!empty($user_defined_servers_env)) {
+			$user_defined_servers = $user_defined_servers_env;
+		}
+
+		if (!empty($user_defined_servers)) {
+			$servers_arr = preg_split('#[\s,|;]+#si', $user_defined_servers);
+			$servers_arr = array_map('trim', $servers_arr);
+			$servers_arr = array_filter($servers_arr);
+			$servers_arr = array_unique($servers_arr);
+
+			if (!empty($servers_arr)) {
+				$servers = $servers_arr;
+				return $servers;
+			}
+		}
+
 		if (!empty($this->cfg['servers'])) { // the user may have custom servers linked to their account
 			return $this->cfg['servers'];
 		}

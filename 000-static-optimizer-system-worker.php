@@ -12,7 +12,6 @@ if (    !defined('ABSPATH')
      || php_sapi_name() == 'cli'
      || (defined('WP_CLI') && WP_CLI)
 //     || !empty($_POST)
-//	 || (!empty($_SERVER['REQUEST_METHOD']) && strcasecmp($_SERVER['REQUEST_METHOD'], 'get') != 0)
      || (!empty($_SERVER['REQUEST_URI']) &&
          (     (strpos($_SERVER['REQUEST_URI'], 'wp-cron') !== false) // no cron requests
             || (strpos($_SERVER['REQUEST_URI'], '/wp-admin/') !== false) // no running in admin area
@@ -21,14 +20,20 @@ if (    !defined('ABSPATH')
 	 || empty( $_SERVER['HTTP_HOST'] )
 	 || empty( $_SERVER['SERVER_NAME'] )
      || (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strcasecmp($_SERVER['HTTP_X_REQUESTED_WITH'], 'xmlhttprequest') == 0)
-	|| ! empty( $_SERVER['QS_SYSTEM_CORE_CORRECT_ASSETS_VER'] ) // do not run on Orbisius servers as this is built-in.
-	|| ! empty( $_SERVER['QS_APP_SYSTEM_OPTIMIZER_URL'] )
+//	|| ! empty( $_SERVER['QS_SYSTEM_CORE_CORRECT_ASSETS_VER'] ) // do not run on Orbisius servers as this is built-in.
+//	|| ! empty( $_SERVER['QS_APP_SYSTEM_OPTIMIZER_URL'] )
 ) {
     return;
 }
 
 // We have the .ht prefix because this is normally blocked by apache .ht access rules
-$cfg_file = WP_CONTENT_DIR . '/.ht-static-optimizer/config.json';
+if (defined( 'STATIC_OPTIMIZER_CONF_FILE')) {
+	$cfg_file = STATIC_OPTIMIZER_CONF_FILE;
+} elseif (defined('WP_CONTENT_DIR')) {
+	$cfg_file = WP_CONTENT_DIR . '/.ht-static-optimizer/config.json';
+} else {
+	return;
+}
 
 if (!file_exists($cfg_file)) {
 	return;
@@ -41,21 +46,30 @@ if (empty($fp)) {
 }
 
 @flock($fp, LOCK_SH);
-$json_buff = file_get_contents($cfg_file);
+$cfg_buff = file_get_contents($cfg_file);
 @flock($fp, LOCK_UN);
 fclose($fp);
 
-if (empty($json_buff)) {
+if (empty($cfg_buff)) {
 	return;
 }
 
-$cfg = json_decode($json_buff, true);
+$cfg = [];
 
-if (empty($cfg['status']) || empty($cfg['file_types'])) { // deactivated or nothing selected?
+if (substr($cfg_buff, 0, 1 ) == '{') { // is this a JSON file?
+	$cfg = json_decode($cfg_buff, true);
+} else { // it must be php serialized file then.
+	$php_ser = base64_decode($cfg_buff);
+	$cfg = unserialize($php_ser);
+}
+
+if (empty($cfg['status']) || empty($cfg['file_types']) || empty($cfg['api_key'])) { // deactivated or nothing selected or missing API key
 	return;
 }
 
 require_once __DIR__ . '/lib/opt.php';
+
+define( 'STATIC_OPTIMIZER_WORKER_RUNNING', 1 );
 
 // We've got everything we need so let's go and optimize.
 $static_opt_obj = new Static_Optimizer_Asset_Optimizer($cfg);
