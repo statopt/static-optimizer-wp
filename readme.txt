@@ -23,6 +23,7 @@ If our optimization server are down (upgrade, maintenance or outage) your origin
 * Automatic image optimization (gif, jpeg, png)
 * Files are reloaded only when they are changed on your server (or deleted from ours).
 * Our servers check and if the visitor's browser support webp that's what we'll serve.
+* Responsive Images (from srcset) are also processed
 * We've put extra efforts to make this plugin as efficient as possible.
 * Simple to use
 
