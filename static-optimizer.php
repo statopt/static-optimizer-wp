@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Static Optimizer
+Plugin Name: StaticOptimizer
 Plugin URI: https://statopt.com
 Description: Makes your images, js, css load faster by optimizing them and loading them from StaticOptimizer Optimization servers
 Version: 1.0.0
@@ -322,13 +322,13 @@ function static_optimizer_init() {
 /**
  * Set up administration
  *
- * @package Static Optimizer
+ * @package StaticOptimizer
  * @since 0.1
  */
 function static_optimizer_setup_admin() {
 	$hook = add_options_page(
-		__( 'Static Optimizer', 'static_optimizer' ),
-		__( 'Static Optimizer', 'static_optimizer' ),
+		__( 'StaticOptimizer', 'static_optimizer' ),
+		__( 'StaticOptimizer', 'static_optimizer' ),
 		'manage_options', __FILE__,
 		'static_optimizer_options_page'
 	);
@@ -395,7 +395,7 @@ function static_optimizer_options_page() {
 
 	?>
     <div id="static_optimizer_wrapper" class="wrap static_optimizer_wrapper">
-        <h2>Static Optimizer</h2>
+        <h2>StaticOptimizer</h2>
 
         <div id="poststuff">
             <div id="post-body" class="metabox-holder columns-2">
@@ -436,8 +436,8 @@ function static_optimizer_options_page() {
                             <!--                            <h3><span>Usage</span></h3>-->
                             <div class="inside">
                                 <div class="">
-                                    <p><a href="https://statopt.com" target="_blank">Static Optimizer</a> makes your site
-                                        load faster by loading your files from Static Optimizer Optimization servers.</p>
+                                    <p><a href="https://statopt.com" target="_blank">StaticOptimizer</a> makes your site
+                                        load faster by loading your files from StaticOptimizer Optimization servers.</p>
                                     <p>We'll take care of optimizing the images & minimizing the javascript and css
                                         files.</p>
                                     <p>If our servers are down for some reason the original images will be loaded from
@@ -869,7 +869,7 @@ function static_optimizer_maybe_render_get_key_form( $ctx = [] ) {
     <hr/>
     <div id="static_optimizer_get_api_key_form_wrapper" class="static_optimizer_get_api_key_form_wrapper">
         <h3>API Key</h3>
-        <p>Get your Static Optimizer API key using this form.</p>
+        <p>Get your StaticOptimizer API key using this form.</p>
 
         <form id="static_optimizer_get_api_key_form" name="static_optimizer_get_api_key_form"
               target="_blank"
@@ -907,7 +907,7 @@ function static_optimizer_maybe_render_manage_key_form( $ctx = [] ) {
     <div id="static_optimizer_manage_api_key_form_wrapper" class="static_optimizer_get_api_key_form_wrapper">
         <h3>Manage API Key</h3>
         <p>
-            To manage your Static Optimizer API key to go <a href="<?php echo esc_url( $app_site_url_href ); ?>"
+            To manage your StaticOptimizer API key to go <a href="<?php echo esc_url( $app_site_url_href ); ?>"
                                                             target="_blank"
                                                             class="button button-primary"><?php echo esc_url( $app_site_url ); ?></a>
         </p>
