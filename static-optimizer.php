@@ -6,7 +6,7 @@ Description: Makes your images, js, css load faster by optimizing them and loadi
 Version: 1.0.0
 Author: StaticOptimizer & Orbisius
 Author URI: https://orbisius.com
-*/Automatic image optimizat
+*/
 
 /*  Copyright 2012-3000 Svetoslav Marinov (Slavi) <slavi@statopt.com>
 
@@ -869,7 +869,7 @@ function static_optimizer_maybe_render_get_key_form( $ctx = [] ) {
     <hr/>
     <div id="static_optimizer_get_api_key_form_wrapper" class="static_optimizer_get_api_key_form_wrapper">
         <h3>API Key</h3>
-        <p>Get your StaticOptimizer API key using this form.</p>
+        <p>Get your Static Optimizer API key using this form.</p>
 
         <form id="static_optimizer_get_api_key_form" name="static_optimizer_get_api_key_form"
               target="_blank"
@@ -907,7 +907,7 @@ function static_optimizer_maybe_render_manage_key_form( $ctx = [] ) {
     <div id="static_optimizer_manage_api_key_form_wrapper" class="static_optimizer_get_api_key_form_wrapper">
         <h3>Manage API Key</h3>
         <p>
-            To manage your StaticOptimizer API key to go <a href="<?php echo esc_url( $app_site_url_href ); ?>"
+            To manage your Static Optimizer API key to go <a href="<?php echo esc_url( $app_site_url_href ); ?>"
                                                             target="_blank"
                                                             class="button button-primary"><?php echo esc_url( $app_site_url ); ?></a>
         </p>
