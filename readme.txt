@@ -78,6 +78,9 @@ Yes
 
 == Changelog ==
 
+= 1.0.2 =
+* fixed twitter handle to statopt
+
 = 1.0.1 =
 * Updated text & labels
 

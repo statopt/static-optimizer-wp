@@ -630,7 +630,7 @@ function static_optimizer_options_page() {
                                 <!-- /Twitter: code -->
 
                                 <!-- Twitter: Orbisius_Follow:js -->
-                                <a href="https://twitter.com/static" class="twitter-follow-button"
+                                <a href="https://twitter.com/statopt" class="twitter-follow-button"
                                    data-align="right" data-show-count="false">Follow @statopt</a>
                                 <!-- /Twitter: Orbisius_Follow:js -->
 
