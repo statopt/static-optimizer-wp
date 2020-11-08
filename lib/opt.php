@@ -152,14 +152,6 @@ class Static_Optimizer_Asset_Optimizer {
 			return $buff;
 		}
 
-		// <body should start within the first N KB
-		$small_buff = substr( $buff, 0, 30 * 1024 );
-
-		// If it's not an HTML code don't modify anything.
-		if ( stripos( $small_buff, '<body' ) === false ) {
-			return $buff;
-		}
-
 		// there are no links for this host?
 		if ( stripos( $buff, $host ) === false ) {
 			return $buff;
