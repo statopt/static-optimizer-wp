@@ -84,6 +84,7 @@ Yes
 
 = 1.0.2 =
 * fixed twitter handle to statopt
+* hide the settings form when there's no api key so it's easier to see what's expected from the user.
 
 = 1.0.1 =
 * Updated text & labels

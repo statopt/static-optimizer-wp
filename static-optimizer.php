@@ -3,7 +3,7 @@
 Plugin Name: StaticOptimizer
 Plugin URI: https://statopt.com
 Description: Makes your images, js, css load faster by optimizing them and loading them from StaticOptimizer Optimization servers
-Version: 1.0.1
+Version: 1.0.2
 Author: StaticOptimizer & Orbisius
 Author URI: https://orbisius.com
 */
@@ -395,7 +395,7 @@ function static_optimizer_options_page() {
         'opts' => $opts,
     ];
 
-	$show_settings_form = empty($opts['api_key']);
+	$show_settings_form = !empty($opts['api_key']);
 
 	do_action( 'static_optimizer_action_before_render_settings_form', $plugin_ctx );
 
@@ -447,8 +447,10 @@ function static_optimizer_options_page() {
 											echo "</div>";
 										}
 
-										echo "<br/>";
-										echo __("Please, use the form below to get your API key | <a href='#' class='button'>I already have an API key</a>", 'statopt');
+										if (!$show_settings_form) {
+											echo "<br/>";
+											echo __( "Please, use the form below to get your API key | <a href='#' class='button'>I already have an API key</a>", 'statopt' );
+										}
 									}
 									?>
                                 </form>
