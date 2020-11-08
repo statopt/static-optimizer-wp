@@ -89,6 +89,9 @@ Yes
 
 == Changelog ==
 
+= 1.0.3 =
+*
+
 = 1.0.2 =
 * Removed the check for body start which was making the plugin to not process anything pretty early. On some sites the body started after 60-70kb
 * fixed twitter handle to statopt
