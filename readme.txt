@@ -41,8 +41,9 @@ People who have lots of images on their site such online stores, photographers.
 = Thanks =
 
 I'd like to express my gratitude to the people who have taken the time to test the plugin & make suggestions and/or has provided access to troubleshoot glitches.
-* Ryan Chaffe - https://site123.ca
-* Michel Veenstra - https://www.adventis.nl
+* Ryan Chaffe - <a href="https://site123.ca" title="" target="_blank">https://site123.ca</a>
+* Michel Veenstra - <a href="https://www.adventis.nl" title="" target="_blank">https://www.adventis.nl</a>
+
 * and to many more.
 
 == Demo ==
