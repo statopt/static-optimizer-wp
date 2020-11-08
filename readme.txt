@@ -2,10 +2,10 @@
 Contributors: lordspace,statopt,orbisius
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7APYDVPBCSY9A
 Tags: wp,static,optimization,smush,ewww,autoptimize,cache,minify,caching,speed,performance,supercacher,wp-super-cache,wp-fastest-cache,image,asset,js,css,font,optimisation
-Requires at least: 4
+Requires at least: 4.0
 Tested up to: 5.5
 Requires PHP: 5.6
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 
 Optimizes your assets (images, css, js, fonts) for faster site loading so they are loaded by StaticOptimizer Optimization servers.
@@ -37,6 +37,13 @@ your users will be redirected back to the original file that was requested. Any 
 
 = Who is this plugin for? =
 People who have lots of images on their site such online stores, photographers.
+
+= Thanks =
+
+I'd like to express my gratitude to the people who have taken the time to test the plugin & make suggestions and/or has provided access to troubleshoot glitches.
+* Ryan Chaffe - https://site123.ca
+* Michel Veenstra - https://www.adventis.nl
+* and to many more.
 
 == Demo ==
 https://www.youtube.com/watch?v=1KC_JJOcu1s
@@ -83,6 +90,7 @@ Yes
 == Changelog ==
 
 = 1.0.2 =
+* Removed the check for body start which was making the plugin to not process anything pretty early. On some sites the body started after 60-70kb
 * fixed twitter handle to statopt
 * hide the settings form when there's no api key so it's easier to see what's expected from the user.
 
