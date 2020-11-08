@@ -390,7 +390,13 @@ function static_optimizer_redirect_to_gen_api_key( $ctx ) {
  * @since 1.0
  */
 function static_optimizer_options_page() {
-	$plugin_ctx = [];
+    $opts = static_optimizer_get_options();
+	$plugin_ctx = [
+        'opts' => $opts,
+    ];
+
+	$show_settings_form = empty($opts['api_key']);
+
 	do_action( 'static_optimizer_action_before_render_settings_form', $plugin_ctx );
 
 	?>
@@ -410,6 +416,14 @@ function static_optimizer_options_page() {
                                     .static_optimizer_admin_options_form h2 {
                                         display: none;
                                     }
+
+                                    .static_optimizer_hide {
+                                        display: none;
+                                    }
+
+                                    .static_optimizer_notice {
+                                        color:yellow;
+                                    }
                                 </style>
                                 <form id="static_optimizer_admin_options_form"
                                       class="static_optimizer_admin_options_form"
@@ -421,10 +435,20 @@ function static_optimizer_options_page() {
 										            . "<br/><a href='$next_url' class='button button-primary'>Continue</a>";
 										echo $msg;
 									} else {
+									    if (!$show_settings_form) {
+										    echo "<div class='static_optimizer_admin_options_fields static_optimizer_hide'>";
+									    }
 										settings_fields( 'static_optimizer_settings' );
 										do_settings_sections( 'static_optimizer_settings' );
 										$btn_label = esc_attr( 'Save Changes' );
 										echo "<input name='submit' class='button button-primary' type='submit' value='$btn_label' />";
+
+										if (!$show_settings_form) {
+											echo "</div>";
+										}
+
+										echo "<br/>";
+										echo __("Please, use the form below to get your API key | <a href='#' class='button'>I already have an API key</a>", 'statopt');
 									}
 									?>
                                 </form>
