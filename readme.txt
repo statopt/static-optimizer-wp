@@ -75,15 +75,14 @@ n/a
 
 == Frequently Asked Questions ==
 
-= How to use this plugin? =
+= For the most up-to-date FAQ see the site =
 
-Check out https://statopt.com
+Check out <a href="https://statopt.com" target="_blank" title="[new window]">https://statopt.com</a>
 
 = Bug Report / Feature Requests =
-Please submit any bug report or feature requests to our github issue tracking system.
 
-<a href="https://github.com/statopt/static-optimizer-wp/issues"
-                                    target="_blank" title="[new window]">Report Bugs / Features</a>
+Please submit any bug report or feature requests in our github issue tracking system.
+<a href="https://github.com/statopt/static-optimizer-wp/issues" target="_blank" title="[new window]">Report Bugs / Features</a>
 
 = Does it work with WordPress multisite? =
 Yes
