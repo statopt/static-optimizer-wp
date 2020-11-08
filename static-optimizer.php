@@ -425,6 +425,18 @@ function static_optimizer_options_page() {
                                         color:yellow;
                                     }
                                 </style>
+                                <script>
+                                    (function($) {
+                                        $(function() {
+                                            jQuery(".static_optimizer_admin_options_fields_reveal_btn").on('click', function () {
+                                                jQuery(".static_optimizer_admin_options_fields_reveal_btn_wrapper").hide();
+                                                jQuery(".static_optimizer_admin_options_fields").show();
+                                                jQuery("#static_optimizer_setting_api_key").focus();
+                                                return false;
+                                            });
+                                        });
+                                    })(jQuery);
+                                </script>
                                 <form id="static_optimizer_admin_options_form"
                                       class="static_optimizer_admin_options_form"
                                       action="options.php" method="post">
@@ -449,7 +461,10 @@ function static_optimizer_options_page() {
 
 										if (!$show_settings_form) {
 											echo "<br/>";
-											echo __( "Please, use the form below to get your API key | <a href='#' class='button'>I already have an API key</a>", 'statopt' );
+                                            echo "<div class='static_optimizer_admin_options_fields_reveal_btn_wrapper'>";
+											echo __( "Use the form below to get your API key | <a href='javascript:void(0);' class='static_optimizer_admin_options_fields_reveal_btn'>I already have an API key</a>", 'statopt' );
+                                            echo "</div>";
+
 										}
 									}
 									?>
@@ -978,19 +993,23 @@ add_action( 'static_optimizer_action_before_settings_form', 'static_optimizer_ma
 function static_optimizer_maybe_render_not_active_plugin( $ctx ) {
 	$options = static_optimizer_get_options();
 
+	$cls = '';
+
 	if ( empty( $options['api_key'] ) ) {
-		$msg = __( "Error: Missing API key. You need to request an API key to use this plugin. "
+		$cls = 'notice-warning';
+		$msg = __( "Warning: You need to request a free API key. "
 		           . "<br/>Generating an API key will authorize the current site."
 		           . " If the site is not authorized our servers will not deliver your files (403 error).", 'statopt' );
 	} elseif ( empty( $options['status'] ) ) {
-		$msg = __( "Error: Plugin Inactive. You need set plugin's status to active in order for it to work.", 'statopt' );
+		$cls = 'notice-warning';
+		$msg = __( "Warning: Plugin is Inactive. You need set plugin's status to active in order for it to work.", 'statopt' );
 	} else {
 		return;
 	}
 
 	?>
-    <div class="alert" style="background:red;color: #fff;padding: 3px;">
-		<?php echo $msg; ?>
+    <div class="notice <?php echo $cls;?>" style00="background:red;color: #fff;padding: 3px;">
+		<p><?php echo $msg; ?></p>
     </div>
 	<?php
 }
