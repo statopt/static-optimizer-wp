@@ -917,10 +917,13 @@ function static_optimizer_maybe_render_get_key_form( $ctx = [] ) {
               method="post">
             <input type="hidden" id="static_optimizer_cmd" name="static_optimizer_cmd" value="api_key.generate"/>
 
-            Site: <input type="url" id="static_optimizer_site_url" name="site_url"
-                         value="<?php esc_attr_e( $site_url ); ?>"/>
             Email: <input type="email" id="static_optimizer_email" name="email"
                           value="<?php esc_attr_e( $admin_email ); ?>"/>
+
+            Site: <input type="url" id="static_optimizer_site_url" name="site_url"
+                         style="width: 45%"
+                         value="<?php esc_attr_e( $site_url ); ?>"/>
+
             <input name='submit' class='button button-primary' type='submit' value='Get API Key'/>
         </form>
     </div> <!-- /static_optimizer_get_api_key_form_wrapper -->
