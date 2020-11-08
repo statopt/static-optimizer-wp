@@ -27,6 +27,9 @@ If our optimization server are down (upgrade, maintenance or outage) your origin
 * We've put extra efforts to make this plugin as efficient as possible.
 * Simple to use
 
+== Demo ==
+https://www.youtube.com/watch?v=1KC_JJOcu1s
+
 = How it works =
 
 After you get your API key the plugin will install as a system (mu-plugin) and will correct the location where the selected files are loaded from.
@@ -45,9 +48,6 @@ I'd like to express my gratitude to the people who have taken the time to test t
 * Michel Veenstra - <a href="https://www.adventis.nl" title="" target="_blank">https://www.adventis.nl</a>
 
 * and to many more.
-
-== Demo ==
-https://www.youtube.com/watch?v=1KC_JJOcu1s
 
 == Support ==
 
@@ -90,7 +90,8 @@ Yes
 == Changelog ==
 
 = 1.0.3 =
-*
+* moved demo up
+* readme changes
 
 = 1.0.2 =
 * Removed the check for body start which was making the plugin to not process anything pretty early. On some sites the body started after 60-70kb
