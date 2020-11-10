@@ -876,6 +876,18 @@ function static_optimizer_setting_file_types() {
             <input id='static_optimizer_setting_file_types_{$file_type}' name='static_optimizer_settings[file_types][$file_type]' 
             type='checkbox' value='1' $checked /> $file_type </label><br/>";
 	}
+
+	$note_on_fonts =<<<NOTE_EOF
+        <br/>
+	        <div>
+                Note: If you have fonts that are loaded/referenced in CSS via relative paths they may not properly load from our
+                servers.
+            </div>
+NOTE_EOF;
+
+	if (isset($file_types['fonts'])) {
+		echo $note_on_fonts;
+	}
 }
 
 /**
