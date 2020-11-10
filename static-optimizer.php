@@ -772,7 +772,7 @@ function static_optimizer_get_options( $load_defaults = false ) {
 			'images' => 1,
 			'js' => 0,
 			'css' => 0,
-			'fonts' => 0,
+			//'fonts' => 0,
 		],
 	);
 
