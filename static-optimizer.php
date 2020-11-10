@@ -434,6 +434,15 @@ function static_optimizer_options_page() {
                                                 jQuery("#static_optimizer_setting_api_key").focus();
                                                 return false;
                                             });
+
+                                            // When the user submits the form to sign up for the API key, it will wait for him/her expanded.
+                                            jQuery('.static_optimizer_get_api_key_form').on('submit', function (e) {
+                                                setTimeout(function () {
+                                                    jQuery('.static_optimizer_admin_options_fields_reveal_btn').trigger('click');
+                                                }, 100);
+
+                                                return true;
+                                            });
                                         });
                                     })(jQuery);
                                 </script>
@@ -462,9 +471,9 @@ function static_optimizer_options_page() {
 										if (!$show_settings_form) {
 											echo "<br/>";
                                             echo "<div class='static_optimizer_admin_options_fields_reveal_btn_wrapper'>";
-											echo __( "Use the form below to get your API key | <a href='javascript:void(0);' class='static_optimizer_admin_options_fields_reveal_btn'>I already have an API key</a>", 'statopt' );
+											echo __( "Use the form below to get your API key "
+                                                     . " | <a href='javascript:void(0);' class='static_optimizer_admin_options_fields_reveal_btn'>I already have an API key</a>", 'statopt' );
                                             echo "</div>";
-
 										}
 									}
 									?>
@@ -772,7 +781,7 @@ function static_optimizer_get_options( $load_defaults = false ) {
 			'images' => 1,
 			'js' => 0,
 			'css' => 0,
-			//'fonts' => 0,
+			'fonts' => 0,
 		],
 	);
 
@@ -913,6 +922,7 @@ function static_optimizer_maybe_render_get_key_form( $ctx = [] ) {
         <p>Get your StaticOptimizer API key using this form.</p>
 
         <form id="static_optimizer_get_api_key_form" name="static_optimizer_get_api_key_form"
+              class="static_optimizer_get_api_key_form"
               target="_blank"
               method="post">
             <input type="hidden" id="static_optimizer_cmd" name="static_optimizer_cmd" value="api_key.generate"/>
@@ -921,7 +931,7 @@ function static_optimizer_maybe_render_get_key_form( $ctx = [] ) {
                           value="<?php esc_attr_e( $admin_email ); ?>"/>
 
             Site: <input type="url" id="static_optimizer_site_url" name="site_url"
-                         style="width: 45%"
+                         style="width: 35%"
                          value="<?php esc_attr_e( $site_url ); ?>"/>
 
             <input name='submit' class='button button-primary' type='submit' value='Get API Key'/>
