@@ -95,6 +95,7 @@ Yes
 * removed the fonts from the selected list as they may not load all the time usually those with relative paths
 * added a check so the api form expands after the user submits the form to get a key
 * added notes about fonts referenced/loaded via relative paths
+* fixed the notice that's shown on localhost installs
 
 = 1.0.2 =
 * Removed the check for body start which was making the plugin to not process anything pretty early. On some sites the body started after 60-70kb

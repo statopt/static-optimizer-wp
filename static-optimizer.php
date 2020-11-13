@@ -984,26 +984,32 @@ function static_optimizer_maybe_render_manage_key_form( $ctx = [] ) {
 add_action( 'static_optimizer_action_before_settings_form', 'static_optimizer_maybe_render_localhost_notice' );
 
 function static_optimizer_maybe_render_localhost_notice( $ctx ) {
-	$local_ips = [ '::1', '127.0.0.1', ];
-
 	if ( empty( $_SERVER['REMOTE_ADDR'] ) ) {
 		return;
 	}
 
-	// Let's check LAN IPs
-	if ( ! preg_match( '#^(::1|127\.0\.|10\.0\.[0-2]|192\.168.[0-2]\.|172\.[1-3]\d*\.0)#si', $_SERVER['REMOTE_ADDR'] ) ) { // internal req or dev machine
-		return;
-	}
-
+	$local_ips = [ '::1', '127.0.0.1', ];
+	$ip = empty( $_SERVER['REMOTE_ADDR'] ) ? '' : $_SERVER['REMOTE_ADDR'];
 	$server_name = empty( $_SERVER['SERVER_NAME'] ) ? '' : $_SERVER['SERVER_NAME'];
+	$show_localhost_notice = false;
 
-	if ( ! preg_match( '#^(localhost|\.local)#si', $server_name ) ) { // internal req or dev machine
-		return;
+	// Let's check LAN IPs
+	if ( in_array($ip, $local_ips)
+        || preg_match( '#^(::1|127\.0\.|10\.0\.[0-2]|192\.168.[0-2]\.|172\.[1-3]\d*\.0)#si', $_SERVER['REMOTE_ADDR'] )
+    ) {
+		$show_localhost_notice = true;
+	} elseif ( $server_name == 'localhost'
+            ||  preg_match( '#^(localhost|\.local)#si', $server_name ) ) { // internal req or dev machine
+		$show_localhost_notice = true;
 	}
+
+	if (!$show_localhost_notice) {
+	    return;
+    }
 
 	?>
     <div class="alert" style="background:red;color: #fff;padding: 3px;">
-        This plugin doesn't work on localhost because our servers need to be able to access your site.
+        <p>Warning: This plugin doesn't work on localhost because our servers need to be able to access your site.</p>
     </div>
 	<?php
 }
