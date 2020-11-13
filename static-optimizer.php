@@ -988,8 +988,8 @@ function static_optimizer_maybe_render_localhost_notice( $ctx ) {
 		return;
 	}
 
-	$local_ips = [ '::1', '127.0.0.1', ];
 	$ip = empty( $_SERVER['REMOTE_ADDR'] ) ? '' : $_SERVER['REMOTE_ADDR'];
+	$local_ips = [ '::1', '127.0.0.1', ];
 	$server_name = empty( $_SERVER['SERVER_NAME'] ) ? '' : $_SERVER['SERVER_NAME'];
 	$show_localhost_notice = false;
 
