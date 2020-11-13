@@ -218,7 +218,7 @@ class Static_Optimizer_Asset_Optimizer {
 			'#(\s*(?:=|url\s*\()[\'"\s]*(?:https?://'
 			. $host_prefix_regex
 			. $host_q
-			. '[\w\-/.]+)[\w\s:\-/.%]+?)\.(' . $supported_ext . ')'
+			. '[\w\-/.]*)[\w\s:\-/.%]+?)\.(' . $supported_ext . ')'
 			. '(?:[?&](?:hash|sha\d+|md5|ts?|version|ver|v|m|_)=([\w\-.]+))?([\'")]*)#si',
 			[ $this, 'appendQSAssetVerReplaceCallback' ],
 			$buff
