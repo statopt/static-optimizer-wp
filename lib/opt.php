@@ -461,6 +461,11 @@ BUFF_EOF;
 	function correctImageSrcsetReplaceCallback( $matches ) {
 		$img_html = $matches[0];
 
+		// local or external link
+		if (!$this->isInternalSiteLink($img_html)) {
+			return $img_html;
+		}
+
 		$append_txt = ' onerror="javascript:static_optimizer_handle_broken_image(this);" ';
 
 		if ( stripos( $img_html, 'onerror=' ) === false ) { // the image doesn't have srcset attrib
@@ -488,7 +493,7 @@ BUFF_EOF;
 			'#((?:https?://'
 			. $host_prefix_regex
 			. $host_q
-			. '[\w\-/.]+)[:\w\-/.\s%]+?)'
+			. '[\w\-/.]*)[:\w\-/.\s%]+?)'
 			. '\.(svg|png|jpe?g|gif)(?:\?(?:hash|sha\d+|md5|ts?|version|ver|v|m|_)=([\w\-.]+))?([\'"\s]+)#si',
 			[ $this, 'appendQSAssetVerReplaceCallback' ],
 			$img_html

@@ -96,6 +96,7 @@ Yes
 * added a check so the api form expands after the user submits the form to get a key
 * added notes about fonts referenced/loaded via relative paths
 * fixed the notice that's shown on localhost installs
+* improved image parser to skip external images.
 
 = 1.0.2 =
 * Removed the check for body start which was making the plugin to not process anything pretty early. On some sites the body started after 60-70kb
