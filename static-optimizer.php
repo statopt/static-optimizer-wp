@@ -824,7 +824,7 @@ function static_optimizer_settings_trim( $input ) {
 }
 
 function static_optimizer_settings_validate( $input ) {
-    $opts = static_optimizer_get_options();
+	$opts = static_optimizer_get_options();
 	$input                   = array_map( 'static_optimizer_settings_trim', $input );
 	$new_input['api_key']    = trim( $input['api_key'] );
 	$new_input['status']     = isset( $input['status'] ) ? ! empty( $input['status'] ) : true;
@@ -834,13 +834,13 @@ function static_optimizer_settings_validate( $input ) {
 		$new_input['api_key'] = '';
 	}
 
-	$file_types = empty( $opts['file_types'] ) ? [] : $opts['file_types'];
-
 	// Here we go through the known keys and check if the user has selected a type.
     // We need to have a value because the defaults would take precedence.
     // if there's no value this means that the user has unchecked that value.
     // The bug is present when the default value is 1 (images) and the user tried to uncheck it.
     // it doesn't get unchecked without the code below
+	$file_types = empty( $opts['file_types'] ) ? [] : $opts['file_types'];
+
 	foreach ($file_types as $file_type => $default_val) {
 		$new_input['file_types'][$file_type] = empty($new_input['file_types'][$file_type]) ? 0 : 1;
     }
