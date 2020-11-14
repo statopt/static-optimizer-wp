@@ -92,6 +92,11 @@ Yes
 
 == Changelog ==
 
+= 1.0.4 =
+* todo: pick preferred server EU or US or random
+* show a notice to update the settings if the domain name has changed in whole wp
+*
+
 = 1.0.3 =
 * moved demo up
 * readme changes
