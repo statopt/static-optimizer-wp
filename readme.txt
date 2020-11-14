@@ -18,14 +18,17 @@ No database or files changes are performed therefore there's no risk if you want
 If our optimization server are down (upgrade, maintenance or outage) your original files will be loaded instead.
 
 = Features / Benefits =
+* Simple, efficient and free to use
 * Easy to set up. Just get your API key and you're good to go.
 * Automatic js and css minification & compression
 * Automatic image optimization (gif, jpeg, png)
 * Files are reloaded only when they are changed on your server (or deleted from ours).
-* Our servers check and if the visitor's browser support webp that's what we'll serve.
+* Automatic conversion to webp
+* Our servers check and if the visitor's browser supports webp we'll serve that file otherwise the optimized version.
 * Responsive Images (from srcset) are also processed
+* Background images url() are also processed
 * We've put extra efforts to make this plugin as efficient as possible.
-* Simple to use
+* The code in script blocks is preserved
 
 == Demo ==
 https://www.youtube.com/watch?v=1KC_JJOcu1s
@@ -39,7 +42,7 @@ The first time our servers get a file it will be downloaded and optimized. Becau
 your users will be redirected back to the original file that was requested. Any subsequent requests will be served from our servers.
 
 = Who is this plugin for? =
-People who have lots of images on their site such online stores, photographers.
+People who have lots of images on their site such online stores, photographers, real estate agents.
 
 = Thanks =
 
