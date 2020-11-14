@@ -94,18 +94,6 @@ class Static_Optimizer_Asset_Optimizer {
 	 */
 	public function run( $buff ) {
 		static $appended_js = 0;
-//		return $buff;
-// dbg
-$buff =<<<BUFF_EF
-<html>
-<head>
-
-</head>
-<body>
-            	.ex_modal .modal-content .fd_modal_des .exfd_nutrition li{color: #0a0a0a;}
-            select.ex-ck-select,.exwoofood-select-loc select.ex-loc-select{background-image: url(http://1mapps.qsandbox0.staging.com:8080/wp-content/plugins/woocommerce-food/css/img/icon-dropdow.png);}
-</body>
-BUFF_EF;
 
 		// process output only if GET method.
 		if (empty($_SERVER['REQUEST_METHOD']) || strcasecmp($_SERVER['REQUEST_METHOD'], 'get') != 0) {
@@ -557,8 +545,6 @@ BUFF_EOF;
 		// we'll clear any matches before the path
 		$first_match = $matches[1];
 		$first_match = trim($first_match, '"\'=. ');
-
-//		return var_export($matches, 1);
 
 		if ($this->isCDNDomain($first_match)) {
 			return $matches[0];
