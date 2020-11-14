@@ -29,6 +29,7 @@ If our optimization server are down (upgrade, maintenance or outage) your origin
 * Background images url() are also processed
 * We've put extra efforts to make this plugin as efficient as possible.
 * The code in script blocks is preserved
+* Sandbox/test/development subdomains are automatically authorized if the main domain is authorized. Test subdomains are: test, testing, sandbox, dev, local, stage, staging
 
 == Demo ==
 https://www.youtube.com/watch?v=1KC_JJOcu1s
