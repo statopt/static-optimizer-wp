@@ -94,6 +94,18 @@ class Static_Optimizer_Asset_Optimizer {
 	 */
 	public function run( $buff ) {
 		static $appended_js = 0;
+//		return $buff;
+// dbg
+$buff =<<<BUFF_EF
+<html>
+<head>
+
+</head>
+<body>
+            	.ex_modal .modal-content .fd_modal_des .exfd_nutrition li{color: #0a0a0a;}
+            select.ex-ck-select,.exwoofood-select-loc select.ex-loc-select{background-image: url(http://1mapps.qsandbox0.staging.com:8080/wp-content/plugins/woocommerce-food/css/img/icon-dropdow.png);}
+</body>
+BUFF_EF;
 
 		// process output only if GET method.
 		if (empty($_SERVER['REQUEST_METHOD']) || strcasecmp($_SERVER['REQUEST_METHOD'], 'get') != 0) {
@@ -546,11 +558,15 @@ BUFF_EOF;
 		$first_match = $matches[1];
 		$first_match = trim($first_match, '"\'=. ');
 
+//		return var_export($matches, 1);
+
 		if ($this->isCDNDomain($first_match)) {
 			return $matches[0];
 		}
 
 		if (stripos($first_match, '.statopt_ver') !== false) { // the link already has version
+			return $matches[0];
+		} elseif (stripos($first_match, '.qs_ver') !== false) { // the link already has version
 			return $matches[0];
 		}
 
@@ -559,6 +575,8 @@ BUFF_EOF;
 		}
 
 		$ver = empty($matches[3]) ? '' : $matches[3];
+		$prev_suffix = $matches[4]; // quotes, parenthesis
+
 		$is_ts = strlen($ver) >= 8 && is_numeric($ver) && preg_match('#^\d+$#si', $ver);
 		$local_file_regex = '#(/wp-[\w\-]+/.+)#si';
 		$clean_no_ver_static_req_uri = $first_match . '.' . $matches[2];
@@ -597,7 +615,7 @@ BUFF_EOF;
 
 		// @todo use https://www.jsdelivr.com/?docs=wp for known wp plugins & themes assets ?
 		// ='https://1mapps.qsandbox0.staging.com/statopt/test/site/wp-includes/css/dist/block-library/style.min.statopt_ver.1603969031.css'
-		$str = $matches[1] . '.statopt_ver.' . $ver . '.'. $matches[2] . $matches[4];
+		$str = $matches[1] . '.statopt_ver.' . $ver . '.'. $matches[2];// . $matches[4];
 
 		$ctx = [
 			'url' => $str,
@@ -631,6 +649,8 @@ BUFF_EOF;
 				$str = $pref . $optimized_asset_url . $suff;
 			}
 		}
+
+		$str .= $prev_suffix; // let's append it here so it doesn't confuse the optimized url
 
 		return $str;
 	}
