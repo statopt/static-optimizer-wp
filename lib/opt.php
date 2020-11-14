@@ -352,9 +352,14 @@ class Static_Optimizer_Asset_Optimizer {
 	}
 
 	function generatePublicSideFallbackCode() {
-		$json_str = json_encode([
-			'server_name' => $this->getHost(),
-		] );
+		$cfg_arr = [];
+		$cfg_arr['server_name'] = $this->getHost();
+
+		if (!empty($this->cfg['file_types'])) {
+			$cfg_arr['file_types'] = $this->cfg['file_types'];
+		}
+
+		$json_str = json_encode($cfg_arr);
 
 		$buff = <<<BUFF_EOF
     <script>
