@@ -17,4 +17,11 @@ class StaticOptimizerBase {
 
 		return $instance;
 	}
+
+	/**
+	 *
+	 */
+	public function init() {
+
+	}
 }

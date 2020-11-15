@@ -8,7 +8,7 @@ Author: StaticOptimizer & Orbisius
 Author URI: https://orbisius.com
 */
 
-/*  Copyright 2012-3000 Svetoslav Marinov (Slavi) <slavi@statopt.com>
+/*  Copyright 2012-3000 Svetoslav Marinov (Slavi) <slavi@orbisius.com>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -65,21 +65,6 @@ if (is_admin()) {
 
 add_action( 'static_optimizer_action_after_settings_form', 'static_optimizer_maybe_render_get_key_form' );
 add_action( 'static_optimizer_action_after_settings_form', 'static_optimizer_maybe_render_manage_key_form' );
-
-// this filter runs most often than action 'update_option_static_optimizer_settings'
-add_filter( 'pre_update_option_static_optimizer_settings', 'static_optimizer_before_option_update', 20, 3 );
-
-/**
- * @param $value
- * @param $option
- * @param $old_value
- *
- * @return mixed
- */
-function static_optimizer_before_option_update($value, $old_value, $option) {
-	static_optimizer_after_option_update($old_value, $value, $option);
-    return $value;
-}
 
 
 register_activation_hook(__FILE__, 'static_optimizer_process_activate');
@@ -163,61 +148,6 @@ function static_optimizer_process_uninstall() {
 	delete_option( 'static_optimizer_settings' );
 
 	// @todo clean htaccess if it was modified by us. backup first of course
-}
-
-/**
- * We'll sync the conf file on option save.
- *
- * @param array $old_value
- * @param array $value
- * @param string $option
- */
-function static_optimizer_after_option_update( $old_value, $value, $option = null) {
-	$dir = dirname( STATIC_OPTIMIZER_CONF_FILE );
-
-	if ( ! is_dir( $dir ) ) {
-		wp_mkdir_p( $dir );
-	}
-
-	$data = $value;
-
-    $data['is_multisite']       = function_exists( 'is_multisite' ) && is_multisite() ? true : false;
-    $data['site_url']           = $data['is_multisite'] ? network_site_url() : site_url();
-    $data['host']               = parse_url( $data['site_url'], PHP_URL_HOST );
-    $data['host']               = strtolower( $data['host'] );
-    $data['host']               = preg_replace( '#^www\.#si', '', $data['host'] );
-	$data['updated_on']         = date( 'r' );
-	$data['updated_by_user_id'] = get_current_user_id();
-
-	$data_str                   = @json_encode( $data, JSON_PRETTY_PRINT );
-
-    if (empty($data_str)) { // JSON serialization failed possibly due to UTF-8 formatting
-	    // let's try php serialization
-	    $data_str = serialize( $data );
-
-	    // Well, we've tried ...
-	    if ( empty( $data_str ) ) {
-		    return;
-	    }
-
-	    // Let's encode the data so it works in case it's transferred to another host and another php version.
-	    $data_str = base64_encode($data_str);
-    }
-
-    // Save data
-    $save_stat = file_put_contents( STATIC_OPTIMIZER_CONF_FILE, $data_str, LOCK_EX );
-
-    // let's add an empty file
-    if ( ! file_exists( $dir . '/index.html' ) ) {
-        file_put_contents( $dir . '/index.html', "StaticOptimizer", LOCK_EX );
-    }
-
-    // let's add some more protection
-    if ( ! file_exists( $dir . '/.htaccess' ) ) {
-        file_put_contents( $dir . '/.htaccess', "deny from all", LOCK_EX );
-    }
-
-    return $save_stat;
 }
 
 add_action( 'static_optimizer_action_before_render_settings_form', 'static_optimizer_redirect_to_gen_api_key' );
