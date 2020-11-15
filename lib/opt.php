@@ -1,17 +1,25 @@
 <?php
 
 class Static_Optimizer_Asset_Optimizer {
+	const SERVER_LOCATION_NORTH_AMERICA = 'north_america';
+	const SERVER_LOCATION_EUROPE = 'europe';
 	private $cfg = [];
 	private $host = '';
 	private $doc_root = '';
 
 	// default servers
 	private $servers = [
+		// US/North America
 		'http://us1.statopt.net:5080',
 		'https://us1.statopt.net:5443',
+
+		// Europe
+		'http://eu1.statopt.net:5080',
+		'https://eu1.statopt.net:5443',
 	];
 
 	public function __construct($cfg = []) {
+		$this->cfg = $cfg;
 		$host = '';
 
 		if (!empty($cfg['host'])) {
@@ -26,15 +34,19 @@ class Static_Optimizer_Asset_Optimizer {
 		$host = strtolower( $host );
 		$host = strip_tags($host);
 		$host = trim($host);
+		$this->host = $host;
 
-		if (defined('ABSPATH')) {
-			$this->doc_root = ABSPATH;
+		$doc_root = '';
+
+		if (!empty($cfg['doc_root'])) {
+			$doc_root = $cfg['doc_root'];
+		} elseif (defined('ABSPATH')) { // WP install
+			$doc_root = ABSPATH;
 		} elseif (!empty($_SERVER['DOCUMENT_ROOT']))  {
-			$this->doc_root = $_SERVER['DOCUMENT_ROOT'];
+			$doc_root = $_SERVER['DOCUMENT_ROOT'];
 		}
 
-		$this->cfg = $cfg;
-		$this->host = $host;
+		$this->doc_root = $doc_root;
 	}
 
 	/**
@@ -65,6 +77,25 @@ class Static_Optimizer_Asset_Optimizer {
 
 		if (!empty($filtered)) {
 			$servers = $filtered;
+		}
+
+		// Examples: us1.statopt.net, eu1.statopt.net
+		if (!empty($this->cfg['server_location'])) { // the user wants the server to be in a given region
+			$server_location_partial_regex = '';
+
+			if ($this->cfg['server_location'] == self::SERVER_LOCATION_NORTH_AMERICA) {
+				$server_location_partial_regex = '(us|ca)';
+			} elseif ($this->cfg['server_location'] == self::SERVER_LOCATION_EUROPE) {
+				$server_location_partial_regex = 'eu';
+			}
+
+			if (!empty($server_location_partial_regex)) {
+				$filtered_servers = preg_grep('#^https?://(www\.)?' . $server_location_partial_regex . '\d+#si', $servers);
+
+				if (!empty($filtered_servers)) {
+					$servers = $filtered_servers;
+				}
+			}
 		}
 
 		// Pick a random static optimization server. If it's one element there won't be any randomness.
@@ -565,6 +596,7 @@ BUFF_EOF;
 		$clean_no_ver_static_req_uri = $first_match . '.' . $matches[2];
 
 		if ((empty($ver) || !$is_ts) // not already a last mod?
+		    && !empty($this->doc_root)
 		    && (stripos($clean_no_ver_static_req_uri, 'wp-') !== false) // within wp-
 		    && preg_match($local_file_regex, $clean_no_ver_static_req_uri, $local_file_matches) ) {
 
