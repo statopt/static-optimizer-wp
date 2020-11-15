@@ -174,13 +174,25 @@ class StaticOptimizerAdmin extends StaticOptimizerBase {
 		add_settings_field( 'static_optimizer_setting_pref_srv_location', 'Preferred Server Location',  [ $this, 'renderSettingPreferredServerLocation' ], 'static_optimizer_settings', 'plugin_settings' );
 	}
 
+	/**
+	 * @param array $input
+	 * @return array
+	 * @throws Exception
+	 */
 	function validateSettings( $input ) {
-		$opts = $this->getOptions();
 		$req_obj = StaticOptimizerRequest::getInstance();
-		$input                   = $req_obj->sanitizeData($input);
-		$new_input['api_key']    = trim( $input['api_key'] );
-		$new_input['status']     = isset( $input['status'] ) ? ! empty( $input['status'] ) : true;
-		$new_input['file_types'] = empty( $input['file_types'] ) ? [] : $input['file_types'];
+		$new_input = $req_obj->sanitizeData($input);
+
+		// Let's see if we have some data
+		$default_opts = $this->getOptions(true);
+
+		// We'll loop through the defaults so we always have values for the expected keys
+		foreach ($default_opts as $key => $default_val) {
+		    if (!isset($new_input[$key])) {
+		        $empty_defaut_val_if_not_passed = is_array($default_opts[$key]) ? [] : '';
+			    $new_input[$key] = $empty_defaut_val_if_not_passed;
+            }
+        }
 
 		if ( ! preg_match( '/^[\w]{5,60}$/si', $new_input['api_key'] ) ) {
 			$new_input['api_key'] = '';
@@ -191,7 +203,7 @@ class StaticOptimizerAdmin extends StaticOptimizerBase {
 		// if there's no value this means that the user has unchecked that value.
 		// The bug is present when the default value is 1 (images) and the user tried to uncheck it.
 		// it doesn't get unchecked without the code below
-		$file_types = empty( $opts['file_types'] ) ? [] : $opts['file_types'];
+		$file_types = empty( $default_opts['file_types'] ) ? [] : $default_opts['file_types'];
 
 		foreach ($file_types as $file_type => $default_val) {
 			$new_input['file_types'][$file_type] = empty($new_input['file_types'][$file_type]) ? 0 : 1;
