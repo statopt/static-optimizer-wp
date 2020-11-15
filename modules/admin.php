@@ -22,8 +22,8 @@ class StaticOptimizerAdmin extends StaticOptimizerBase {
 		add_action( 'static_optimizer_action_before_settings_form', [ $this, 'maybeRenderNotice' ] );
 		add_action( 'static_optimizer_action_before_render_settings_form', [ $this, 'redirectToGenerateApiKeyPage' ] );
 		add_action( 'static_optimizer_action_before_settings_form', [ $this, 'maybeRenderNoticePluginNotActive' ] );
-		add_action( 'static_optimizer_action_after_settings_form', [ $this, 'static_optimizer_maybe_render_get_key_form' ] );
-		add_action( 'static_optimizer_action_after_settings_form', [ $this, 'static_optimizer_maybe_render_manage_key_form' ] );
+		add_action( 'static_optimizer_action_after_settings_form', [ $this, 'maybeRenderGetKeyForm' ] );
+		add_action( 'static_optimizer_action_after_settings_form', [ $this, 'maybeRenderManageKeyForm' ] );
 	}
 
 	/**
@@ -208,7 +208,7 @@ class StaticOptimizerAdmin extends StaticOptimizerBase {
 	 *
 	 * @param array $ctx
 	 */
-	function static_optimizer_maybe_render_manage_key_form( $ctx = [] ) {
+	public function maybeRenderManageKeyForm( $ctx = [] ) {
 		$options = $this->getOptions();
 
 		if ( empty( $options['api_key'] ) ) {
@@ -300,7 +300,7 @@ class StaticOptimizerAdmin extends StaticOptimizerBase {
 	 *
 	 * @param array $ctx
 	 */
-	function static_optimizer_maybe_render_get_key_form( $ctx = [] ) {
+	public function maybeRenderGetKeyForm( $ctx = [] ) {
 		$options = $this->getOptions();
 
 		if ( ! empty( $options['api_key'] ) ) {
