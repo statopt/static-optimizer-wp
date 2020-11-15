@@ -43,7 +43,7 @@ define( 'STATIC_OPTIMIZER_APP_SITE_URL',
 if ( defined( 'WP_CONTENT_DIR' ) ) {
 	define( 'STATIC_OPTIMIZER_CONF_FILE', WP_CONTENT_DIR . '/.ht-static-optimizer/.ht_config.json' );
 } else {
-	define( 'STATIC_OPTIMIZER_CONF_FILE', __DIR__ . '/.ht_config.json' );
+	define( 'STATIC_OPTIMIZER_CONF_FILE', STATIC_OPTIMIZER_BASE_DIR . '/.ht_config.json' );
 }
 
 $static_optimizer_worker = __DIR__ . '/000-static-optimizer-system-worker.php';
