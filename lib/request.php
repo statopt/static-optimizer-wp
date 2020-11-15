@@ -158,7 +158,7 @@ class StaticOptimizerRequest {
 			$data = empty( $data ) ? $_REQUEST : $data;
 			$this->raw_data = $data;
 			$data = stripslashes_deep( $data );
-			$data = $this->sanitize_data( $data );
+			$data = $this->sanitizeData( $data );
 			$this->data = $data;
 		}
 	}
@@ -169,12 +169,12 @@ class StaticOptimizerRequest {
 	 * @return str/array
 	 * @throws Exception
 	 */
-	public function sanitize_data( $data = null ) {
+	public function sanitizeData( $data = null ) {
 		if ( is_scalar( $data ) ) {
 			$data = wp_kses_data( $data );
 			$data = trim( $data );
 		} elseif ( is_array( $data ) ) {
-			$data = array_map( array( $this, 'sanitize_data' ), $data );
+			$data = array_map( array( $this, 'sanitizeData' ), $data );
 		} else {
 			throw new Exception( "Invalid data type passed for sanitization" );
 		}
@@ -188,5 +188,21 @@ class StaticOptimizerRequest {
 	public function getRequestUrl() {
 		$req_url = empty($_SERVER['REQUEST_URI']) ? '' : $_SERVER['REQUEST_URI'];
 		return $req_url;
+	}
+
+	/**
+	 * @param array|mixed|string $input
+	 * @return array|mixed|string
+	 */
+	public function trim( $input ) {
+		if ( is_scalar( $input ) ) {
+			return trim( $input );
+		}
+
+		if ( is_array( $input ) ) {
+			$input = array_map( [ $this, 'trim' ], $input );
+		}
+
+		return $input;
 	}
 }
