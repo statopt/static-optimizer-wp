@@ -3,16 +3,15 @@
 $obj = StaticOptimizerCore::getInstance();
 add_action( 'init', [ $obj, 'init' ] );
 
-// WP requires these to be static for some reason
-register_activation_hook(STATIC_OPTIMIZER_BASE_PLUGIN, 'StaticOptimizerCore::onActivate');
-register_deactivation_hook(STATIC_OPTIMIZER_BASE_PLUGIN, 'StaticOptimizerCore::onDeactivate');
-register_uninstall_hook( STATIC_OPTIMIZER_BASE_PLUGIN, 'StaticOptimizerCore::onUninstall' );
+register_activation_hook(STATIC_OPTIMIZER_BASE_PLUGIN, [ $obj, 'onActivate' ] );
+register_deactivation_hook(STATIC_OPTIMIZER_BASE_PLUGIN, [ $obj, 'onDeactivate' ] );
+register_uninstall_hook( STATIC_OPTIMIZER_BASE_PLUGIN, [ $obj, 'onUninstall' ] );
 
 class StaticOptimizerCore extends StaticOptimizerBase {
 	/**
 	 * The plugin was activated. If conf file exists and has api_key we can set it to status=1 now
 	 */
-	public static function onActivate() {
+	public function onActivate() {
 		if ( ! file_exists( STATIC_OPTIMIZER_CONF_FILE ) ) {
 			return;
 		}
@@ -39,7 +38,7 @@ class StaticOptimizerCore extends StaticOptimizerBase {
 	/**
 	 * The plugin was deactivated so we need to set status to 0
 	 */
-	public static function onDeactivate() {
+	public function onDeactivate() {
 		if ( ! file_exists( STATIC_OPTIMIZER_CONF_FILE ) ) {
 			return;
 		}
@@ -66,7 +65,7 @@ class StaticOptimizerCore extends StaticOptimizerBase {
 	/**
 	 * The plugin is about to be uninstalled.
 	 */
-	public static function onUninstall() {
+	public function onUninstall() {
 		// delete cfg files and data dir
 		if ( file_exists( STATIC_OPTIMIZER_CONF_FILE ) ) {
 			unlink( STATIC_OPTIMIZER_CONF_FILE );
@@ -90,5 +89,4 @@ class StaticOptimizerCore extends StaticOptimizerBase {
 
 		// @todo clean htaccess if it was modified by us. backup first of course
 	}
-
 }
