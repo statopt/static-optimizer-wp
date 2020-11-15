@@ -38,7 +38,7 @@ class StaticOptimizerAdmin extends StaticOptimizerBase {
 			__( 'StaticOptimizer', 'static_optimizer' ),
 			'manage_options',
 			STATIC_OPTIMIZER_BASE_PLUGIN,
-			[ $this, 'static_optimizer_options_page' ]
+			[ $this, 'renderOptionsPage' ]
 		);
 
 		add_filter( 'plugin_action_links', [ $this, 'updatePluginLinksInManagePlugins' ], 10, 2 );
@@ -140,6 +140,7 @@ class StaticOptimizerAdmin extends StaticOptimizerBase {
 		$defaults = array(
 			'status'     => false,
 			'api_key'    => '',
+			'server_location' => 'north_america',
 			'file_types' => [
 				'images' => 1,
 				'js' => 0,
@@ -169,7 +170,8 @@ class StaticOptimizerAdmin extends StaticOptimizerBase {
 		add_settings_section( 'plugin_settings', 'Settings', [ $this, 'static_optimizer_settings_text' ], 'static_optimizer_settings' );
 		add_settings_field( 'static_optimizer_setting_status', 'Status',  [ $this, 'renderSettingStatus' ], 'static_optimizer_settings', 'plugin_settings' );
 		add_settings_field( 'static_optimizer_setting_api_key', 'API Key',  [ $this, 'renderSettingApiKey' ], 'static_optimizer_settings', 'plugin_settings' );
-		add_settings_field( 'static_optimizer_setting_file_types', 'File Types',  [ $this, 'static_optimizer_setting_file_types' ], 'static_optimizer_settings', 'plugin_settings' );
+		add_settings_field( 'static_optimizer_setting_file_types', 'File Types',  [ $this, 'renderSettingrenderSettingFileTypes' ], 'static_optimizer_settings', 'plugin_settings' );
+		add_settings_field( 'static_optimizer_setting_pref_srv_location', 'Preferred Server Location',  [ $this, 'renderSettingPreferredServerLocation' ], 'static_optimizer_settings', 'plugin_settings' );
 	}
 
 	function validateSettings( $input ) {
@@ -356,7 +358,7 @@ class StaticOptimizerAdmin extends StaticOptimizerBase {
 		return $link;
 	}
 
-	function static_optimizer_setting_file_types() {
+	function renderSettingrenderSettingFileTypes() {
 		$options         = $this->getOptions();
 		$file_types      = empty( $options['file_types'] ) ? [] : $options['file_types'];
 
@@ -412,6 +414,27 @@ name='static_optimizer_settings[status]' type='radio' value='0' $inactive_checke
 	}
 
 	/**
+	 * Renders the radio buttons for the preferred server location.
+	 */
+	public function renderSettingPreferredServerLocation() {
+		$options          = $this->getOptions();
+		$val              = $options['server_location'];
+		$north_america_checked   = ! empty( $val ) ? checked( 'north_america', $val, false ) : '';
+		$europe_checked = empty( $val ) ? checked( 'europe', $val, false ) : '';
+		?>
+		<label for='static_optimizer_setting_server_location_north_america'>
+            <input id='static_optimizer_setting_server_location_north_america'
+                name='static_optimizer_settings[server_location]'
+                   type='radio' value='north_america' <?php echo $north_america_checked;?> /> North America</label>
+		&nbsp;&nbsp;&nbsp;
+		<label for='static_optimizer_setting_server_location_europe'>
+                <input id='static_optimizer_setting_server_location_europe'
+                    name='static_optimizer_settings[server_location]' type='radio'
+                       value='europe' <?php echo $europe_checked;?> /> Europe</label>
+        <?php
+	}
+
+	/**
 	 * Options page and this is shown under Products.
 	 * For some reason the saved message doesn't show up on Products page
 	 * that's why I had to display the message for edit.php page specifically.
@@ -419,7 +442,7 @@ name='static_optimizer_settings[status]' type='radio' value='0' $inactive_checke
 	 * @package StaticOptimizer
 	 * @since 1.0
 	 */
-	function static_optimizer_options_page() {
+	function renderOptionsPage() {
 		$opts = $this->getOptions();
 		$plugin_ctx = [
 			'opts' => $opts,
