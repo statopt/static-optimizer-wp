@@ -329,7 +329,8 @@ function static_optimizer_setup_admin() {
 	$hook = add_options_page(
 		__( 'StaticOptimizer', 'static_optimizer' ),
 		__( 'StaticOptimizer', 'static_optimizer' ),
-		'manage_options', __FILE__,
+		'manage_options',
+        __FILE__,
 		'static_optimizer_options_page'
 	);
 
@@ -343,7 +344,7 @@ function static_optimizer_redirect_to_gen_api_key( $ctx ) {
 		$req_obj = StaticOptimizerRequest::getInstance();
 		$cmd     = $req_obj->get( 'static_optimizer_cmd' );
 
-		if ( empty( $cmd ) ) {
+		if ( empty( $cmd ) || ! current_user_can('manage_options') ) {
 			return;
 		}
 
@@ -535,9 +536,7 @@ function static_optimizer_options_page() {
 							<?php
 							$current_user      = wp_get_current_user();
 							$email             = empty( $current_user->user_email ) ? '' : $current_user->user_email;
-							$quick_form_action = is_ssl()
-								? 'https://ssl.statopt.com/apps/quick-contact/'
-								: '//apps.statopt.com/quick-contact/';
+							$quick_form_action = 'https://apps.orbisius.com/quick-contact/';
 
 							if ( ! empty( $_SERVER['DEV_ENV'] ) ) {
 								$quick_form_action = '//localhost/projects/quick-contact/';

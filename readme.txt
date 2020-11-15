@@ -98,7 +98,8 @@ Yes
 * fix: when js/css couldn't be loaded we used to create a new obj. Now we are reusing the existing one.
 * todo: pick preferred server EU or US or random
 * show a notice to update the settings if the domain name has changed in whole wp
-* fixed: images were unselectable.
+* fixed images file type was unselectable.
+* fixed the link to the quick contact page
 
 = 1.0.3 =
 * moved demo up
