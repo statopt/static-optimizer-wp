@@ -618,6 +618,20 @@ name='static_optimizer_settings[status]' type='radio' value='0' $inactive_checke
 								</div> <!-- .inside -->
 							</div> <!-- .postbox --> <!-- /quick-contact -->
 
+                            <!-- Support options -->
+                            <div class="postbox">
+                                <h3><span>Support & Feature Requests</span></h3>
+                                <h3>
+									<span>
+                                    <a href="https://statopt.com/?utm_source=plugin" target="_blank" title="[new window]">Product Page</a>
+                                    |
+                                    <a href="https://github.com/statopt/static-optimizer-wp/issues"
+                                       target="_blank" title="[new window]">Bugs / Features</a>
+                                </span>
+                                </h3>
+                            </div> <!-- .postbox -->
+                            <!-- /Support options -->
+
 							<!-- Hire Us -->
 							<div class="postbox">
 								<h3><span>Hire Us</span></h3>
@@ -671,20 +685,6 @@ name='static_optimizer_settings[status]' type='radio' value='0' $inactive_checke
 								</div> <!-- .inside -->
 							</div> <!-- .postbox -->
 							<!-- /Newsletter-->
-
-							<!-- Support options -->
-							<div class="postbox">
-								<h3><span>Support & Feature Requests</span></h3>
-								<h3>
-									<span>
-                                    <a href="https://statopt.com/?utm_source=plugin" target="_blank" title="[new window]">Product Page</a>
-                                    |
-                                    <a href="https://github.com/statopt/static-optimizer-wp/issues"
-                                       target="_blank" title="[new window]">Report Bugs / Features</a>
-                                </span>
-								</h3>
-							</div> <!-- .postbox -->
-							<!-- /Support options -->
 
 						</div> <!-- .meta-box-sortables -->
 					</div> <!-- #postbox-container-1 .postbox-container -->
