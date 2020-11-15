@@ -97,7 +97,8 @@ Yes
 = 1.0.4 =
 * fix: when js/css couldn't be loaded we used to create a new obj. Now we are reusing the existing one.
 * todo: pick preferred server EU or US or random
-* show a notice to update the settings if the domain name has changed in whole wp
+* todo: show a notice to update the settings if the domain name has changed in whole wp
+* Refactored code so it uses OOP style.
 * fixed images file type was unselectable.
 * fixed the link to the quick contact page
 * Cleaned up code. Removed old code that was going to be used for the mu plugin
