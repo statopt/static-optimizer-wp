@@ -636,7 +636,7 @@ name='static_optimizer_settings[status]' type='radio' value='0' $inactive_checke
 							<div class="postbox">
 								<h3><span>Hire Us (StaticOptimizer & Orbisius)</span></h3>
 								<div class="inside">
-									Hire us to create a plugin/SaaS app
+                                    Hire us to create a plugin/<span title="Software As a Service">SaaS [?]</span> app
 									<br/><a href="https://orbisius.com/page/free-quote/?utm_source=<?php echo str_replace( '.php', '', basename( STATIC_OPTIMIZER_BASE_PLUGIN ) ); ?>&utm_medium=plugin-settings&utm_campaign=product"
 									        title="If you want a custom web/mobile app/plugin developed contact us. This opens in a new window/tab"
 									        class="button-primary" target="_blank">Get a Free Quote</a>
