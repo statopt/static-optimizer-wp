@@ -383,33 +383,25 @@ class Static_Optimizer_Asset_Optimizer {
         return true;
     }
 
-    function static_optimizer_handle_broken_script(asset) {
-        var src = asset.src || '';
+    function static_optimizer_handle_broken_script(asset_obj) {
+        var src = asset_obj.src || '';
         var orig_src = static_optimizer_core_get_original_asset_url(src);
 
         if (orig_src) {
-            asset.onerror = null;  
-            var script = document.createElement("script");
-            script.type = "text/javascript";
-            script.src = orig_src;
-            asset.parentNode.appendChild(script);
+            asset_obj.onerror = null;
+            asset_obj.src = orig_src;
         }
-        
+
         return true;
     }
 
-    function static_optimizer_handle_broken_link(asset) {
-        var src = asset.href || '';
+    function static_optimizer_handle_broken_link(asset_obj) {
+        var src = asset_obj.href || '';
         var orig_src = static_optimizer_core_get_original_asset_url(src);
 
         if (orig_src) {
-            asset.onerror = null;  
-            var link = document.createElement("link");
-            link.rel = "stylesheet";
-            link.type = "text/css";
-            link.media = "all";
-            link.href = orig_src;
-            document.head.appendChild(link);
+            asset_obj.onerror = null;
+            asset_obj.href = orig_src;
         }
     
         return true;
