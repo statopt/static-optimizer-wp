@@ -31,6 +31,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // define('STATIC_OPTIMIZER_ACTIVE', 0); // to turn off define this in WP config
 define( 'STATIC_OPTIMIZER_LIVE_ENV', empty( $_SERVER['DEV_ENV'] ) );
+define( 'STATIC_OPTIMIZER_BASE_DIR', dirname(__FILE__) );
 define( 'STATIC_OPTIMIZER_BASE_PLUGIN', __FILE__ );
 
 define( 'STATIC_OPTIMIZER_APP_SITE_URL',
