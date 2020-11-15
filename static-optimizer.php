@@ -56,21 +56,11 @@ if (!defined('STATIC_OPTIMIZER_ACTIVE') || STATIC_OPTIMIZER_ACTIVE) {
 	}
 }
 
-//$mu_plugins_dir = '';
-//
-//if ( defined( 'WPMU_PLUGIN_DIR' ) ) {
-//	$mu_plugins_dir = WPMU_PLUGIN_DIR;
-//} elseif ( defined( 'WP_PLUGIN_DIR' ) ) {
-//	$mu_plugins_dir = WP_PLUGIN_DIR . '/mu-plugins';
-//}
-
-// Adds or removes the loader depending on the status
-//if ( true || ! empty( $mu_plugins_dir ) ) {
-//	$system_worker_loader_file = $mu_plugins_dir . '/000-static-optimizer-system-loader.php';
-//	define( 'STATIC_OPTIMIZER_SYSTEM_WORKER_LOADER_FILE', $system_worker_loader_file );
-//}
-
 require_once __DIR__ . '/lib/request.php';
+
+if (is_admin()) {
+	require_once __DIR__ . '/modules/admin.php';
+}
 
 add_action( 'init', 'static_optimizer_init' );
 add_action( 'admin_menu', 'static_optimizer_setup_admin' );
@@ -79,7 +69,6 @@ add_action( 'static_optimizer_action_after_settings_form', 'static_optimizer_may
 
 // this filter runs most often than action 'update_option_static_optimizer_settings'
 add_filter( 'pre_update_option_static_optimizer_settings', 'static_optimizer_before_option_update', 20, 3 );
-//add_action( 'update_option_static_optimizer_settings', 'static_optimizer_after_option_update', 20, 3 );
 
 /**
  * @param $value
@@ -174,10 +163,6 @@ function static_optimizer_process_uninstall() {
         rmdir( $opt_dir );
     }
 
-//	if ( defined( 'STATIC_OPTIMIZER_SYSTEM_WORKER_LOADER_FILE' ) && file_exists( STATIC_OPTIMIZER_SYSTEM_WORKER_LOADER_FILE ) ) {
-////		unlink( STATIC_OPTIMIZER_SYSTEM_WORKER_LOADER_FILE );
-//	}
-
 	delete_option( 'static_optimizer_settings' );
 
 	// @todo clean htaccess if it was modified by us. backup first of course
@@ -191,29 +176,6 @@ function static_optimizer_process_uninstall() {
  * @param string $option
  */
 function static_optimizer_after_option_update( $old_value, $value, $option = null) {
-//	$mu_plugins_dir = '';
-//
-//	if ( defined( 'WPMU_PLUGIN_DIR' ) ) {
-//		$mu_plugins_dir = WPMU_PLUGIN_DIR;
-//	} elseif ( defined( 'WP_PLUGIN_DIR' ) ) {
-//		$mu_plugins_dir = WP_PLUGIN_DIR . '/mu-plugins';
-//	} else {
-//	    return false;
-//    }
-
-//	$system_worker_loader_file     = STATIC_OPTIMIZER_SYSTEM_WORKER_LOADER_FILE;
-//	$src_system_worker_loader_file = dirname(__FILE__) . '/' . basename( $system_worker_loader_file );
-
-//	if ( empty( $data['status'] ) ) { // plugin was deactivated.
-//		$del_res = true;
-//
-//		if ( file_exists( $system_worker_loader_file ) ) { // on deactivate delete the worker loader
-//			$del_res = unlink( $system_worker_loader_file );
-//		}
-//
-//	    return $del_res;
-//	}
-
 	$dir = dirname( STATIC_OPTIMIZER_CONF_FILE );
 
 	if ( ! is_dir( $dir ) ) {
@@ -257,32 +219,6 @@ function static_optimizer_after_option_update( $old_value, $value, $option = nul
     if ( ! file_exists( $dir . '/.htaccess' ) ) {
         file_put_contents( $dir . '/.htaccess', "deny from all", LOCK_EX );
     }
-
-    // Adds or removes the loader depending on the status
-//    if ( ! is_dir( $mu_plugins_dir ) ) {
-//        wp_mkdir_p( $mu_plugins_dir );
-//    }
-//
-//    if ( ! file_exists( $system_worker_loader_file ) ) {
-//        // the plugin may be installed in a different dir so we need to check if that's the case.
-//        // if it is we need to update the system plugin that loads the worker so it looks for it in the proper folder.
-//        // If the worker file can't be found the plugin won't optimize anything.
-//        $expected_plugin_install_dir = 'static-optimizer';
-//        $plugin_directory            = plugin_dir_path( __FILE__ );
-//        $actual_plugin_install_dir   = basename( $plugin_directory );
-//
-//        $copy_res = copy( $src_system_worker_loader_file, $system_worker_loader_file );
-//
-//        if ( $copy_res && $actual_plugin_install_dir != $expected_plugin_install_dir ) { // dev or another install dir.
-//            $system_worker_loader_file_buff = file_get_contents( $system_worker_loader_file );
-//            $system_worker_loader_file_buff = str_replace(
-//                "/$expected_plugin_install_dir/",
-//                "/$actual_plugin_install_dir/",
-//                $system_worker_loader_file_buff
-//            );
-//            file_put_contents( $system_worker_loader_file, $system_worker_loader_file_buff, LOCK_EX );
-//        }
-//    }
 
     return $save_stat;
 }
@@ -366,13 +302,10 @@ function static_optimizer_redirect_to_gen_api_key( $ctx ) {
 
 			$key_gen_page_params['current_page_url'] = $req_obj->getRequestUrl();
 
+			// https://wpvip.com/documentation/encode-values-passed-to-add_query_arg/
 			if ( ! empty( $key_gen_page_params ) ) {
 				$post_login_redirect_url = $api_key_gen_url  . '?' .http_build_query( $key_gen_page_params);
-				// https://wpvip.com/documentation/encode-values-passed-to-add_query_arg/
-//				$key_gen_page_params = array_map( 'rawurlencode', $key_gen_page_params );
-//				$post_login_redirect_url = add_query_arg( $key_gen_page_params, $api_key_gen_url );
-
-				$app_login_url           = add_query_arg( 'redirect_to', rawurlencode($post_login_redirect_url), $app_login_url );
+				$app_login_url = add_query_arg( 'redirect_to', rawurlencode($post_login_redirect_url), $app_login_url );
 			}
 
 			$req_obj->redirect( $app_login_url, StaticOptimizerRequest::REDIRECT_EXTERNAL_SITE );

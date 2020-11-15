@@ -100,6 +100,7 @@ Yes
 * show a notice to update the settings if the domain name has changed in whole wp
 * fixed images file type was unselectable.
 * fixed the link to the quick contact page
+* Cleaned up code. Removed old code that was going to be used for the mu plugin
 
 = 1.0.3 =
 * moved demo up
