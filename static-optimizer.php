@@ -57,13 +57,12 @@ if (!defined('STATIC_OPTIMIZER_ACTIVE') || STATIC_OPTIMIZER_ACTIVE) {
 }
 
 require_once __DIR__ . '/lib/request.php';
+require_once __DIR__ . '/lib/base.php';
 
 if (is_admin()) {
 	require_once __DIR__ . '/modules/admin.php';
 }
 
-add_action( 'init', 'static_optimizer_init' );
-add_action( 'admin_menu', 'static_optimizer_setup_admin' );
 add_action( 'static_optimizer_action_after_settings_form', 'static_optimizer_maybe_render_get_key_form' );
 add_action( 'static_optimizer_action_after_settings_form', 'static_optimizer_maybe_render_manage_key_form' );
 
@@ -82,8 +81,6 @@ function static_optimizer_before_option_update($value, $old_value, $option) {
     return $value;
 }
 
-// multisite
-add_action( 'network_admin_menu', 'static_optimizer_setup_admin' ); // manage_network_themes
 
 register_activation_hook(__FILE__, 'static_optimizer_process_activate');
 register_deactivation_hook(__FILE__, 'static_optimizer_process_deactivate');
@@ -221,56 +218,6 @@ function static_optimizer_after_option_update( $old_value, $value, $option = nul
     }
 
     return $save_stat;
-}
-
-/**
- * Adds the action link to settings. That's from Plugins. It is a nice thing.
- *
- * @param array $links
- * @param string $file
- *
- * @return array
- */
-function static_optimizer_add_quick_settings_link( $links, $file ) {
-	if ( $file == plugin_basename( __FILE__ ) ) {
-		$link          = static_optimizer_get_settings_link();
-		$settings_link = "<a href=\"{$link}\">Settings</a>";
-		array_unshift( $links, $settings_link );
-	}
-
-	return $links;
-}
-
-/**
- * Setups loading of assets (css, js).
- * @return void
- */
-function static_optimizer_init() {
-	if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
-		return;
-	}
-
-	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-		return;
-	}
-}
-
-/**
- * Set up administration
- *
- * @package StaticOptimizer
- * @since 0.1
- */
-function static_optimizer_setup_admin() {
-	$hook = add_options_page(
-		__( 'StaticOptimizer', 'static_optimizer' ),
-		__( 'StaticOptimizer', 'static_optimizer' ),
-		'manage_options',
-        __FILE__,
-		'static_optimizer_options_page'
-	);
-
-	add_filter( 'plugin_action_links', 'static_optimizer_add_quick_settings_link', 10, 2 );
 }
 
 add_action( 'static_optimizer_action_before_render_settings_form', 'static_optimizer_redirect_to_gen_api_key' );
