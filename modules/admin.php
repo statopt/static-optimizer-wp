@@ -21,7 +21,7 @@ class StaticOptimizerAdmin extends StaticOptimizerBase {
 
 		add_action( 'static_optimizer_action_before_settings_form', [ $this, 'maybeRenderNotice' ] );
 		add_action( 'static_optimizer_action_before_render_settings_form', [ $this, 'redirectToGenerateApiKeyPage' ] );
-		add_action( 'static_optimizer_action_before_settings_form', [ $this, 'static_optimizer_maybe_render_not_active_plugin' ] );
+		add_action( 'static_optimizer_action_before_settings_form', [ $this, 'maybeRenderNoticePluginNotActive' ] );
 		add_action( 'static_optimizer_action_after_settings_form', [ $this, 'static_optimizer_maybe_render_get_key_form' ] );
 		add_action( 'static_optimizer_action_after_settings_form', [ $this, 'static_optimizer_maybe_render_manage_key_form' ] );
 	}
@@ -270,7 +270,7 @@ class StaticOptimizerAdmin extends StaticOptimizerBase {
 	 *
 	 * @param $ctx
 	 */
-	function static_optimizer_maybe_render_not_active_plugin( $ctx ) {
+	function maybeRenderNoticePluginNotActive( $ctx = []) {
 		$options = $this->getOptions();
 
 		$cls = '';
