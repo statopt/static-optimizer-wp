@@ -432,7 +432,7 @@ name='static_optimizer_settings[status]' type='radio' value='0' $inactive_checke
 		$options          = $this->getOptions();
 		$val              = $options['server_location'];
 		$north_america_checked   = ! empty( $val ) ? checked( 'north_america', $val, false ) : '';
-		$europe_checked = empty( $val ) ? checked( 'europe', $val, false ) : '';
+		$europe_checked = ! empty( $val ) ? checked( 'europe', $val, false ) : '';
 		?>
 		<label for='static_optimizer_setting_server_location_north_america'>
             <input id='static_optimizer_setting_server_location_north_america'
