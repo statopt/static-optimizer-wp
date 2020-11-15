@@ -167,7 +167,7 @@ class StaticOptimizerAdmin extends StaticOptimizerBase {
 	function registerSettings() {
 		register_setting( 'static_optimizer_settings', 'static_optimizer_settings', [ $this, 'validateSettings' ] );
 		add_settings_section( 'plugin_settings', 'Settings', [ $this, 'static_optimizer_settings_text' ], 'static_optimizer_settings' );
-		add_settings_field( 'static_optimizer_setting_status', 'Status',  [ $this, 'static_optimizer_setting_status' ], 'static_optimizer_settings', 'plugin_settings' );
+		add_settings_field( 'static_optimizer_setting_status', 'Status',  [ $this, 'renderSettingStatus' ], 'static_optimizer_settings', 'plugin_settings' );
 		add_settings_field( 'static_optimizer_setting_api_key', 'API Key',  [ $this, 'static_optimizer_setting_api_key' ], 'static_optimizer_settings', 'plugin_settings' );
 		add_settings_field( 'static_optimizer_setting_file_types', 'File Types',  [ $this, 'static_optimizer_setting_file_types' ], 'static_optimizer_settings', 'plugin_settings' );
 	}
@@ -396,7 +396,10 @@ NOTE_EOF;
 		echo "<input id='static_optimizer_setting_api_key' name='static_optimizer_settings[api_key]' class='widefat' type='text' value='$val_esc' />";
 	}
 
-	function static_optimizer_setting_status() {
+	/**
+	 * Renders the radio buttons for the plugin status
+	 */
+	function renderSettingStatus() {
 		$options          = $this->getOptions();
 		$val              = $options['status'];
 		$active_checked   = ! empty( $val ) ? checked( 1, 1, false ) : '';
