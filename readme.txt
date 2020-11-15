@@ -31,6 +31,7 @@ If our optimization server are down (upgrade, maintenance or outage) your origin
 * The code in script blocks is preserved
 * Sandbox/test/development subdomains are automatically authorized if the main domain is authorized. Test subdomains are: test, testing, sandbox, dev, local, stage, staging
 * SEO: Our servers return canonical header to tell which is the source file. Link: <https://example.com/images/image.png>; rel="canonical"
+* Select if you want your site to be optimized by servers in Europe or North America
 
 == Demo ==
 https://www.youtube.com/watch?v=1KC_JJOcu1s
@@ -96,7 +97,7 @@ Yes
 
 = 1.0.4 =
 * fix: when js/css couldn't be loaded we used to create a new obj. Now we are reusing the existing one.
-* todo: pick preferred server EU or US or random
+* Pick preferred server location in Europe or North America
 * todo: show a notice to update the settings if the domain name has changed in whole wp
 * Refactored code so it uses OOP style.
 * fixed images file type was unselectable.
