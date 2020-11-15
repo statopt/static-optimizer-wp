@@ -676,50 +676,8 @@ name='static_optimizer_settings[status]' type='radio' value='0' $inactive_checke
 							<div class="postbox">
 								<h3><span>Support & Feature Requests</span></h3>
 								<h3>
-									<?php
-									$plugin_data         = get_plugin_data( STATIC_OPTIMIZER_BASE_PLUGIN );
-									$product_name        = trim( $plugin_data['Name'] );
-									$product_page        = trim( $plugin_data['PluginURI'] );
-									$product_descr       = trim( $plugin_data['Description'] );
-									$product_descr_short = substr( $product_descr, 0, 50 ) . '...';
-									$product_descr_short .= ' #WordPress #plugin';
-
-									$base_name_slug = basename( STATIC_OPTIMIZER_BASE_PLUGIN );
-									$base_name_slug = str_replace( '.php', '', $base_name_slug );
-									$product_page   .= ( strpos( $product_page, '?' ) === false ) ? '?' : '&';
-									$product_page   .= "utm_source=$base_name_slug&utm_medium=plugin-settings&utm_campaign=product";
-
-									$product_page_tweet_link = $product_page;
-									$product_page_tweet_link = str_replace( 'plugin-settings', 'tweet', $product_page_tweet_link );
-									?>
-									<!-- Twitter: code -->
-									<script>!function (d, s, id) {
-                                            var js, fjs = d.getElementsByTagName(s)[0];
-                                            if (!d.getElementById(id)) {
-                                                js = d.createElement(s);
-                                                js.id = id;
-                                                js.src = "//platform.twitter.com/widgets.js";
-                                                fjs.parentNode.insertBefore(js, fjs);
-                                            }
-                                        }(document, "script", "twitter-wjs");</script>
-									<!-- /Twitter: code -->
-
-									<!-- Twitter: Orbisius_Follow:js -->
-									<a href="https://twitter.com/statopt" class="twitter-follow-button"
-									   data-align="right" data-show-count="false">Follow @statopt</a>
-									<!-- /Twitter: Orbisius_Follow:js -->
-
-									<!-- Twitter: Tweet:js -->
-									<a href="https://twitter.com/share" class="twitter-share-button"
-									   data-lang="en"
-									   data-text="Checkout <?php echo $product_name; ?> #WordPress #plugin <?php echo $product_descr_short; ?>"
-									   data-count="none" data-via="statopt" data-related="orbisius"
-									   data-url="<?php echo $product_page_tweet_link; ?>">Tweet</a>
-									<!-- /Twitter: Tweet:js -->
-
-									<br/>
 									<span>
-                                    <a href="<?php echo $product_page; ?>" target="_blank" title="[new window]">Product Page</a>
+                                    <a href="https://statopt.com/?utm_source=plugin" target="_blank" title="[new window]">Product Page</a>
                                     |
                                     <a href="https://github.com/statopt/static-optimizer-wp/issues"
                                        target="_blank" title="[new window]">Report Bugs / Features</a>
