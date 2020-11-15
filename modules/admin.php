@@ -15,11 +15,11 @@ class StaticOptimizerAdmin extends StaticOptimizerBase {
 
 
 		// this filter runs most often than action 'update_option_static_optimizer_settings'
-		add_filter( 'pre_update_option_static_optimizer_settings', [ $this, 'static_optimizer_before_option_update' ], 20, 3 );
+		add_filter( 'pre_update_option_static_optimizer_settings', [ $this, 'processBeforeDbSaveSettings' ], 20, 3 );
 
 		add_action( 'admin_init', [ $this, 'registerSettings' ] );
 
-		add_action( 'static_optimizer_action_before_settings_form', [ $this, 'static_optimizer_maybe_render_localhost_notice' ] );
+		add_action( 'static_optimizer_action_before_settings_form', [ $this, 'maybeRenderNotice' ] );
 		add_action( 'static_optimizer_action_before_render_settings_form', [ $this, 'redirectToGenerateApiKeyPage' ] );
 		add_action( 'static_optimizer_action_before_settings_form', [ $this, 'static_optimizer_maybe_render_not_active_plugin' ] );
 		add_action( 'static_optimizer_action_after_settings_form', [ $this, 'static_optimizer_maybe_render_get_key_form' ] );
@@ -69,8 +69,8 @@ class StaticOptimizerAdmin extends StaticOptimizerBase {
 	 *
 	 * @return mixed
 	 */
-	function static_optimizer_before_option_update($value, $old_value, $option) {
-		$this->static_optimizer_after_option_update($old_value, $value, $option);
+	function processBeforeDbSaveSettings($value, $old_value, $option) {
+		$this->syncStaticFileSettings($old_value, $value, $option);
 		return $value;
 	}
 
@@ -81,7 +81,7 @@ class StaticOptimizerAdmin extends StaticOptimizerBase {
 	 * @param array $value
 	 * @param string $option
 	 */
-	function static_optimizer_after_option_update( $old_value, $value, $option = null) {
+	function syncStaticFileSettings( $old_value, $value, $option = null) {
 		$dir = dirname( STATIC_OPTIMIZER_CONF_FILE );
 
 		if ( ! is_dir( $dir ) ) {
@@ -234,7 +234,7 @@ class StaticOptimizerAdmin extends StaticOptimizerBase {
 	/**
 	 * @param array $ctx
 	 */
-	function static_optimizer_maybe_render_localhost_notice( $ctx ) {
+	public function maybeRenderNotice( $ctx = []) {
 		if ( empty( $_SERVER['REMOTE_ADDR'] ) ) {
 			return;
 		}
