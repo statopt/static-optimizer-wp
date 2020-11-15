@@ -329,7 +329,7 @@ class StaticOptimizerAdmin extends StaticOptimizerBase {
 				             style="width: 35%"
 				             value="<?php esc_attr_e( $site_url ); ?>"/>
 
-				<input name='submit' class='button button-primary' type='submit' value='Get API Key'/>
+				<input name='submit' class='button' type='submit' value='Get API Key'/>
 			</form>
 		</div> <!-- /static_optimizer_get_api_key_form_wrapper -->
 		<?php
@@ -623,7 +623,7 @@ name='static_optimizer_settings[status]' type='radio' value='0' $inactive_checke
 								<h3><span>Hire Us</span></h3>
 								<div class="inside">
 									Hire us to create a plugin/SaaS app
-									<br/><a href="https://statopt.com/page/free-quote/?utm_source=<?php echo str_replace( '.php', '', basename( STATIC_OPTIMIZER_BASE_PLUGIN ) ); ?>&utm_medium=plugin-settings&utm_campaign=product"
+									<br/><a href="https://orbisius.com/page/free-quote/?utm_source=<?php echo str_replace( '.php', '', basename( STATIC_OPTIMIZER_BASE_PLUGIN ) ); ?>&utm_medium=plugin-settings&utm_campaign=product"
 									        title="If you want a custom web/mobile app/plugin developed contact us. This opens in a new window/tab"
 									        class="button-primary" target="_blank">Get a Free Quote</a>
 								</div> <!-- .inside -->
