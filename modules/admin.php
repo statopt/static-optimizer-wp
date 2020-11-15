@@ -728,57 +728,6 @@ name='static_optimizer_settings[status]' type='radio' value='0' $inactive_checke
 							</div> <!-- .postbox -->
 							<!-- /Support options -->
 
-							<div class="postbox">
-								<h3><span>Share</span></h3>
-								<div class="inside">
-									<?php
-									$plugin_data = get_plugin_data( STATIC_OPTIMIZER_BASE_PLUGIN );
-
-									$app_link  = urlencode( $plugin_data['PluginURI'] );
-									$app_title = urlencode( $plugin_data['Name'] );
-									$app_descr = urlencode( $plugin_data['Description'] );
-									?>
-									<p>
-										<!-- AddThis Button BEGIN -->
-									<div class="addthis_toolbox addthis_default_style addthis_32x32_style">
-										<a class="addthis_button_facebook" addthis:url="<?php echo $app_link ?>"
-										   addthis:title="<?php echo $app_title ?>"
-										   addthis:description="<?php echo $app_descr ?>"></a>
-										<a class="addthis_button_twitter" addthis:url="<?php echo $app_link ?>"
-										   addthis:title="<?php echo $app_title ?>"
-										   addthis:description="<?php echo $app_descr ?>"></a>
-										<a class="addthis_button_linkedin" addthis:url="<?php echo $app_link ?>"
-										   addthis:title="<?php echo $app_title ?>"
-										   addthis:description="<?php echo $app_descr ?>"></a>
-										<a class="addthis_button_email" addthis:url="<?php echo $app_link ?>"
-										   addthis:title="<?php echo $app_title ?>"
-										   addthis:description="<?php echo $app_descr ?>"></a>
-										<!--<a class="addthis_button_myspace" addthis:url="<?php echo $app_link ?>" addthis:title="<?php echo $app_title ?>" addthis:description="<?php echo $app_descr ?>"></a>
-                                        <a class="addthis_button_google" addthis:url="<?php echo $app_link ?>" addthis:title="<?php echo $app_title ?>" addthis:description="<?php echo $app_descr ?>"></a>
-                                        <a class="addthis_button_digg" addthis:url="<?php echo $app_link ?>" addthis:title="<?php echo $app_title ?>" addthis:description="<?php echo $app_descr ?>"></a>
-                                        <a class="addthis_button_delicious" addthis:url="<?php echo $app_link ?>" addthis:title="<?php echo $app_title ?>" addthis:description="<?php echo $app_descr ?>"></a>
-                                        <a class="addthis_button_stumbleupon" addthis:url="<?php echo $app_link ?>" addthis:title="<?php echo $app_title ?>" addthis:description="<?php echo $app_descr ?>"></a>
-                                        <a class="addthis_button_tumblr" addthis:url="<?php echo $app_link ?>" addthis:title="<?php echo $app_title ?>" addthis:description="<?php echo $app_descr ?>"></a>
-                                        <a class="addthis_button_favorites" addthis:url="<?php echo $app_link ?>" addthis:title="<?php echo $app_title ?>" addthis:description="<?php echo $app_descr ?>"></a>-->
-										<a class="addthis_button_compact"></a>
-									</div>
-									<!-- The JS code is in the footer -->
-
-									<script type="text/javascript">
-                                        var addthis_config = {"data_track_clickback": false};
-                                        var addthis_share = {
-                                            templates: {twitter: 'Check out {{title}} @ {{lurl}} (from @static)'}
-                                        }
-									</script>
-									<!-- AddThis Button START part2 -->
-									<script type="text/javascript" src="//s7.addthis.com/js/250/addthis_widget.js"
-									        async></script>
-									<!-- AddThis Button END part2 -->
-									</p>
-								</div> <!-- .inside -->
-
-							</div> <!-- .postbox -->
-
 						</div> <!-- .meta-box-sortables -->
 					</div> <!-- #postbox-container-1 .postbox-container -->
 
