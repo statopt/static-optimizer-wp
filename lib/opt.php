@@ -386,6 +386,10 @@ class Static_Optimizer_Asset_Optimizer {
 		$cfg_arr = [];
 		$cfg_arr['server_name'] = $this->getHost();
 
+		if (!empty($this->cfg['server_location'])) {
+			$cfg_arr['server_location'] = $this->cfg['server_location'];
+		}
+
 		if (!empty($this->cfg['file_types'])) {
 			$cfg_arr['file_types'] = $this->cfg['file_types'];
 		}
