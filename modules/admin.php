@@ -168,7 +168,7 @@ class StaticOptimizerAdmin extends StaticOptimizerBase {
 		register_setting( 'static_optimizer_settings', 'static_optimizer_settings', [ $this, 'validateSettings' ] );
 		add_settings_section( 'plugin_settings', 'Settings', [ $this, 'static_optimizer_settings_text' ], 'static_optimizer_settings' );
 		add_settings_field( 'static_optimizer_setting_status', 'Status',  [ $this, 'renderSettingStatus' ], 'static_optimizer_settings', 'plugin_settings' );
-		add_settings_field( 'static_optimizer_setting_api_key', 'API Key',  [ $this, 'static_optimizer_setting_api_key' ], 'static_optimizer_settings', 'plugin_settings' );
+		add_settings_field( 'static_optimizer_setting_api_key', 'API Key',  [ $this, 'renderSettingApiKey' ], 'static_optimizer_settings', 'plugin_settings' );
 		add_settings_field( 'static_optimizer_setting_file_types', 'File Types',  [ $this, 'static_optimizer_setting_file_types' ], 'static_optimizer_settings', 'plugin_settings' );
 	}
 
@@ -389,7 +389,7 @@ NOTE_EOF;
 	/**
 	 * Generates the api_key box
 	 */
-	function static_optimizer_setting_api_key() {
+	function renderSettingApiKey() {
 		$options = $this->getOptions();
 		$val     = $options['api_key'];
 		$val_esc = esc_attr( $val );
