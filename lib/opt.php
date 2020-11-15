@@ -344,7 +344,7 @@ class Static_Optimizer_Asset_Optimizer {
 			$append_txt = ' onerror="javascript:static_optimizer_handle_broken_script(this);" ';
 			$html_buff = str_ireplace('<script ', '<script ' . $append_txt, $html_buff);
 		} elseif (strcasecmp($what, 'link') == 0 && ( stripos( $html_buff, 'stylesheet' ) !== false )) {
-			$append_txt = ' onerror="javascript:static_optimizer_handle_broken_link(this);" onload="javascript:static_optimizer_handle_broken_link(this);" ';
+			$append_txt = ' onerror="javascript:static_optimizer_handle_broken_link(this);" ';
 			$html_buff = str_ireplace('<link ', '<link ' . $append_txt, $html_buff);
 		}
 
