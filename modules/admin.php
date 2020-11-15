@@ -20,7 +20,7 @@ class StaticOptimizerAdmin extends StaticOptimizerBase {
 		add_action( 'admin_init', [ $this, 'registerSettings' ] );
 
 		add_action( 'static_optimizer_action_before_settings_form', [ $this, 'static_optimizer_maybe_render_localhost_notice' ] );
-		add_action( 'static_optimizer_action_before_render_settings_form', [ $this, 'static_optimizer_redirect_to_gen_api_key' ] );
+		add_action( 'static_optimizer_action_before_render_settings_form', [ $this, 'redirectToGenerateApiKeyPage' ] );
 		add_action( 'static_optimizer_action_before_settings_form', [ $this, 'static_optimizer_maybe_render_not_active_plugin' ] );
 		add_action( 'static_optimizer_action_after_settings_form', [ $this, 'static_optimizer_maybe_render_get_key_form' ] );
 		add_action( 'static_optimizer_action_after_settings_form', [ $this, 'static_optimizer_maybe_render_manage_key_form' ] );
@@ -791,7 +791,11 @@ name='static_optimizer_settings[status]' type='radio' value='0' $inactive_checke
 		<?php
 	}
 
-	function static_optimizer_redirect_to_gen_api_key( $ctx ) {
+	/**
+     * The get key is first submitted to this plugin so we can prefill the fields and then redirect
+	 * @param $ctx
+	 */
+	function redirectToGenerateApiKeyPage( $ctx = [] ) {
 		try {
 			$req_obj = StaticOptimizerRequest::getInstance();
 			$cmd     = $req_obj->get( 'static_optimizer_cmd' );
