@@ -608,17 +608,12 @@ BUFF_EOF;
 			$local_file = $this->doc_root . $local_file_matches[1];
 
 			if (file_exists($local_file)) {
-				//putenv('QS_APP_SYSTEM_OPTIMIZER_FUNCTION=md5_file');
-				//putenv('QS_APP_SYSTEM_OPTIMIZER_CALC_SHARED_FILES_HASH=1');
-				$opt_func = getenv('QS_APP_SYSTEM_OPTIMIZER_FUNCTION');
-				$calc_hash = getenv('QS_APP_SYSTEM_OPTIMIZER_CALC_SHARED_FILES_HASH');
-				$opt_func = empty($opt_func) ? '' : $opt_func;
-
 				// We can do md5_file, sha1_file if necessary but last mod should be good enough and quicker.
 				// md5 or sha1 may be useful if we want to make the caching server look up the file by cache id
 				// if wp only we'll calc the hash to wp files so there's a chance that the hash caches will be hit more often.
 				if ($this->isCalcCommonFileHashEnabled()
 				    && preg_match('#/(wp-(includes|admin)|woocommerce|twenty[\w\-]+|divi|generatepress|bootstrap|foundation|oceanwp|avada|storefront|elementor|beaver|composer|ogyxgen|builder|gutenberg)/.+#si', $local_file )) {
+					$opt_func = getenv('STATIC_OPTIMIZER_FILE_HASH_FUNCTION'); // md5_file
 					$opt_func = empty($opt_func) ? 'sha1_file' : $opt_func;
 				}
 
