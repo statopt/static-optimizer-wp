@@ -100,6 +100,7 @@ Yes
 * Pick preferred server location in Europe or North America
 * todo: show a notice to update the settings if the domain name has changed in whole wp
 * Refactored code so it uses OOP style.
+* fixed sha1 wasn't calculated for the most common files
 * fixed images file type was unselectable.
 * fixed the link to the quick contact page
 * Cleaned up code. Removed old code that was going to be used for the mu plugin
