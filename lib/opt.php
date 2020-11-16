@@ -6,6 +6,7 @@ class Static_Optimizer_Asset_Optimizer {
 	private $cfg = [];
 	private $host = '';
 	private $doc_root = '';
+	private $calc_common_file_hash = true;
 
 	// default servers
 	private $servers = [
@@ -616,7 +617,7 @@ BUFF_EOF;
 				// We can do md5_file, sha1_file if necessary but last mod should be good enough and quicker.
 				// md5 or sha1 may be useful if we want to make the caching server look up the file by cache id
 				// if wp only we'll calc the hash to wp files so there's a chance that the hash caches will be hit more often.
-				if (!empty($calc_hash)
+				if ($this->isCalcCommonFileHashEnabled()
 				    && preg_match('#/(wp-(includes|admin)|woocommerce|twenty[\w\-]+|divi|generatepress|bootstrap|foundation|oceanwp|avada|storefront|elementor|beaver|composer|ogyxgen|builder|gutenberg)/.+#si', $local_file )) {
 					$opt_func = empty($opt_func) ? 'sha1_file' : $opt_func;
 				}
@@ -737,5 +738,19 @@ BUFF_EOF;
 		}
 
 		return $this->servers;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isCalcCommonFileHashEnabled() {
+		return $this->calc_common_file_hash;
+	}
+
+	/**
+	 * @param bool $calc_common_file_hash
+	 */
+	public function setCalcCommonFileHash( $calc_common_file_hash ) {
+		$this->calc_common_file_hash = (bool) $calc_common_file_hash;
 	}
 }
