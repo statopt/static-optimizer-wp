@@ -608,6 +608,8 @@ BUFF_EOF;
 			$local_file = $this->doc_root . $local_file_matches[1];
 
 			if (file_exists($local_file)) {
+				$opt_func = '';
+
 				// We can do md5_file, sha1_file if necessary but last mod should be good enough and quicker.
 				// md5 or sha1 may be useful if we want to make the caching server look up the file by cache id
 				// if wp only we'll calc the hash to wp files so there's a chance that the hash caches will be hit more often.
