@@ -46,6 +46,8 @@ if ( defined( 'WP_CONTENT_DIR' ) ) {
 	define( 'STATIC_OPTIMIZER_CONF_FILE', STATIC_OPTIMIZER_BASE_DIR . '/.ht_config.json' );
 }
 
+require_once __DIR__ . '/lib/base.php';
+
 $static_optimizer_worker = __DIR__ . '/000-static-optimizer-system-worker.php';
 
 if (!defined('STATIC_OPTIMIZER_ACTIVE') || STATIC_OPTIMIZER_ACTIVE) {
@@ -53,12 +55,15 @@ if (!defined('STATIC_OPTIMIZER_ACTIVE') || STATIC_OPTIMIZER_ACTIVE) {
 
 	// The worker has all the conditions to run so don't load the plugin's stuff.
 	if (defined('STATIC_OPTIMIZER_WORKER_RUNNING') && STATIC_OPTIMIZER_WORKER_RUNNING) {
+		if (defined('STATIC_OPTIMIZER_CFG_DATA')) {
+			require_once __DIR__ . '/modules/misc.php';
+		}
+
 		return;
 	}
 }
 
 require_once __DIR__ . '/lib/request.php';
-require_once __DIR__ . '/lib/base.php';
 require_once __DIR__ . '/modules/core.php';
 
 if (is_admin()) {
