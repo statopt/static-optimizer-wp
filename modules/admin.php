@@ -147,6 +147,7 @@ class StaticOptimizerAdmin extends StaticOptimizerBase {
 				'css' => 0,
 				'fonts' => 0,
 			],
+            'provide_credits' => 0,
 		);
 
 		if ( $load_defaults ) {
@@ -172,6 +173,7 @@ class StaticOptimizerAdmin extends StaticOptimizerBase {
 		add_settings_field( 'static_optimizer_setting_api_key', 'API Key',  [ $this, 'renderSettingApiKey' ], 'static_optimizer_settings', 'plugin_settings' );
 		add_settings_field( 'static_optimizer_setting_file_types', 'File Types',  [ $this, 'renderSettingrenderSettingFileTypes' ], 'static_optimizer_settings', 'plugin_settings' );
 		add_settings_field( 'static_optimizer_setting_pref_srv_location', 'Preferred Server Location',  [ $this, 'renderSettingPreferredServerLocation' ], 'static_optimizer_settings', 'plugin_settings' );
+		add_settings_field( 'static_optimizer_setting_provide_credits', 'Provide Credits',  [ $this, 'renderProvideCreditsSection' ], 'static_optimizer_settings', 'plugin_settings' );
 	}
 
 	/**
@@ -423,6 +425,17 @@ name='static_optimizer_settings[status]' type='radio' value='1' $active_checked 
 		echo "&nbsp;&nbsp;&nbsp;";
 		echo "<label for='static_optimizer_setting_status_inactive'><input id='static_optimizer_setting_status_inactive' 
 name='static_optimizer_settings[status]' type='radio' value='0' $inactive_checked /> Inactive</label>";
+	}
+
+	/**
+	 * Renders a checkbox to ask the user if they want to link to StaticOptimizer site.
+	 */
+	function renderProvideCreditsSection() {
+		$options          = $this->getOptions();
+		$val              = $options['provide_credits'];
+		$active_checked   = ! empty( $val ) ? checked( 1, 1, false ) : '';
+		echo "<label for='static_optimizer_setting_provide_credits'><input id='static_optimizer_setting_provide_credits' 
+name='static_optimizer_settings[provide_credits]' type='checkbox' value='1' $active_checked /> As a thank you I'd like to show a link to StaticOptimizer site in my site's footer </label>";
 	}
 
 	/**
