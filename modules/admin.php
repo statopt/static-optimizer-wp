@@ -434,8 +434,18 @@ name='static_optimizer_settings[status]' type='radio' value='0' $inactive_checke
 		$options          = $this->getOptions();
 		$val              = $options['provide_credits'];
 		$active_checked   = ! empty( $val ) ? checked( 1, 1, false ) : '';
-		echo "<label for='static_optimizer_setting_provide_credits'><input id='static_optimizer_setting_provide_credits' 
-name='static_optimizer_settings[provide_credits]' type='checkbox' value='1' $active_checked /> As a thank you I'd like to show a link to StaticOptimizer site in my site's footer </label>";
+		?>
+		<label for='static_optimizer_setting_provide_credits'><input id='static_optimizer_setting_provide_credits'
+            name='static_optimizer_settings[provide_credits]' type='checkbox' value='1' <?php echo $active_checked;?> />
+            I love this plugin so I'd like to show a link to StaticOptimizer site in my site's footer </label>
+            <hr/>
+            <a href="https://wordpress.org/plugins/static-optimizer/#reviews"
+               title="[new window]" target="_blank">Write a Review</a>
+            |
+            <a href="https://github.com/statopt/static-optimizer-wp/issues"
+                target="_blank" title="[new window]">Submit a bug / request a feature</a>
+		<br/>
+        <?php
 	}
 
 	/**
