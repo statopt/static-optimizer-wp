@@ -3,15 +3,15 @@
 $obj = StaticOptimizerCore::getInstance();
 add_action( 'init', [ $obj, 'init' ] );
 
-register_activation_hook(STATIC_OPTIMIZER_BASE_PLUGIN, [ $obj, 'onActivate' ] );
-register_deactivation_hook(STATIC_OPTIMIZER_BASE_PLUGIN, [ $obj, 'onDeactivate' ] );
-register_uninstall_hook( STATIC_OPTIMIZER_BASE_PLUGIN, [ $obj, 'onUninstall' ] );
+register_activation_hook(STATIC_OPTIMIZER_BASE_PLUGIN, 'StaticOptimizerCore::onActivate' );
+register_deactivation_hook(STATIC_OPTIMIZER_BASE_PLUGIN, 'StaticOptimizerCore::onDeactivate' );
+register_uninstall_hook( STATIC_OPTIMIZER_BASE_PLUGIN, 'StaticOptimizerCore::onUninstall' );
 
 class StaticOptimizerCore extends StaticOptimizerBase {
 	/**
 	 * The plugin was activated. If conf file exists and has api_key we can set it to status=1 now
 	 */
-	public function onActivate() {
+	static public function onActivate() {
 		if ( ! file_exists( STATIC_OPTIMIZER_CONF_FILE ) ) {
 			return;
 		}
@@ -38,7 +38,7 @@ class StaticOptimizerCore extends StaticOptimizerBase {
 	/**
 	 * The plugin was deactivated so we need to set status to 0
 	 */
-	public function onDeactivate() {
+	static public function onDeactivate() {
 		if ( ! file_exists( STATIC_OPTIMIZER_CONF_FILE ) ) {
 			return;
 		}
@@ -65,7 +65,7 @@ class StaticOptimizerCore extends StaticOptimizerBase {
 	/**
 	 * The plugin is about to be uninstalled.
 	 */
-	public function onUninstall() {
+	static public function onUninstall() {
 		// delete cfg files and data dir
 		if ( file_exists( STATIC_OPTIMIZER_CONF_FILE ) ) {
 			unlink( STATIC_OPTIMIZER_CONF_FILE );
