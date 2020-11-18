@@ -19,6 +19,7 @@ If our optimization server are down (upgrade, maintenance or outage) your origin
 
 = Features / Benefits =
 * Simple, efficient and free to use
+* The free plan allows you to have images up to 5mb and up to 1600px wide or tall
 * Easy to set up. Just get your API key and you're good to go.
 * Automatic js and css minification & compression
 * Automatic image optimization (gif, jpeg, png)
