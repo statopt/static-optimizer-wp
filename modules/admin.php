@@ -55,8 +55,12 @@ class StaticOptimizerAdmin extends StaticOptimizerBase {
 	function updatePluginLinksInManagePlugins( $links, $file ) {
 		if ( $file == plugin_basename( STATIC_OPTIMIZER_BASE_PLUGIN ) ) {
 			$link          = $this->static_optimizer_get_settings_link();
-			$settings_link = "<a href=\"{$link}\">Settings</a>";
-			array_unshift( $links, $settings_link );
+			$full_html_link = "<a href=\"{$link}\">Settings</a>";
+			array_unshift( $links, $full_html_link );
+
+			$link          = 'https://statopt.com/?utm_source=plugin&utm_medium=admin_plugin_list';
+			$full_html_link = "<a href=\"{$link}\" target='_blank' title='Opens in a new tab/window'>Home Page</a>";
+			array_unshift( $links, $full_html_link );
 		}
 
 		return $links;
