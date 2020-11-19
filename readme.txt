@@ -5,7 +5,7 @@ Tags: wp,static,optimization,smush,ewww,autoptimize,cache,minify,caching,speed,p
 Requires at least: 4.0
 Tested up to: 5.5
 Requires PHP: 5.6
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPLv2 or later
 
 Optimizes your assets (images, css, js) for faster site loading so they are loaded by StaticOptimizer Optimization servers.
