@@ -4,7 +4,7 @@ class StaticOptimizerBase {
 	/**
 	 * Singleton pattern i.e. we have only one instance of this obj
 	 * @staticvar static $instance
-	 * @return orbisius_prop_ed_file
+	 * @return static
 	 */
 	public static function getInstance() {
 		static $instance = null;
