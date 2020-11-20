@@ -222,6 +222,7 @@ class Static_Optimizer_Asset_Optimizer {
 			$supported_ext_arr[] = 'png';
 			$supported_ext_arr[] = 'jpe?g';
 			$supported_ext_arr[] = 'gif';
+			$supported_ext_arr[] = 'svg';
 		}
 
 		if (in_array('js', $enabled_file_types)) {

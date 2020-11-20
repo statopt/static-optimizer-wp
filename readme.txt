@@ -22,7 +22,7 @@ If our optimization server are down (upgrade, maintenance or outage) your origin
 * The free plan allows you to have images up to 5mb and up to 1600px wide or tall
 * Easy to set up. Just get your API key and you're good to go.
 * Automatic js and css minification & compression
-* Automatic image optimization (gif, jpeg, png)
+* Automatic image optimization (gif, jpeg, png, svg)
 * Files are reloaded only when they are changed on your server (or deleted from ours).
 * Automatic conversion to webp
 * Our servers check and if the visitor's browser supports webp we'll serve that file otherwise the optimized version.
@@ -97,6 +97,7 @@ Yes
 == Changelog ==
 
 = 1.0.5 =
+* added optimization support for svg images
 * todo: show a notice if the domain name has changed & for sandbox
 
 = 1.0.4 =
