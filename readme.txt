@@ -33,6 +33,7 @@ If our optimization server are down (upgrade, maintenance or outage) your origin
 * Sandbox/test/development subdomains are automatically authorized if the main domain is authorized. Test subdomains are: test, testing, sandbox, dev, local, stage, staging
 * SEO: Our servers return canonical header to tell which is the source file. Link: <https://example.com/images/image.png>; rel="canonical"
 * Select if you want your site to be optimized by servers in Europe or North America
+* No lock-in = after deactivation, all files will work and load from your current host and no data loss
 
 == Demo ==
 https://www.youtube.com/watch?v=1KC_JJOcu1s
