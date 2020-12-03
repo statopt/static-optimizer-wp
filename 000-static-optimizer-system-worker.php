@@ -10,15 +10,16 @@ if (    !defined('ABSPATH')
      || defined('DOING_AJAX')
      || !defined('WP_CONTENT_DIR')
      || php_sapi_name() == 'cli'
+     || empty( $_SERVER['HTTP_HOST'] )
+     || empty( $_SERVER['SERVER_NAME'] )
      || (defined('WP_CLI') && WP_CLI)
+     || (isset($_REQUEST['statopt_status']) && empty($_REQUEST['statopt_status'])) // turn off from request
 //     || !empty($_POST)
      || (!empty($_SERVER['REQUEST_URI']) &&
          (     (strpos($_SERVER['REQUEST_URI'], 'wp-cron') !== false) // no cron requests
             || (strpos($_SERVER['REQUEST_URI'], '/wp-admin/') !== false) // no running in admin area
          )
      )
-	 || empty( $_SERVER['HTTP_HOST'] )
-	 || empty( $_SERVER['SERVER_NAME'] )
      || (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strcasecmp($_SERVER['HTTP_X_REQUESTED_WITH'], 'xmlhttprequest') == 0)
 //	|| ! empty( $_SERVER['QS_SYSTEM_CORE_CORRECT_ASSETS_VER'] ) // do not run on Orbisius servers as this is built-in.
 //	|| ! empty( $_SERVER['QS_APP_SYSTEM_OPTIMIZER_URL'] )

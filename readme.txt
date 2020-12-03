@@ -100,6 +100,7 @@ Yes
 = 1.0.5 =
 * added optimization support for svg images
 * todo: show a notice if the domain name has changed & for sandbox
+* added a parameter 'statopt_status' to turn off the optimization for a given page using ?statopt_status=0
 
 = 1.0.4 =
 * Fix: when js/css couldn't be loaded we used to create a new obj. Now we are reusing the existing one.
