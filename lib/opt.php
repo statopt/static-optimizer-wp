@@ -179,6 +179,8 @@ class Static_Optimizer_Asset_Optimizer {
 
 		$small_buff = substr( $buff, 0, 1024 );
 
+		// @todo skip HTML checks. Useful in tool mode.
+
 		// If it's not an HTML code don't modify anything.
 		if ( stripos( $small_buff, '<head' ) === false ) {
 			return $buff;
