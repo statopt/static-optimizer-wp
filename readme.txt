@@ -36,6 +36,11 @@ If our optimization server are down (upgrade, maintenance or outage) your origin
 * No lock-in = after deactivation, all files will work and load from your current host and no data loss
 
 == Demo ==
+
+Test drive
+https://wpdemo.net/try/plugin/static-optimizer
+
+Video demo
 https://www.youtube.com/watch?v=1KC_JJOcu1s
 
 = How it works =
@@ -99,6 +104,8 @@ Yes
 
 = 1.0.5 =
 * added optimization support for svg images
+* the CSS relative paths should have been resolved.
+* added demo
 * todo: show a notice if the domain name has changed & for sandbox
 
 = 1.0.4 =
