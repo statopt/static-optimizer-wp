@@ -199,6 +199,8 @@ class Static_Optimizer_Asset_Optimizer {
 			return $buff;
 		}
 
+		$orig_buff = $buff; // sometimes the replacements fail and we'll use the orig buff in such case.
+
 		// We'll pick only the keys of enabled file types
 		$enabled_file_types = array_filter($file_types);
 		$enabled_file_types = array_keys($enabled_file_types);
@@ -327,6 +329,7 @@ class Static_Optimizer_Asset_Optimizer {
 		// change jquery to google cdn ? or leave my code to run in WP to do it.
 		// //<script onerror="javascript:static_optimizer_handle_broken_script(this);"
 		// src='http://demo.qsandbox0.staging.com/qs3_1596199452_0089/s-qcsgy24aatlal.qsandbox0.staging.com/wp-admin/load-scripts.php?c=0&amp;load%5Bchunk_0%5D=jquery-core,jquery-migrate,utils&amp;ver=5.4.2'></script>
+		$buff = empty($buff) ? $orig_buff : $buff; // fallback or it would be an annoying white/blank page.
 
 		return $buff;
 	}

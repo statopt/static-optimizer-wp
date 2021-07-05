@@ -108,6 +108,7 @@ Yes
 * added demo
 * todo: show a notice if the domain name has changed & for sandbox
 * added a parameter 'statopt_status' to turn off the optimization for a given page using ?statopt_status=0
+* added a fallback parameter if for some reason the replacements didn't succeed.
 
 = 1.0.4 =
 * Fix: when js/css couldn't be loaded we used to create a new obj. Now we are reusing the existing one.
