@@ -56,6 +56,8 @@ People who have lots of images on their site such online stores, photographers, 
 
 = Thanks =
 
+The logo was designed by Atanas Lambew - <a href="https://dralart.com" title="Web Design Bulgaria, Logo design bulgaria" target="_blank">https://dralart.com</a>
+	
 I'd like to express my gratitude to the people who have taken the time to test the plugin & make suggestions and/or has provided access to troubleshoot glitches.
 * Phil Ryan - <a href="https://site123.ca" title="" target="_blank">https://site123.ca</a>
 * Michel Veenstra - <a href="https://www.adventis.nl" title="" target="_blank">https://www.adventis.nl</a>
@@ -65,7 +67,7 @@ I'd like to express my gratitude to the people who have taken the time to test t
 == Support ==
 
 Bugs? Suggestions? If you want a faster response contact us through our website's contact form at https://statopt.com and 
-not through the support tab of this plugin or WordPress forums.
+not through the support tab of this plugin or WordPress forums for a faster response.
 
 = Author =
 
