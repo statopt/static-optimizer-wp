@@ -56,7 +56,7 @@ People who have lots of images on their site such online stores, photographers, 
 
 = Thanks =
 
-The logo was designed by Atanas Lambew - <a href="https://dralart.com" title="Web Design Bulgaria, Logo design bulgaria" target="_blank">https://dralart.com</a>
+The logo was designed by Atanas Lambev - <a href="https://dralart.com" title="Web Design Bulgaria, Logo design bulgaria" target="_blank">https://dralart.com</a>
 	
 I'd like to express my gratitude to the people who have taken the time to test the plugin & make suggestions and/or has provided access to troubleshoot glitches.
 * Phil Ryan - <a href="https://site123.ca" title="" target="_blank">https://site123.ca</a>
