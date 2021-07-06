@@ -3,7 +3,7 @@ Contributors: lordspace,statopt,orbisius
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7APYDVPBCSY9A
 Tags: wp,static,optimization,smush,ewww,autoptimize,cache,minify,caching,speed,performance,supercacher,wp-super-cache,wp-fastest-cache,image,asset,js,css,optimisation
 Requires at least: 4.0
-Tested up to: 5.5
+Tested up to: 5.7
 Requires PHP: 5.6
 Stable tag: 1.0.5
 License: GPLv2 or later
@@ -111,6 +111,7 @@ Yes
 * todo: show a notice if the domain name has changed & for sandbox
 * added a parameter 'statopt_status' to turn off the optimization for a given page using ?statopt_status=0
 * added a fallback parameter if for some reason the replacements didn't succeed.
+* Tested with WP 5.7
 
 = 1.0.4 =
 * Fix: when js/css couldn't be loaded we used to create a new obj. Now we are reusing the existing one.
