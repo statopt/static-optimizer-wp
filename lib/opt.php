@@ -644,32 +644,35 @@ BUFF_EOF;
 			'url' => $str,
 		];
 
-		$optimizer_url = $this->getOptimizerServerUri($ctx);
+		// I may need to only have version in the file name only
+		if (empty($this->cfg['static_version_only'])) {
+			$optimizer_url = $this->getOptimizerServerUri( $ctx );
 
-		if (!empty($optimizer_url)) {
-			// get url replace url with server + url and append leave the other stuff as is such as surrounding quotes.
-			// ='https://1mapps.qsandbox0.staging.com/statopt/test/site/wp-includes/css/dist/block-library/style.min.statopt_ver.1603969031.css'
-			// 1 -> ='
-			// 2 -> https://1mapps.qsandbox0.staging.com/statopt/test/site/wp-includes/css/dist/block-library/style.min.statopt_ver.1603969031.css
-			// 3 -> '' <= or spaces or quotes
-			$r = '#(.*?)(https?://[^\s\'\"]+)(.*)$#si';
-			if (preg_match($r, $str, $matches)) {
-				$pref = $matches[1];
-				$suff = $matches[3];
-				$url_only = $matches[2];
-				$url_only_esc = urlencode($url_only);
+			if ( ! empty( $optimizer_url ) ) {
+				// get url replace url with server + url and append leave the other stuff as is such as surrounding quotes.
+				// ='https://1mapps.qsandbox0.staging.com/statopt/test/site/wp-includes/css/dist/block-library/style.min.statopt_ver.1603969031.css'
+				// 1 -> ='
+				// 2 -> https://1mapps.qsandbox0.staging.com/statopt/test/site/wp-includes/css/dist/block-library/style.min.statopt_ver.1603969031.css
+				// 3 -> '' <= or spaces or quotes
+				$r = '#(.*?)(https?://[^\s\'\"]+)(.*)$#si';
+				if ( preg_match( $r, $str, $matches ) ) {
+					$pref         = $matches[1];
+					$suff         = $matches[3];
+					$url_only     = $matches[2];
+					$url_only_esc = urlencode( $url_only );
 
-				// Sometimes we may have a specific place where to put the URL as a template variable {url}
-				// but if it doesn't exist then we'll just append.
-				$search_tpl_var = '{url}';
+					// Sometimes we may have a specific place where to put the URL as a template variable {url}
+					// but if it doesn't exist then we'll just append.
+					$search_tpl_var = '{url}';
 
-				if (strpos($optimizer_url, $search_tpl_var) === false) {
-					$optimized_asset_url = $optimizer_url . '/site/' . $url_only_esc;
-				} else {
-					$optimized_asset_url = str_replace($search_tpl_var, $url_only_esc, $optimizer_url);
+					if ( strpos( $optimizer_url, $search_tpl_var ) === false ) {
+						$optimized_asset_url = $optimizer_url . '/site/' . $url_only_esc;
+					} else {
+						$optimized_asset_url = str_replace( $search_tpl_var, $url_only_esc, $optimizer_url );
+					}
+
+					$str = $pref . $optimized_asset_url . $suff;
 				}
-
-				$str = $pref . $optimized_asset_url . $suff;
 			}
 		}
 
