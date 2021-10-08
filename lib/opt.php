@@ -306,7 +306,8 @@ class Static_Optimizer_Asset_Optimizer {
 			);
 		}
 
-		if ($appended_js <= 0) {
+		// If it configured to output version in files only locally we don't need the fallback
+		if (empty($this->cfg['static_version_only']) && $appended_js <= 0) {
 			$buff = str_ireplace('<head>', '<head>' . $this->generatePublicSideFallbackCode(), $buff); // first thing after <head>
 			$appended_js++;
 		}
