@@ -31,6 +31,7 @@ class Static_Optimizer_Asset_Optimizer {
 			$host = $_SERVER['SERVER_NAME'];
 		}
 
+		// it may contain a port e.g. host:8080
 		$host = preg_replace( '#^www\.#si', '', $host );
 		$host = strtolower( $host );
 		$host = strip_tags($host);
