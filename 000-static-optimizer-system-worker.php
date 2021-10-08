@@ -6,6 +6,7 @@
  */
 if (    !defined('ABSPATH')
      || defined('WP_UNINSTALL_PLUGIN')
+     || defined('STATIC_OPTIMIZER_SERVER_SETUP') // a solution is deployed server wide so turn off plugin
      || defined('DOING_CRON')
      || defined('DOING_AJAX')
      || !defined('WP_CONTENT_DIR')
