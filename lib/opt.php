@@ -509,10 +509,12 @@ BUFF_EOF;
 			return $img_html;
 		}
 
-		$append_txt = ' onerror="javascript:static_optimizer_handle_broken_image(this);" ';
+		if (empty($this->cfg['static_version_only'])) {
+			$append_txt = ' onerror="javascript:static_optimizer_handle_broken_image(this);" ';
 
-		if ( stripos( $img_html, 'onerror=' ) === false ) { // the image doesn't have srcset attrib
-			$img_html = str_ireplace('<img ', '<img ' . $append_txt, $img_html);
+			if ( stripos( $img_html, 'onerror=' ) === false ) { // the image doesn't have srcset attrib
+				$img_html = str_ireplace( '<img ', '<img ' . $append_txt, $img_html );
+			}
 		}
 
 		if ( stripos( $img_html, 'srcset=' ) === false ) { // the image doesn't have srcset attrib
