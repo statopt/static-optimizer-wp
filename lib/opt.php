@@ -284,32 +284,34 @@ class Static_Optimizer_Asset_Optimizer {
 			$css_load_found = true;
 		}
 
-		// do we have css/script stuff?
-		if ($script_tag_found || $css_load_found) {
-			$js_css_search = [];
+		if (empty($this->cfg['static_version_only'])) {
+			// do we have css/script stuff?
+			if ( $script_tag_found || $css_load_found ) {
+				$js_css_search = [];
 
-			if ($script_tag_found) {
-				$js_css_search[] = 'script';
+				if ( $script_tag_found ) {
+					$js_css_search[] = 'script';
+				}
+
+				if ( $css_load_found ) {
+					$js_css_search[] = 'link';
+				}
+
+				$regex_part       = join( '|', $js_css_search );
+				$all_assets_regex = '#<(' . $regex_part . ')[^>]*>#si';
+
+				$buff = preg_replace_callback(
+					$all_assets_regex,
+					[ $this, 'appendOnerrorReplaceCallback' ],
+					$buff
+				);
 			}
 
-			if ($css_load_found) {
-				$js_css_search[] = 'link';
+			// If it configured to output version in files only locally we don't need the fallback
+			if ( $appended_js <= 0 ) {
+				$buff = str_ireplace( '<head>', '<head>' . $this->generatePublicSideFallbackCode(), $buff ); // first thing after <head>
+				$appended_js ++;
 			}
-
-			$regex_part = join('|', $js_css_search);
-			$all_assets_regex = '#<(' . $regex_part . ')[^>]*>#si';
-
-			$buff = preg_replace_callback(
-				$all_assets_regex,
-				[ $this, 'appendOnerrorReplaceCallback' ],
-				$buff
-			);
-		}
-
-		// If it configured to output version in files only locally we don't need the fallback
-		if (empty($this->cfg['static_version_only']) && $appended_js <= 0) {
-			$buff = str_ireplace('<head>', '<head>' . $this->generatePublicSideFallbackCode(), $buff); // first thing after <head>
-			$appended_js++;
 		}
 
 		// did we escape some JS?
