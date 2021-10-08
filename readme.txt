@@ -104,6 +104,9 @@ Yes
 
 == Changelog ==
 
+= 1.0.6 =
+* Updated code so it doesn't run if there's a server side StatOpt optimization solution
+
 = 1.0.5 =
 * added optimization support for svg images
 * the CSS relative paths should have been resolved.
