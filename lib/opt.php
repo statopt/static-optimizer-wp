@@ -54,7 +54,6 @@ class Static_Optimizer_Asset_Optimizer {
 			$doc_root = $_SERVER['DOCUMENT_ROOT'];
 		}
 
-		// @todo if empty supported files check const or use default if serverside
 		if (empty($cfg['file_types']) && defined('STATIC_OPTIMIZER_SERVER_SETUP') ) {
 			$cfg['file_types'] = $this->supported_file_types_by_default;
 		}
