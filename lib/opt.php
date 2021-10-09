@@ -8,10 +8,10 @@ class Static_Optimizer_Asset_Optimizer {
 	private $doc_root = '';
 	private $calc_common_file_hash = true;
 	private $supported_file_types_by_default = [
-		'js',
-		'css',
-		'fonts',
-		'images',
+		'js' => 1,
+		'css' => 1,
+		'fonts' => 1,
+		'images' => 1,
 	];
 
 	// default servers
@@ -27,7 +27,6 @@ class Static_Optimizer_Asset_Optimizer {
 
 	public function __construct($cfg = []) {
 		$cfg = (array) $cfg;
-		$cfg = array_map('trim', $cfg);
 		$host = '';
 
 		if (!empty($cfg['host'])) {
@@ -771,6 +770,15 @@ BUFF_EOF;
 	 * @return bool
 	 */
 	public function isCalcCommonFileHashEnabled() {
+		// If it's server side set up we don't want to be calculating hashes .. unless there's a local optimizing server.
+		if (defined('STATIC_OPTIMIZER_SERVER_SETUP')) {
+			if (defined('STATIC_OPTIMIZER_LOCAL_OPT_SERVER')) {
+				// this means the local instance will cache the files with common hashes properly
+			} else {
+				return false;
+			}
+		}
+
 		return $this->calc_common_file_hash;
 	}
 
