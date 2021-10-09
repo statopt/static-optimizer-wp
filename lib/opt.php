@@ -6,9 +6,10 @@
  * Also this can calculate their hash (using sha1_file by default) but can be changed via const: STATIC_OPTIMIZER_FILE_HASH_FUNCTION
  *
  * If there's a local optimization server this STATIC_OPTIMIZER_SERVERS env var will contain a comma or pipe| separated values.
- * That optimization server will be used instead of https://StatOpt.com ones
+ * That optimization server will be used instead of https://StatOpt.com ones.
  *
- * STATIC_OPTIMIZER_SERVERS
+ * if this env is set: STATIC_OPTIMIZER_VERSION_IN_FILE_ONLY the files will contain either last mod or hash.
+ * The server must be set up to handle that.
  */
 class Static_Optimizer_Asset_Optimizer {
 	const SERVER_LOCATION_NORTH_AMERICA = 'north_america';
