@@ -65,19 +65,18 @@ class Static_Optimizer_Asset_Optimizer {
 			$doc_root = $_SERVER['DOCUMENT_ROOT'];
 		}
 
-		if (empty($cfg['file_types']) && $this->hasLocalOptimizationServers() ) {
-			$cfg['file_types'] = $this->supported_file_types_by_default;
-		}
+		if (!empty(getenv('STATIC_OPTIMIZER_VERSION_IN_FILE_ONLY')) || $this->hasLocalOptimizationServers()) {
+			if (empty($cfg['file_types'])) {
+				$cfg['file_types'] = $this->supported_file_types_by_default;
+			}
 
-		// For now we'll only make the last modified as part of the files.
-		// When we have the local opt server ready or if it\s necessary then we'll redirect the whole traffic to it.
-		// but if we have an optimized nginx in front we don't need to pass through the optimization servers
-		// because we've already optimized the files in the backend and nginx is delivering them.
-		if (empty($cfg['version_in_file_only'])
-		    && (!empty(getenv('STATIC_OPTIMIZER_VERSION_IN_FILE_ONLY'))
-		        || $this->hasLocalOptimizationServers()
-		    ) ) {
-			$cfg['version_in_file_only'] = 1;
+			// For now we'll only make the last modified as part of the files.
+			// When we have the local opt server ready or if it\s necessary then we'll redirect the whole traffic to it.
+			// but if we have an optimized nginx in front we don't need to pass through the optimization servers
+			// because we've already optimized the files in the backend and nginx is delivering them.
+			if (empty($cfg['version_in_file_only'])) {
+				$cfg['version_in_file_only'] = 1;
+			}
 		}
 
 		$this->cfg = $cfg;
