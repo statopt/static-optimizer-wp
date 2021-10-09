@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * This class can correct links to images, js, css, fonts so they have their last modified date appended to the file.
+ * Also this can calculate their hash (using sha1_file by default) but can be changed via const: STATIC_OPTIMIZER_FILE_HASH_FUNCTION
+ *
+ * If there's a local optimization server this STATIC_OPTIMIZER_SERVERS env var will contain a comma or pipe| separated values.
+ * That optimization server will be used instead of https://StatOpt.com ones
+ */
 class Static_Optimizer_Asset_Optimizer {
 	const SERVER_LOCATION_NORTH_AMERICA = 'north_america';
 	const SERVER_LOCATION_EUROPE = 'europe';
@@ -54,7 +61,7 @@ class Static_Optimizer_Asset_Optimizer {
 			$doc_root = $_SERVER['DOCUMENT_ROOT'];
 		}
 
-		if (empty($cfg['file_types']) && defined('STATIC_OPTIMIZER_SERVER_SETUP') ) {
+		if (empty($cfg['file_types']) && $this->hasLocalOptimizationServers() ) {
 			$cfg['file_types'] = $this->supported_file_types_by_default;
 		}
 
@@ -740,11 +747,14 @@ BUFF_EOF;
 
 		$user_defined_servers = '';
 		$user_defined_servers_env = getenv('STATIC_OPTIMIZER_SERVERS');
+		$user_defined_servers_server = empty($_SERVER['STATIC_OPTIMIZER_SERVERS']) ? '' : $_SERVER['STATIC_OPTIMIZER_SERVERS'];
 
 		if (defined('STATIC_OPTIMIZER_SERVERS')) {
 			$user_defined_servers = STATIC_OPTIMIZER_SERVERS;
 		} elseif (!empty($user_defined_servers_env)) {
 			$user_defined_servers = $user_defined_servers_env;
+		} elseif (!empty($user_defined_servers_server)) {
+			$user_defined_servers = $user_defined_servers_server;
 		}
 
 		if (!empty($user_defined_servers)) {
@@ -767,16 +777,30 @@ BUFF_EOF;
 	}
 
 	/**
+	 *
+	 * @return bool
+	 */
+	public function hasLocalOptimizationServers() {
+		$user_defined_servers_env = getenv('STATIC_OPTIMIZER_SERVERS');
+
+		if (!empty($user_defined_servers_env)) {
+			return true;
+		}
+
+		if (!empty($_SERVER['STATIC_OPTIMIZER_SERVERS'])) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * @return bool
 	 */
 	public function isCalcCommonFileHashEnabled() {
-		// If it's server side set up we don't want to be calculating hashes .. unless there's a local optimizing server.
-		if (defined('STATIC_OPTIMIZER_SERVER_SETUP')) {
-			if (defined('STATIC_OPTIMIZER_LOCAL_OPT_SERVER')) {
-				// this means the local instance will cache the files with common hashes properly
-			} else {
-				return false;
-			}
+		// If there's a local optimization server we don't want to be calculating hashes for now.
+		if ($this->hasLocalOptimizationServers()) {
+			return false;
 		}
 
 		return $this->calc_common_file_hash;
