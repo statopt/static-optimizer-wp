@@ -10,6 +10,7 @@ class Static_Optimizer_Asset_Optimizer {
 	private $supported_file_types_by_default = [
 		'js',
 		'css',
+		'fonts',
 		'images',
 	];
 
