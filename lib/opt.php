@@ -2,6 +2,7 @@
 
 /**
  * This class can correct links to images, js, css, fonts so they have their last modified date appended to the file.
+ * test.m123.css -> test.css
  * Also this can calculate their hash (using sha1_file by default) but can be changed via const: STATIC_OPTIMIZER_FILE_HASH_FUNCTION
  *
  * If there's a local optimization server this STATIC_OPTIMIZER_SERVERS env var will contain a comma or pipe| separated values.
@@ -63,6 +64,14 @@ class Static_Optimizer_Asset_Optimizer {
 
 		if (empty($cfg['file_types']) && $this->hasLocalOptimizationServers() ) {
 			$cfg['file_types'] = $this->supported_file_types_by_default;
+		}
+
+		// For now we'll only make the last modified as part of the files.
+		// When we have the local opt server ready or if it\s necessary then we'll redirect the whole traffic to it.
+		// but if we have an optimized nginx in front we don't need to pass through the optimization servers
+		// because we've already optimized the files in the backend and nginx is delivering them.
+		if (empty($cfg['static_version_only']) && $this->hasLocalOptimizationServers() ) {
+			$cfg['static_version_only'] = 1;
 		}
 
 		$this->cfg = $cfg;
