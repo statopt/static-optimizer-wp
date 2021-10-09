@@ -7,6 +7,8 @@
  *
  * If there's a local optimization server this STATIC_OPTIMIZER_SERVERS env var will contain a comma or pipe| separated values.
  * That optimization server will be used instead of https://StatOpt.com ones
+ *
+ * STATIC_OPTIMIZER_SERVERS
  */
 class Static_Optimizer_Asset_Optimizer {
 	const SERVER_LOCATION_NORTH_AMERICA = 'north_america';
@@ -70,7 +72,10 @@ class Static_Optimizer_Asset_Optimizer {
 		// When we have the local opt server ready or if it\s necessary then we'll redirect the whole traffic to it.
 		// but if we have an optimized nginx in front we don't need to pass through the optimization servers
 		// because we've already optimized the files in the backend and nginx is delivering them.
-		if (empty($cfg['static_version_only']) && $this->hasLocalOptimizationServers() ) {
+		if (empty($cfg['static_version_only'])
+		    && (!empty(getenv('STATIC_OPTIMIZER_VERSION_IN_FILE_ONLY'))
+		        || $this->hasLocalOptimizationServers()
+		    ) ) {
 			$cfg['static_version_only'] = 1;
 		}
 
