@@ -7,6 +7,11 @@ class Static_Optimizer_Asset_Optimizer {
 	private $host = '';
 	private $doc_root = '';
 	private $calc_common_file_hash = true;
+	private $supported_file_types_by_default = [
+		'js',
+		'css',
+		'images',
+	];
 
 	// default servers
 	private $servers = [
@@ -20,7 +25,8 @@ class Static_Optimizer_Asset_Optimizer {
 	];
 
 	public function __construct($cfg = []) {
-		$this->cfg = $cfg;
+		$cfg = (array) $cfg;
+		$cfg = array_map('trim', $cfg);
 		$host = '';
 
 		if (!empty($cfg['host'])) {
@@ -49,7 +55,11 @@ class Static_Optimizer_Asset_Optimizer {
 		}
 
 		// @todo if empty supported files check const or use default if serverside
+		if (empty($cfg['file_types']) && defined('STATIC_OPTIMIZER_SERVER_SETUP') ) {
+			$cfg['file_types'] = $this->supported_file_types_by_default;
+		}
 
+		$this->cfg = $cfg;
 		$this->doc_root = $doc_root;
 	}
 
@@ -113,10 +123,10 @@ class Static_Optimizer_Asset_Optimizer {
 	 * You can change it back by e.g. chdir(dirname($_SERVER['SCRIPT_FILENAME'])) in the callback function.
 	 * https://www.php.net/ob_start
 	 */
-	public function maybeCorrectScriptDir() {
+	public function maybeCorrectScriptDirBecauseOfOutputBuffering() {
 		if (!empty($_SERVER['SCRIPT_FILENAME'])
 		    && !empty($_SERVER['SERVER_SOFTWARE'])
-		    && (stripos($_SERVER['SERVER_SOFTWARE'], 'apache') !== false)
+		    && (strpos($_SERVER['SERVER_SOFTWARE'], 'Apache') !== false)
 	    ) {
 			chdir(dirname($_SERVER['SCRIPT_FILENAME']));
 		}
@@ -211,7 +221,7 @@ class Static_Optimizer_Asset_Optimizer {
 		$enabled_file_types = array_filter($file_types);
 		$enabled_file_types = array_keys($enabled_file_types);
 
-		$this->maybeCorrectScriptDir();
+		$this->maybeCorrectScriptDirBecauseOfOutputBuffering();
 
 		$host_q = preg_quote( $host, '#' );
 		$script_tag_found = false;
