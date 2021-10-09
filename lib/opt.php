@@ -72,11 +72,11 @@ class Static_Optimizer_Asset_Optimizer {
 		// When we have the local opt server ready or if it\s necessary then we'll redirect the whole traffic to it.
 		// but if we have an optimized nginx in front we don't need to pass through the optimization servers
 		// because we've already optimized the files in the backend and nginx is delivering them.
-		if (empty($cfg['static_version_only'])
+		if (empty($cfg['version_in_file_only'])
 		    && (!empty(getenv('STATIC_OPTIMIZER_VERSION_IN_FILE_ONLY'))
 		        || $this->hasLocalOptimizationServers()
 		    ) ) {
-			$cfg['static_version_only'] = 1;
+			$cfg['version_in_file_only'] = 1;
 		}
 
 		$this->cfg = $cfg;
@@ -319,7 +319,7 @@ class Static_Optimizer_Asset_Optimizer {
 			$css_load_found = true;
 		}
 
-		if (empty($this->cfg['static_version_only'])) {
+		if (empty($this->cfg['version_in_file_only'])) {
 			// do we have css/script stuff?
 			if ( $script_tag_found || $css_load_found ) {
 				$js_css_search = [];
@@ -544,7 +544,7 @@ BUFF_EOF;
 			return $img_html;
 		}
 
-		if (empty($this->cfg['static_version_only'])) {
+		if (empty($this->cfg['version_in_file_only'])) {
 			$append_txt = ' onerror="javascript:static_optimizer_handle_broken_image(this);" ';
 
 			if ( stripos( $img_html, 'onerror=' ) === false ) { // the image doesn't have srcset attrib
@@ -686,7 +686,7 @@ BUFF_EOF;
 		];
 
 		// I may need to only have version in the file name only
-		if (empty($this->cfg['static_version_only'])) {
+		if (empty($this->cfg['version_in_file_only'])) {
 			$optimizer_url = $this->getOptimizerServerUri( $ctx );
 
 			if ( ! empty( $optimizer_url ) ) {
