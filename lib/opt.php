@@ -48,6 +48,8 @@ class Static_Optimizer_Asset_Optimizer {
 			$doc_root = $_SERVER['DOCUMENT_ROOT'];
 		}
 
+		// @todo if empty supported files check const or use default if serverside
+
 		$this->doc_root = $doc_root;
 	}
 
@@ -149,7 +151,9 @@ class Static_Optimizer_Asset_Optimizer {
 		$small_buff = substr( $buff, 0, 32 );
 
 		// if it starts like HTML there's huge chance that it's not a binary file
-		if (substr($small_buff, 0, 1) != '<' && substr($small_buff, 1, 1) != '<' && substr($small_buff, 2, 1) != '<') {
+		if (substr($small_buff, 0, 1) != '<'
+		    && substr($small_buff, 1, 1) != '<'
+		    && substr($small_buff, 2, 1) != '<') {
 			// This is how I got to these prefixes
 			//    $f = 't.pdf';
 			//    $buff = file_get_contents($f);
@@ -179,16 +183,17 @@ class Static_Optimizer_Asset_Optimizer {
 		}
 
 		$small_buff = substr( $buff, 0, 1024 );
+		$small_buff = strtolower($small_buff);
 
 		// @todo skip HTML checks. Useful in tool mode.
 
 		// If it's not an HTML code don't modify anything.
-		if ( stripos( $small_buff, '<head' ) === false ) {
+		if ( strpos( $small_buff, '<head' ) === false ) {
 			return $buff;
 		}
 
 		// there are no links for this host?
-		if ( stripos( $buff, $host ) === false ) {
+		if ( strpos( $buff, $host ) === false ) {
 			return $buff;
 		}
 
