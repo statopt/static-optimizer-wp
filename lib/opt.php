@@ -675,6 +675,12 @@ BUFF_EOF;
 			}
 		}
 
+		// Somehow some links in the https://qsandbox.com panel got replaced with the date fallback which is not good.
+		// especially if it's on a subdomain.
+		if (empty($ver)) {
+			return $matches[0];
+		}
+
 		$ver = empty($ver)? date('Y-m-d') : $ver; // one day caching if version was not found.
 
 		// @todo use https://www.jsdelivr.com/?docs=wp for known wp plugins & themes assets ?
