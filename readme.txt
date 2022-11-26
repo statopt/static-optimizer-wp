@@ -37,11 +37,11 @@ If our optimization server are down (upgrade, maintenance or outage) your origin
 
 == Demo ==
 
-Test drive
+= Test drive =
 https://wpdemo.net/try/plugin/static-optimizer
 
-Video demo
-https://www.youtube.com/watch?v=1KC_JJOcu1s
+= Video demo =
+https://youtube.com/watch?v=1KC_JJOcu1s
 
 = How it works =
 
