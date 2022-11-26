@@ -3,7 +3,7 @@ Contributors: lordspace,statopt,orbisius
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7APYDVPBCSY9A
 Tags: wp,static,optimization,smush,ewww,autoptimize,cache,minify,caching,speed,performance,supercacher,wp-super-cache,wp-fastest-cache,image,asset,js,css,optimisation
 Requires at least: 4.0
-Tested up to: 5.7
+Tested up to: 6.1
 Requires PHP: 5.6
 Stable tag: 1.0.5
 License: GPLv2 or later
@@ -106,6 +106,7 @@ Yes
 
 = 1.0.6 =
 * Updated code so it doesn't run if there's a server side StatOpt optimization solution
+* Fixes and tests with latest WordPress version
 
 = 1.0.5 =
 * added optimization support for svg images

@@ -3,7 +3,7 @@
 Plugin Name: StaticOptimizer
 Plugin URI: https://statopt.com
 Description: Makes your images, js, css load faster by optimizing them and loading them from StaticOptimizer Optimization servers
-Version: 1.0.5
+Version: 1.0.6
 Author: StaticOptimizer & Orbisius
 Author URI: https://orbisius.com
 */
