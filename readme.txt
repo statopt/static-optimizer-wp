@@ -104,6 +104,9 @@ Yes
 
 == Changelog ==
 
+= 1.0.7 =
+* checking for php const STATIC_OPTIMIZER_VERSION_IN_FILE_ONLY too
+
 = 1.0.6 =
 * Updated code so it doesn't run if there's a server side StatOpt optimization solution
 * Fixes and tests with latest WordPress version
