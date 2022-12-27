@@ -109,7 +109,7 @@ Yes
 
 = 1.0.6 =
 * Updated code so it doesn't run if there's a server side StatOpt optimization solution
-* Fixes and tests with latest WordPress version
+* Fixes and tests with the latest WordPress version
 * a fix for the case when the last modified time couldn't be determined for some reason i.e. skip the asset opt url rewriting
 
 = 1.0.5 =
