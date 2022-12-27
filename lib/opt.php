@@ -65,7 +65,10 @@ class Static_Optimizer_Asset_Optimizer {
 			$doc_root = $_SERVER['DOCUMENT_ROOT'];
 		}
 
-		if (!empty(getenv('STATIC_OPTIMIZER_VERSION_IN_FILE_ONLY')) || $this->hasLocalOptimizationServers()) {
+		if ( (defined('STATIC_OPTIMIZER_VERSION_IN_FILE_ONLY') && STATIC_OPTIMIZER_VERSION_IN_FILE_ONLY)
+            || !empty(getenv('STATIC_OPTIMIZER_VERSION_IN_FILE_ONLY'))
+            || $this->hasLocalOptimizationServers()
+        ) {
 			if (empty($cfg['file_types'])) {
 				$cfg['file_types'] = $this->supported_file_types_by_default;
 			}
